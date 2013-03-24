@@ -1,7 +1,7 @@
 package org.theglobalsquare.ui;
 
 import org.theglobalsquare.app.*;
-import org.theglobalsquare.framework.TGSFragment;
+import org.theglobalsquare.framework.*;
 
 import android.os.Bundle;
 import android.view.*;
@@ -14,7 +14,7 @@ public class MonitorFragment extends TGSFragment {
 			Bundle savedInstanceState) {
 		View monitor = inflater.inflate(R.layout.main_monitor, null);
 		TextView tv = (TextView)monitor.findViewById(R.id.monitor);
-		tv.setText(((MainActivity)getActivity()).getMonitorTxt());
+		tv.setText(((UIShellActivity)getActivity()).getMonitorTxt());
 		return monitor;
 	}
 

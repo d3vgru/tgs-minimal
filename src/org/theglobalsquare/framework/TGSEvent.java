@@ -27,16 +27,6 @@ public abstract class TGSEvent {
 		this.object = object;
 	}
 	
-	public boolean send() {
-		android.util.Log.w("TGSEvent", "SEND event");
-		return TGSEventProxy.sendEvent(this);
-	}
-
-	public boolean sendToPy() {
-		android.util.Log.w("TGSEvent", "SEND event to python");
-		return TGSEventProxy.sendEvent(this, true);
-	}
-	
 	public String toString() {
 		String out = (getSubject() + " " + getVerb());
 		TGSObject o = getObject();

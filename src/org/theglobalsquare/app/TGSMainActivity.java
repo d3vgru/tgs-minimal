@@ -23,7 +23,7 @@ import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 import org.theglobalsquare.ui.*;
 
-public class MainActivity extends TabbedFragmentActivity
+public class TGSMainActivity extends TGSBaseActivity
 		implements PropertyChangeListener {
 	
 	@Override
@@ -44,6 +44,8 @@ public class MainActivity extends TabbedFragmentActivity
 	
 	private boolean composerShowing = false;
 	
+	private int selectedTab = -1;
+	
 	private MenuItem menuCompose = null;
 	private MenuItem menuRefresh = null;
 	private MenuItem menuShare = null;
@@ -56,6 +58,7 @@ public class MainActivity extends TabbedFragmentActivity
 	}
 	
 	private static Handler msgHandler = null;
+	private static TGSEventProxy events = new TGSEventProxy();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,7 @@ public class MainActivity extends TabbedFragmentActivity
         configureButtons();
         
         // register to receive system events from python
-        TGSEventProxy.addListener(TGSSystemEvent.class, this);
+        events.addListener(TGSSystemEvent.class, this);
 	}
 	
 	protected void configureTabs() {
@@ -129,8 +132,9 @@ public class MainActivity extends TabbedFragmentActivity
 
 			@Override
 			public void onPageSelected(int tab) {
+				selectedTab = tab;
 				// hide action buttons if not viewing a square
-				boolean visible = TAB_COUNT_BASE < tab;
+				boolean visible = showActionButtons(tab);
 				if(menuCompose != null)
 					menuCompose.setVisible(visible);
 				if(menuRefresh != null)
@@ -145,6 +149,10 @@ public class MainActivity extends TabbedFragmentActivity
         
         // select Monitor tab
         mViewPager.setCurrentItem(TAB_MONITOR);
+	}
+	
+	protected boolean showActionButtons(int tab) {
+		return tab >= TAB_COUNT_BASE;
 	}
 	
 	protected void configureButtons() {
@@ -167,7 +175,7 @@ public class MainActivity extends TabbedFragmentActivity
 				TGSMessageEvent event = new TGSMessageEvent();
 				event.setVerb(TGSMessage.SEND);
 				event.setSubject(subject);
-				TGSEventProxy.sendEvent(event, true);
+				events.sendEvent(event, true);
 				
 				// clear text
 				et.setText(null);
@@ -184,28 +192,16 @@ public class MainActivity extends TabbedFragmentActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 	    inflater.inflate(R.menu.main_menu, menu);
+	    boolean visible = showActionButtons(selectedTab);
+		menuCompose = menu.findItem(R.id.menu_compose);
+		menuCompose.setVisible(visible);
+		menuRefresh = menu.findItem(R.id.menu_refresh);
+		menuRefresh.setVisible(visible);
+		menuShare = menu.findItem(R.id.menu_share);
+		menuShare.setVisible(visible);
+		menuCreate = menu.findItem(R.id.menu_create);
+		menuCreate.setVisible(visible);
 	    return true;
-	}
-	
-	// to be used by python
-	public static void log(String message) {
-		android.util.Log.i("MainActivity", "got message from python: " + message);
-		if(msgHandler != null) {
-			android.util.Log.i("MainActivity", "msgHandler not null");
-			Message msg = new Message();
-			android.util.Log.i("MainActivity", "android.os.Message obtained: " + msg);
-			msg.obj = message;
-			android.util.Log.i("MainActivity", "obj field of Message set");
-			msgHandler.sendMessage(msg);
-			android.util.Log.i("MainActivity", "logged");
-		}
-	}
-	
-	public void monitor(String message) {
-		this.monitorTxt += "\n" + message;
-		final TextView monitorTxt = (TextView) findViewById(R.id.monitor);
-		if(monitorTxt != null)
-			monitorTxt.setText(this.monitorTxt);
 	}
 
 	@Override
@@ -213,22 +209,18 @@ public class MainActivity extends TabbedFragmentActivity
 		// FIXME disable until startup complete
 		switch(item.getItemId()) {
 			case R.id.menu_compose:
-				menuCompose = item;
 				if(composerShowing)
 					hideComposer();
 				else showComposer();
 				break;
 			case R.id.menu_refresh:
-				menuRefresh = item;
 				mTabsAdapter.notifyDataSetChanged();
 				break;
 			case R.id.menu_share:
-				menuShare = item;
 				// TODO share action
 				Toast.makeText(this, R.string.shareBtnLabel, Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.menu_create:
-				menuCreate = item;
 				// TODO show new square dialog
 				Toast.makeText(this, R.string.createBtnLabel, Toast.LENGTH_SHORT).show();
 				break;
@@ -300,10 +292,10 @@ public class MainActivity extends TabbedFragmentActivity
 	
 	// http://stackoverflow.com/questions/11407943/this-handler-class-should-be-static-or-leaks-might-occur-incominghandler
 	static class MessageHandler extends Handler {
-	    private final WeakReference<MainActivity> mActivity; 
+	    private final WeakReference<TGSMainActivity> mActivity; 
 
-	    MessageHandler(MainActivity service) {
-	        mActivity = new WeakReference<MainActivity>(service);
+	    MessageHandler(TGSMainActivity service) {
+	        mActivity = new WeakReference<TGSMainActivity>(service);
 	    }
 		@Override
 	    public void handleMessage(Message msg)
@@ -311,10 +303,10 @@ public class MainActivity extends TabbedFragmentActivity
 			// the TGSEvent object
 			Object value = msg.obj;
 			String out = "";
-			MainActivity activity = mActivity.get();
+			TGSMainActivity activity = mActivity.get();
 			
-			android.util.Log.i("MainActivity.LogHandler", "value: " + value);
-			android.util.Log.i("MainActivity.LogHandler", "class: " + value.getClass().getName());
+			android.util.Log.i("TGSMainActivity.MsgHandler", "value: " + value);
+			android.util.Log.i("TGSMainActivity.MsgHandler", "class: " + value.getClass().getName());
 			
 			// turn LED green on dispersy start
 			if(value instanceof TGSEvent) {
@@ -338,4 +330,38 @@ public class MainActivity extends TabbedFragmentActivity
 	    }
 	}
 
+	public void monitor(String message) {
+		this.monitorTxt += "\n" + message;
+		final TextView monitor = (TextView) findViewById(R.id.monitor);
+		if(monitor != null)
+			monitor.setText(this.monitorTxt);
+		final TextView status = (TextView)findViewById(R.id.statusMessage);
+		if(status != null)
+			status.setText(message);
+	}
+	
+	// to be used by python
+	public static void log(String message) {
+		android.util.Log.i("MainActivity", "got message from python: " + message);
+		if(msgHandler != null) {
+			android.util.Log.i("MainActivity", "msgHandler not null");
+			Message msg = new Message();
+			android.util.Log.i("MainActivity", "android.os.Message obtained: " + msg);
+			msg.obj = message;
+			android.util.Log.i("MainActivity", "obj field of Message set");
+			msgHandler.sendMessage(msg);
+			android.util.Log.i("MainActivity", "logged");
+		}
+	}
+	
+	public TGSEventProxy getEvents() {
+		return events;
+	}
+	
+	public static boolean sendEvent(TGSEvent e) {
+		if(events == null)
+			return false;
+		events.sendEvent(e);
+		return true;
+	}
 }

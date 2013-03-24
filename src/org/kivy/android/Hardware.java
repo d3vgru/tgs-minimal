@@ -7,7 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.DisplayMetrics;
-import android.view.inputmethod.InputMethodManager;
+//import android.view.inputmethod.InputMethodManager;
 import android.view.View;
 
 import java.util.List;
@@ -30,6 +30,8 @@ public class Hardware {
 
      // The context.
      static Context context;
+     
+     // for a minimal app, the SDLSurfaceView is not created so this will be null
      static View view;
 
      /**
@@ -168,16 +170,20 @@ public class Hardware {
       * Show the soft keyboard.
       */
      public static void showKeyboard() {
-         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-         imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+    	 // view will be null
+         //InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+         //imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+    	 return;
      }
 
      /**
       * Hide the soft keyboard.
       */
      public static void hideKeyboard() {
-         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    	 // view will be null
+         //InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+         //imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    	 return;
      }
 
     /**
