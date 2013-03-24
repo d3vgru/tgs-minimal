@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
     <!-- from http://stackoverflow.com/questions/8346833/console-textview-android -->
 	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	    		android:layout_width="wrap_content"
+	    		android:layout_width="match_parent"
 	            android:layout_height="0dip" 
 	            android:layout_weight="1">
 	    <TextView android:id="@+id/monitor"
 	        	android:padding="5dp"
-	            android:layout_width="wrap_content"
+	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"/>
 	</ScrollView>    

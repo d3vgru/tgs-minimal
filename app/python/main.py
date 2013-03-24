@@ -29,52 +29,61 @@ from configobj import ConfigObj
 
 # pyjnius bindings to java framework
 PythonActivity = autoclass('org.kivy.android.PythonActivity')
-TGSMainActivity = autoclass('org.theglobalsquare.app.MainActivity')
+TGSMessage = autoclass('org.theglobalsquare.framework.values.TGSMessage')
+TGSSystemEvent = autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
+""" don't need yet
 TGSEventProxy = autoclass('org.theglobalsquare.framework.TGSEventProxy')
 TGSCommunity = autoclass('org.theglobalsquare.framework.values.TGSCommunity')
 TGSCommunityEvent = autoclass('org.theglobalsquare.framework.values.TGSCommunityEvent')
 TGSConfig = autoclass('org.theglobalsquare.framework.values.TGSConfig')
 TGSConfigEvent = autoclass('org.theglobalsquare.framework.values.TGSConfigEvent')
-TGSMessage = autoclass('org.theglobalsquare.framework.values.TGSMessage')
 TGSMessageEvent = autoclass('org.theglobalsquare.framework.values.TGSMessageEvent')
-TGSSystemEvent = autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
 TGSUser = autoclass('org.theglobalsquare.framework.values.TGSUser')
 TGSUserEvent = autoclass('org.theglobalsquare.framework.values.TGSUserEvent')
 TGSCommunitySearchEvent = autoclass('org.theglobalsquare.framework.values.TGSCommunitySearchEvent')
 TGSMessageSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSMessageSearchEvent')
 TGSUserSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
-
-class ControllerApp():
-    def run(self):
-        '''Main loop'''
-        while not self.quit:
-            self.idle()
-        self.exit()
+"""
 
 # from whirm/tgs-pc tgs_pc/main.py
 CONFIG_FILE_NAME='tgs.conf'
 
 
-# segfault after successful completion..
 class AndroidFacade:
-    def __init__(self):
-        self.events = TGSEventProxy()
-        AndroidFacade.getMainActivity().setEvents(self.events)
-
     @staticmethod
     def getMainActivity():
-    	return cast('org.theglobalsquare.app.MainActivity', PythonActivity.mActivity)
+    	return cast('org.theglobalsquare.app.TGSTestActivity', PythonActivity.mActivity)
 
     @staticmethod
     def sendEvent(event):
         return AndroidFacade.getMainActivity().sendEvent(event)
-
-    def monitor(self, msg):
-        AndroidFacade.getMainActivity().log(msg)
         
-    def nextEvent(self):
-    	return self.events.nextEvent()
+    @staticmethod
+    def nextEvent():
+        return AndroidFacade.getMainActivity().getEvents().nextEvent()
 
+    @staticmethod
+    def monitor(msg):
+        message = TGSMessage()
+        message.setBody(msg)
+        event = TGSSystemEvent.forLog(message)
+        AndroidFacade.sendEvent(event)
+        pass
+
+
+class MainLoop():
+    def __init__(self):
+        self.go = True
+    def run(self):
+        while self.process():
+            pass
+    def process(self):
+        # TODO actually process the event
+        nextEvent = AndroidFacade.nextEvent()
+        if nextEvent is not None:
+            AndroidFacade.monitor('got event from java')
+        return self.go
+            
 
 # for simple notifications of a recurring event
 class TGSSignal:
@@ -92,18 +101,14 @@ class TGS:
 #    memberSearchUpdate = QtCore.pyqtSignal(SearchCache, 'QString')
 #    squareSearchUpdate = QtCore.pyqtSignal(SearchCache, 'QString')
 #    textSearchUpdate = QtCore.pyqtSignal(SearchCache, 'QString')
-# pass the update value
-    def __init__(self, workdir, app):
-        self._app = app
-        self._app.monitor('TGS: init')
-        self._app.monitor('TGS: log message 2')
-        self._app.monitor('TGS: log message 3')
+    def __init__(self, workdir):
+        AndroidFacade.monitor('TGS: init')
         self._workdir = workdir
         self.callback = None
         self._discovery = None
         self._my_member = None
         """
-        Logger.info("TGS: setting up search signals")
+        AndroidFacade.monitor("TGS: setting up search signals")
         self.memberSearchUpdateEvent = TGSUserSearchEvent()
         self.memberSearchUpdate = TGSSignal(self.memberSearchUpdateEvent)
         self.squareSearchUpdateEvent = TGSCommunitySearchEvent()
@@ -139,7 +144,7 @@ class TGS:
     #Public methods:
     ##################################
     def setupThreads(self):
-    	#Logger.info('TGS: setting up threads')
+        AndroidFacade.monitor('starting dispersy threads')
         # start threads
         callback = Callback()
         callback.start(name="Dispersy")
@@ -152,36 +157,35 @@ class TGS:
         self.callback = callback
 
     def stopThreads(self):
-    	#Logger.info('TGS: tearing down threads')
+    	AndroidFacade.monitor('TGS: tearing down threads')
         self.callback.stop()
 
+        #hmm, this looks dangerous
         if self.callback.exception:
             global exit_exception
             exit_exception = self.callback.exception
 
     def createNewSquare(self, square_info):
-    	#Logger.info('TGS: creating new square')
+    	AndroidFacade.monitor('TGS: creating new square')
         self.callback.register(self._dispersyCreateCommunity, square_info)
 
     def sendText(self, community, message, media_hash=''):
-    	#Logger.info('TGS: sending text')
+    	AndroidFacade.monitor('TGS: sending text')
         self.callback.register(community.post_text, (message, media_hash))
 
     def setMemberInfo(self, community, alias, thumbnail_hash=''):
-    	#Logger.info('TGS: setting member info')
+    	AndroidFacade.monitor('TGS: setting member info')
         self.callback.register(community.set_my_member_info, (alias,thumbnail_hash))
 
     ##################################
     #Private methods:
     ##################################
     def _dispersy(self, callback):
-        self._app.monitor('TGS: starting dispersy')
-    	#Logger.info('TGS._dispersy: init')
         # start Dispersy
+        AndroidFacade.monitor('TGS: starting dispersy endpoint')
         dispersy = Dispersy.get_instance(callback, self._workdir)
         dispersy.endpoint = StandaloneEndpoint(dispersy, 12345)
         dispersy.endpoint.start()
-    	#Logger.info('TGS._dispersy: endpoint started')
 
         # load/join discovery community
 	# FIXME
@@ -203,13 +207,12 @@ class TGS:
         dispersy.define_auto_load(PreviewCommunity, (self._discovery, False))
         dispersy.define_auto_load(SquareCommunity, (self._discovery,))
 
-    	#Logger.info('TGS._dispersy: loading squares')
+    	AndroidFacade.monitor('TGS: loading squares')
         # load squares
         for master in SquareCommunity.get_master_members():
             yield 0.1
             dispersy.get_community(master.mid)
-    	self._app.monitor('TGS: dispersy startup complete')
-    	#Logger.info('TGS._dispersy: startup complete')
+    	AndroidFacade.monitor('TGS: dispersy startup complete')
 
     def _dispersy_onSearchResult(self, result):
         print "OnSearchResult", result
@@ -273,10 +276,6 @@ class TGS:
 
 class ChatCore:
     def __init__(self):
-
-        # there can be only one
-        self._app = AndroidFacade()
-
         self.message_references = []
         self._communities = {}
         self._communities_listwidgets = {}
@@ -537,9 +536,9 @@ class ChatCore:
         #Read config file
         self._getConfig()
 
-    	#Logger.info('ChatCore.run: setting up TGS')
         #Setup TGS core
-        self._tgs = TGS(self._workdir, self._app)
+        AndroidFacade.monitor('ChatCore.run: dispersy startup')
+        self._tgs = TGS(self._workdir)
 
         """ ERK - re-enable once these have been replaced
         self._tgs.memberSearchUpdate.connect(self.onMemberSearchUpdate)
@@ -588,25 +587,17 @@ class ChatCore:
         #                                        self.onNewPreviewCommunityCreated)
         """
 
-    	#Logger.info('ChatCore.run: START')
-
         #Setup dispersy threads
-        self._tgs.setupThreads()
-
-        #Show the main window
-        #self.mainwin.show()
-        #Start QT's event loop
-        #self.app.exec_()
-    	#Logger.info('ChatCore.run: start kivy app')
-        # actually, let kivy do the starting
-
-        # let android know we're done initializing        
-#        self._app.sendEvent(TGSSystemEvent.forStart())
+        AndroidFacade.monitor('ChatCore.run: skipping thread startup')
+#        self._tgs.setupThreads()
         
-        ControllerApp().run()
-    	#Logger.info('ChatCore.run: STOP')
+        # let android know we're done initializing        
+        AndroidFacade.sendEvent(TGSSystemEvent.forStart())
+        
+        MainLoop().run()
 
         #Destroy dispersy threads before exiting
+        AndroidFacade.monitor('ChatCore.run: destroying threads')
         self._tgs.stopThreads()
 
     ##################################
@@ -633,16 +624,16 @@ class ChatCore:
 
         #Create app data dir if it doesn't exist
         if not os.path.exists(config_path):
-#            Logger.info('ChatCore: making config dir')
+#            AndroidFacade.monitor('ChatCore: making config dir')
             os.makedirs(config_path)
 
         config_file_path = os.path.join(config_path, CONFIG_FILE_NAME)
 
-#        Logger.info('ChatCore: ConfigObjing it up')
+#        AndroidFacade.monitor('ChatCore: ConfigObjing it up')
         config = ConfigObj(config_file_path, encoding='utf-8')
 
         if not os.path.exists(config_file_path):
-#            Logger.info('ChatCore: using defaults')
+#            AndroidFacade.monitor('ChatCore: using defaults')
             #Set default values
             config['Member'] = {
                 'Alias': u'Anon',

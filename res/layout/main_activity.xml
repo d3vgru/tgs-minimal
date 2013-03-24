@@ -92,7 +92,7 @@
         	android:layout_height="wrap_content"
         	android:textColor="#999999"
         	android:textSize="14sp"
-        	android:layout_marginRight="50dp"
+        	android:layout_marginRight="20dp"
             />
         <TextView
             android:id="@+id/statusMessage"

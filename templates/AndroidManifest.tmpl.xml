@@ -9,9 +9,10 @@
   <application android:label="@string/appName"
 	  android:icon="@drawable/tgs_logo"
 	  android:theme="@style/PPSPTheme"
+	  android:debuggable="true"
                >
 
-    <activity android:name="org.theglobalsquare.app.MainActivity"
+    <activity android:name="org.theglobalsquare.app.TestActivity"
               android:label="@string/iconName"
               android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode"
               android:launchMode="singleTask"
