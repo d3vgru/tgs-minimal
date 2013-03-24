@@ -5,5 +5,5 @@ assets/*
 bin/*
 gen/*
 res/drawable/icon.png
-res/drawable/presplash.png
+res/drawable/presplash.jpg
 res/values/strings.xml
