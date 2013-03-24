@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <!-- TODO: use regular search interface -->
+    <!-- search terms -->
+    <EditText
+        android:id="@+id/txt_search_terms" 
+        android:hint="@string/hintMainSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        />
+    
+    <!-- search for text
+    <Button
+        android:id="@+id/btn_search_text"
+        android:text="@string/btnSearchText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    
+    <! search for user
+    <Button
+        android:id="@+id/btn_search_user"
+        android:text="@string/btnSearchUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+        -->
+    
+    <!-- search for community -->
+    <Button
+        android:id="@+id/btn_search_community"
+        android:text="@string/btnSearchCommunity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        />
+    
+</LinearLayout>

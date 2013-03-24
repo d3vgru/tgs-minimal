@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="short_name">TGS</string>
+
+    <string name="fileBtnLabel">Attach</string>
+    <string name="sendBtnLabel">Send</string>
+    <string name="searchBtnLabel">Search</string>
+    <string name="createBtnLabel">Create</string>
+    <string name="saveBtnLabel">Save</string>
+    <string name="cancelBtnLabel">Cancel</string>
+    <string name="settingsBtnLabel">Settings</string>
+    <string name="helpBtnLabel">Help</string>
+    <string name="refreshBtnLabel">Refresh</string>
+    <string name="shareBtnLabel">Share</string>
+    <string name="composeBtnLabel">Compose</string>
+    <string name="aboutBtnLabel">About</string>
+
+    <string name="overviewLabel">My Squares</string>
+    <string name="noSquaresMsg">You haven\'t joined any squares yet.
+            Search for a square to join or create a new one to get started.</string>
+            
+    <string name="coreLabel">Core</string>
+    <string name="monitorLabel">Monitor</string>
+    <string name="statusLabel">Status</string>
+            
+	<string name="hintMainSearch">Keyword</string>
+    <string name="btnSearchText">Search For Text</string>
+    <string name="btnSearchUser">Search For User</string>
+    <string name="btnSearchCommunity">Search For Community</string>
+</resources>
