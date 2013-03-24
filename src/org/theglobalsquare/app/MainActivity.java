@@ -37,11 +37,17 @@ public class MainActivity extends TabbedFragmentActivity
 		msgHandler.sendMessage(message);
 	}
 
+	public final static int TAB_COUNT_BASE = 3;
 	public final static int TAB_SEARCH = 0;
 	public final static int TAB_OVERVIEW = 1;
 	public final static int TAB_MONITOR = 2;
 	
 	private boolean composerShowing = false;
+	
+	private MenuItem menuCompose = null;
+	private MenuItem menuRefresh = null;
+	private MenuItem menuShare = null;
+	private MenuItem menuCreate = null;
 	
 	private String monitorTxt = "";
 	
@@ -108,6 +114,35 @@ public class MainActivity extends TabbedFragmentActivity
                 MessageListFragment.class, null);
         */
         
+        // listener for tab change
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// NOOP
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// NOOP
+			}
+
+			@Override
+			public void onPageSelected(int tab) {
+				// hide action buttons if not viewing a square
+				boolean visible = TAB_COUNT_BASE < tab;
+				if(menuCreate != null)
+					menuCreate.setVisible(visible);
+				if(menuRefresh != null)
+					menuRefresh.setVisible(visible);
+				if(menuShare != null)
+					menuShare.setVisible(visible);
+				if(menuCreate != null)
+					menuCreate.setVisible(visible);
+			}
+        	
+        });
+        
         // select Monitor tab
         mViewPager.setCurrentItem(TAB_MONITOR);
 	}
@@ -155,15 +190,15 @@ public class MainActivity extends TabbedFragmentActivity
 	// to be used by python
 	public static void log(String message) {
 		android.util.Log.i("MainActivity", "got message from python: " + message);
-//		if(logHandler != null) {
-//			android.util.Log.i("MainActivity", "logHandler not null");
-//			Message msg = new Message();
-//			android.util.Log.i("MainActivity", "android.os.Message obtained: " + msg);
-//			msg.obj = message;
-//			android.util.Log.i("MainActivity", "obj field of Message set");
-//			logHandler.sendMessage(msg);
-//			android.util.Log.i("MainActivity", "logged");
-//		}
+		if(msgHandler != null) {
+			android.util.Log.i("MainActivity", "msgHandler not null");
+			Message msg = new Message();
+			android.util.Log.i("MainActivity", "android.os.Message obtained: " + msg);
+			msg.obj = message;
+			android.util.Log.i("MainActivity", "obj field of Message set");
+			msgHandler.sendMessage(msg);
+			android.util.Log.i("MainActivity", "logged");
+		}
 	}
 	
 	public void monitor(String message) {
@@ -177,21 +212,25 @@ public class MainActivity extends TabbedFragmentActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// FIXME disable until startup complete
 		switch(item.getItemId()) {
-			case R.id.menu_create:
-				// TODO show new square dialog
-				Toast.makeText(this, R.string.createBtnLabel, Toast.LENGTH_SHORT).show();
-				break;
 			case R.id.menu_compose:
+				menuCompose = item;
 				if(composerShowing)
 					hideComposer();
 				else showComposer();
 				break;
-			case R.id.menu_help:
-				// TODO show help dialog
-				Toast.makeText(this, R.string.helpBtnLabel, Toast.LENGTH_SHORT).show();
-				break;
 			case R.id.menu_refresh:
+				menuRefresh = item;
 				mTabsAdapter.notifyDataSetChanged();
+				break;
+			case R.id.menu_share:
+				menuShare = item;
+				// TODO share action
+				Toast.makeText(this, R.string.shareBtnLabel, Toast.LENGTH_SHORT).show();
+				break;
+			case R.id.menu_create:
+				menuCreate = item;
+				// TODO show new square dialog
+				Toast.makeText(this, R.string.createBtnLabel, Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.menu_search:
 				// select Search tab
@@ -201,9 +240,13 @@ public class MainActivity extends TabbedFragmentActivity
 				// TODO show settings dialog
 				Toast.makeText(this, R.string.settingsBtnLabel, Toast.LENGTH_SHORT).show();
 				break;
-			case R.id.menu_share:
-				// TODO share action
-				Toast.makeText(this, R.string.shareBtnLabel, Toast.LENGTH_SHORT).show();
+			case R.id.menu_help:
+				// TODO show help dialog
+				Toast.makeText(this, R.string.helpBtnLabel, Toast.LENGTH_SHORT).show();
+				break;
+			case R.id.menu_about:
+				// TODO show about dialog
+				Toast.makeText(this, R.string.aboutBtnLabel, Toast.LENGTH_SHORT).show();
 				break;
 			default:
 				// unknown option, maybe a superclass can handle it

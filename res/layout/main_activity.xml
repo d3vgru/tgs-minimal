@@ -87,16 +87,23 @@
             />
         <TextView
             android:text="@string/coreLabel"
+            android:layout_gravity="center_vertical" 
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
+        	android:textColor="#999999"
+        	android:textSize="14sp"
+        	android:layout_marginRight="50dp"
             />
         <TextView
-            android:id="@+id/statusMessage" 
+            android:id="@+id/statusMessage"
+            android:layout_gravity="center_vertical" 
         	android:layout_height="wrap_content"
         	android:layout_width="0dip"
         	android:layout_weight="1"
         	android:singleLine="true"
         	android:ellipsize="end"
+        	android:textColor="#999999"
+        	android:textSize="14sp"
             />
     </LinearLayout>
 </LinearLayout>

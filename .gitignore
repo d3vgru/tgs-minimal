@@ -4,3 +4,4 @@ AndroidManifest.xml
 assets/*
 bin/*
 gen/*
+res/values/strings.xml

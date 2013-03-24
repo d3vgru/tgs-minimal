@@ -19,6 +19,12 @@
         android:icon="@drawable/social_share"
         />
     <item
+        android:id="@+id/menu_create"
+        android:showAsAction="always|withText"
+        android:title="@string/refreshBtnLabel"
+        android:icon="@drawable/content_new"
+        />
+    <item
         android:id="@+id/menu_search"
         android:showAsAction="withText"
         android:title="@string/searchBtnLabel"
