@@ -28,7 +28,7 @@ from configobj import ConfigObj
 
 
 # pyjnius bindings to java framework
-PythonActivity = autoclass('org.renpy.android.PythonActivity')
+PythonActivity = autoclass('org.kivy.android.PythonActivity')
 TGSMainActivity = autoclass('org.theglobalsquare.app.MainActivity')
 TGSEventProxy = autoclass('org.theglobalsquare.framework.TGSEventProxy')
 TGSCommunity = autoclass('org.theglobalsquare.framework.values.TGSCommunity')

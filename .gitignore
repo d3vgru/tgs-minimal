@@ -4,4 +4,6 @@ AndroidManifest.xml
 assets/*
 bin/*
 gen/*
+res/drawable/icon.png
+res/drawable/presplash.png
 res/values/strings.xml
