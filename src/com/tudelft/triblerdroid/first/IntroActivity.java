@@ -63,14 +63,12 @@ import se.kth.pymdht.Id.IdError;
     protected boolean _inmainloop = false;
     
     // Arno, 2012-11-28: NFC + Beam
-    protected static final String     _beamdefaultfilename = "/sdcard/swift/capture.mp4";
-	
+    protected static final String     _beamdefaultfilename = Environment.getExternalStorageDirectory().getPath() + "/swift/capture.mp4";
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Util.sendKillToDHT(); //just in case
-		final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		boolean showIntro = settings.getBoolean("showIntro", true);
 
 		// Arno, 2012-11-26: Init single swift thread 
 		
@@ -124,9 +122,9 @@ import se.kth.pymdht.Id.IdError;
 			});
 			return;
 		}
-		Id id = null;
 		try{
-			id = new Id(hash);
+			@SuppressWarnings("unused")
+			Id id = new Id(hash);
 		}
 		catch(IdError e){
 			Log.w("hash", "invalid");
@@ -238,7 +236,6 @@ import se.kth.pymdht.Id.IdError;
 			return alert;	
 		}
 		if (id == MOBILE_WARNING_DIALOG){
-			final String finalHash = hash;
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("Using mobile connectivity.\nWe recommend using wi-fi to download PPSP videos.\nDo you want to play anyway?")
 			.setCancelable(false)
@@ -321,7 +318,6 @@ import se.kth.pymdht.Id.IdError;
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent data) {
-		boolean readyToTwit = false;
 		Uri videoUri = null;
 		
 		super.onActivityResult(requestCode, resultCode, data);

@@ -131,8 +131,8 @@ public class MainActivity extends TabbedFragmentActivity
 			public void onPageSelected(int tab) {
 				// hide action buttons if not viewing a square
 				boolean visible = TAB_COUNT_BASE < tab;
-				if(menuCreate != null)
-					menuCreate.setVisible(visible);
+				if(menuCompose != null)
+					menuCompose.setVisible(visible);
 				if(menuRefresh != null)
 					menuRefresh.setVisible(visible);
 				if(menuShare != null)

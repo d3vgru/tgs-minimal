@@ -130,7 +130,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         _swarmid = "e5a12c7ad2d8fab33c699d1e198d66f79fa610c3";
         		
         NativeLib nativelib = new NativeLib();
-		String ret = nativelib.LiveCreate( _swarmid );
+		/* String ret = */ nativelib.LiveCreate( _swarmid );
 		
         // Create new Session
         try
