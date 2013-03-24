@@ -52,7 +52,7 @@ CONFIG_FILE_NAME='tgs.conf'
 class AndroidFacade:
     @staticmethod
     def getMainActivity():
-    	return cast('org.theglobalsquare.app.TGSTestActivity', PythonActivity.mActivity)
+    	return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
 
     @staticmethod
     def sendEvent(event):

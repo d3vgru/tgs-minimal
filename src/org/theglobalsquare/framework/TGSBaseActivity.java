@@ -18,6 +18,8 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
+// this class sets up and manages the tabs in the main_activity layout
+
 // adapted from https://bitbucket.org/owentech/abstabsviewpager
 // depends on ActionBarSherlock
 public class TGSBaseActivity extends PythonActivity {
@@ -69,16 +71,6 @@ public class TGSBaseActivity extends PythonActivity {
         mTabsAdapter.addTab(
         		bar.newTab().setText(R.string.monitorLabel),
         		MonitorFragment.class, null);
-        
-        // TODO tabs for each square the user has joined
-        /*
-        mTabsAdapter.addTab(
-                bar.newTab().setText("abc"),
-                MessageListFragment.class, null);
-        mTabsAdapter.addTab(
-                bar.newTab().setText("Another Square"),
-                MessageListFragment.class, null);
-        */
         
         // listener for tab change
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

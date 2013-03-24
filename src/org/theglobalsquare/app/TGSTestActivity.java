@@ -13,7 +13,7 @@ import org.theglobalsquare.framework.values.*;
 
 public class TGSTestActivity extends UIShellActivity
 		implements PropertyChangeListener {
-	public final static String TAG = "TestActivity";
+	public final static String TAG = "TGSTest";
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {

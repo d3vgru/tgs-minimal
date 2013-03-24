@@ -21,6 +21,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+// this class sets up and manages the main UI
 public class UIShellActivity extends TGSBaseActivity {
 	public final static String TAG = "UIShell";
 	

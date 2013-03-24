@@ -12,7 +12,7 @@
 	  android:debuggable="true"
                >
 
-    <activity android:name="org.theglobalsquare.app.TestActivity"
+    <activity android:name="org.theglobalsquare.app.TGSMainActivity"
               android:label="@string/iconName"
               android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode"
               android:launchMode="singleTask"
