@@ -14,7 +14,7 @@ public class MonitorFragment extends TGSFragment {
 			Bundle savedInstanceState) {
 		View monitor = inflater.inflate(R.layout.main_monitor, null);
 		TextView tv = (TextView)monitor.findViewById(R.id.monitor);
-		tv.setText(((UIShellActivity)getActivity()).getMonitorTxt());
+		tv.setText(((TGSUIActivity)getActivity()).getMonitorTxt());
 		return monitor;
 	}
 

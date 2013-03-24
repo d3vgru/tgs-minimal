@@ -78,11 +78,13 @@ public class TGSBaseActivity extends PythonActivity {
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 				// NOOP
+				android.util.Log.i(TGSBaseActivity.TAG, "page scrollStateChanged: " + arg0);
 			}
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 				// NOOP
+				android.util.Log.i(TGSBaseActivity.TAG, "page scrolled: " + arg0);
 			}
 
 			@Override

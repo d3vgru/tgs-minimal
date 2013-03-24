@@ -11,7 +11,7 @@ import android.os.Message;
 import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 
-public class TGSTestActivity extends UIShellActivity
+public class TGSTestActivity extends TGSUIActivity
 		implements PropertyChangeListener {
 	public final static String TAG = "TGSTest";
 	
@@ -116,9 +116,9 @@ public class TGSTestActivity extends UIShellActivity
 	}
 	
 	public static boolean sendEvent(TGSEvent e) {
-		if(UIShellActivity.events == null)
+		if(TGSUIActivity.events == null)
 			return false;
-		UIShellActivity.events.sendEvent(e);
+		TGSUIActivity.events.sendEvent(e);
 		return true;
 	}
 }

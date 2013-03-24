@@ -13,7 +13,7 @@ import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 
 // this class defines interactions between java and python layers
-public class TGSMainActivity extends UIShellActivity implements
+public class TGSMainActivity extends TGSUIActivity implements
 		PropertyChangeListener {
 	public final static String TAG = "TGSMain";
 
@@ -123,9 +123,9 @@ public class TGSMainActivity extends UIShellActivity implements
 	}
 
 	public static boolean sendEvent(TGSEvent e) {
-		if (UIShellActivity.events == null)
+		if (TGSUIActivity.events == null)
 			return false;
-		UIShellActivity.events.sendEvent(e);
+		TGSUIActivity.events.sendEvent(e);
 		return true;
 	}
 }

@@ -22,7 +22,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 // this class sets up and manages the main UI
-public class UIShellActivity extends TGSBaseActivity {
+public class TGSUIActivity extends TGSBaseActivity {
 	public final static String TAG = "UIShell";
 	
 	private boolean composerShowing = false;
@@ -83,16 +83,16 @@ public class UIShellActivity extends TGSBaseActivity {
 				if(composerShowing)
 					hideComposer();
 				
-				monitor(UIShellActivity.TAG + ": sent message: " + body);
+				monitor(TGSUIActivity.TAG + ": sent message: " + body);
 			}
 		});
 	}
 	
 	public void monitor(String message) {
-		UIShellActivity.monitorTxt += "\n" + message;
+		TGSUIActivity.monitorTxt += "\n" + message;
 		final TextView monitor = (TextView) findViewById(R.id.monitor);
 		if(monitor != null)
-			monitor.setText(UIShellActivity.monitorTxt);
+			monitor.setText(TGSUIActivity.monitorTxt);
 		final TextView status = (TextView)findViewById(R.id.statusMessage);
 		if(status != null)
 			status.setText(message);
