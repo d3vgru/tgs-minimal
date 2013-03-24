@@ -1,0 +1,3 @@
+[submodule "dispersy"]
+        path = app/python/tgscore/dispersy
+        url = git://github.com/triblerteam/dispersy.git
