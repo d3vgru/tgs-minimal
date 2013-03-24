@@ -1,0 +1,6 @@
+*.pyc
+*.pyo
+AndroidManifest.xml
+assets/*
+bin/*
+gen/*
