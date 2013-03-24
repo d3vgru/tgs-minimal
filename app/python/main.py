@@ -588,8 +588,8 @@ class ChatCore:
         """
 
         #Setup dispersy threads
-        AndroidFacade.monitor('ChatCore.run: skipping thread startup')
-#        self._tgs.setupThreads()
+        AndroidFacade.monitor('ChatCore.run: setting up threads')
+        self._tgs.setupThreads()
         
         # let android know we're done initializing        
         AndroidFacade.sendEvent(TGSSystemEvent.forStart())
