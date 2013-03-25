@@ -23,7 +23,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 // this class sets up and manages the main UI
 public class TGSUIActivity extends TGSBaseActivity {
-	public final static String TAG = "UIShell";
+	public final static String TAG = "TGSUI";
 	
 	private boolean composerShowing = false;
 	
@@ -109,8 +109,6 @@ public class TGSUIActivity extends TGSBaseActivity {
 		menuRefresh.setVisible(visible);
 		menuShare = menu.findItem(R.id.menu_share);
 		menuShare.setVisible(visible);
-		menuCreate = menu.findItem(R.id.menu_create);
-		menuCreate.setVisible(visible);
 	    return true;
 	}
 
@@ -136,7 +134,7 @@ public class TGSUIActivity extends TGSBaseActivity {
 				break;
 			case R.id.menu_search:
 				// select Search tab
-		        mViewPager.setCurrentItem(TAB_SEARCH);
+		        setTab(TAB_SEARCH);
 				break;
 			case R.id.menu_settings:
 				// TODO show settings dialog

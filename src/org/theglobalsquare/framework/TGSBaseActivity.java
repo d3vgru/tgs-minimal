@@ -89,8 +89,9 @@ public class TGSBaseActivity extends PythonActivity {
 
 			@Override
 			public void onPageSelected(int tab) {
-				selectedTab = tab;
+				android.util.Log.i(TGSBaseActivity.TAG, "page selected: " + tab);
 				// hide action buttons if not viewing a square
+				selectedTab = tab;
 				boolean visible = showActionButtons(tab);
 				if(menuCompose != null)
 					menuCompose.setVisible(visible);
@@ -98,14 +99,17 @@ public class TGSBaseActivity extends PythonActivity {
 					menuRefresh.setVisible(visible);
 				if(menuShare != null)
 					menuShare.setVisible(visible);
-				if(menuCreate != null)
-					menuCreate.setVisible(visible);
 			}
         	
         });
         
         // select Monitor tab
-        mViewPager.setCurrentItem(TAB_MONITOR);
+        setTab(TAB_MONITOR);
+	}
+	
+	public void setTab(int tab) {
+		getSupportActionBar().setSelectedNavigationItem(tab);
+//		mViewPager.setCurrentItem(tab);
 	}
 	
 	public static class TabsAdapter extends FragmentStatePagerAdapter implements

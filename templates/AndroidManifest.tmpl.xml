@@ -9,7 +9,6 @@
   <application android:label="@string/appName"
 	  android:icon="@drawable/tgs_logo"
 	  android:theme="@style/PPSPTheme"
-	  android:debuggable="true"
                >
 
     <activity android:name="org.theglobalsquare.app.TGSMainActivity"

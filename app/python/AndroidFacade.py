@@ -3,9 +3,6 @@ from jnius import cast
 
 
 # pyjnius bindings to java framework
-PythonActivity = autoclass('org.kivy.android.PythonActivity')
-TGSMessage = autoclass('org.theglobalsquare.framework.values.TGSMessage')
-TGSSystemEvent = autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
 """ don't need yet
 TGSEventProxy = autoclass('org.theglobalsquare.framework.TGSEventProxy')
 TGSCommunity = autoclass('org.theglobalsquare.framework.values.TGSCommunity')
@@ -20,22 +17,20 @@ TGSMessageSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSMessa
 TGSUserSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
 """
 
-class AndroidFacade:
-    @staticmethod
-    def getMainActivity():
-    	return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
+def getMainActivity():
+    PythonActivity = autoclass('org.kivy.android.PythonActivity')
+	return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
 
-    @staticmethod
-    def sendEvent(event):
-        return AndroidFacade.getMainActivity().sendEvent(event)
-        
-    @staticmethod
-    def nextEvent():
-        return AndroidFacade.getMainActivity().getEvents().nextEvent()
+def sendEvent(event):
+	return getMainActivity().sendEvent(event)
+	
+def nextEvent():
+	return getMainActivity().getEvents().nextEvent()
 
-    @staticmethod
-    def monitor(msg):
-        message = TGSMessage()
-        message.setBody(msg)
-        event = TGSSystemEvent.forLog(message)
-        AndroidFacade.sendEvent(event)
+def monitor(msg):
+    TGSMessage = autoclass('org.theglobalsquare.framework.values.TGSMessage')
+    message = TGSMessage()
+	message.setBody(msg)
+	TGSSystemEvent = autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
+	event = TGSSystemEvent.forLog(message)
+	sendEvent(event)

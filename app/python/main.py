@@ -28,7 +28,7 @@ from configobj import ConfigObj
 #events.setEventBrokerFactory(eventproxy.createEventBroker)
 #global_events = eventproxy.createEventBroker(None)
 
-
+TGSSystemEvent = autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
 
 # from whirm/tgs-pc tgs_pc/main.py
 CONFIG_FILE_NAME='tgs.conf'
