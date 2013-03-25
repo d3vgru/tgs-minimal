@@ -22,6 +22,7 @@ from tgscore.dispersy.crypto import (ec_generate_key,
 from configobj import ConfigObj
 
 
+
 # FIXME use new event model
 # dispersy depends on this, so... wtf is it?
 #Set up our QT event broker
@@ -37,15 +38,25 @@ class MainLoop():
     def __init__(self):
         self.go = True
     def run(self):
+        # http://stackoverflow.com/questions/1956142/how-to-redirect-stderr-in-python
+        r, w = os.pipe()
+        os.close(sys.stderr.fileno())
+        os.dup2(w, sys.stderr.fileno())
+        self.errs = r
+
         while self.process():
             pass
     def process(self):
+        # read 1K from stderr and cc to monitor
+        errMsg = os.read(self.errs, 1024)
+        if errMsg is not None:
+            AndroidFacade.monitor(errMsg)
+        
         # TODO actually process the event
         nextEvent = AndroidFacade.nextEvent()
         if nextEvent is not None:
             AndroidFacade.monitor('got event from java')
         return self.go
-            
 
 # for simple notifications of a recurring event
 class TGSSignal:
@@ -111,20 +122,18 @@ class TGS:
         callback = Callback()
         callback.start(name="Dispersy")
         AndroidFacade.monitor('callback started, but not registering')
-        """ following line causes an asynchronous(?) segfault
+        """ following line causes an asynchronous(?) segfault """
         callback.register(self._dispersy, (callback,))
         if "--simulate" in sys.argv:
             callback.register(self._DEBUG_SIMULATION)
         if "--simulate-qt" in sys.argv:
             callback.register(self._DEBUG_QT_SIMULATION)
-        """
         self.callback = callback
 
     def stopThreads(self):
     	AndroidFacade.monitor('TGS: tearing down threads')
         self.callback.stop()
 
-        #hmm, this looks dangerous
         if self.callback.exception:
             global exit_exception
             exit_exception = self.callback.exception
@@ -556,6 +565,8 @@ class ChatCore:
         self._tgs.setupThreads()
         
         # let android know we're done initializing
+        # monitor will say "EVENT: TGSSystemEvent: start"
+        # light turns green
         TGSSystemEvent = AndroidFacade.SystemEvent()
         AndroidFacade.sendEvent(TGSSystemEvent.forStart())
         

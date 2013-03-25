@@ -220,8 +220,13 @@ public class PythonActivity extends SherlockFragmentActivity implements Runnable
         nativeSetEnv("ANDROID_PRIVATE", mFilesDirectory);
         android.util.Log.v(TAG, "ANDROID_ARGUMENT: " + mArgument);
         nativeSetEnv("ANDROID_ARGUMENT", mPath.getAbsolutePath());
-        android.util.Log.v(TAG, "PYTHON_OPTIMIZE: 2");
+        
+        // comment out to enable __debug__
+        /*
+        android.util.Log.v(TAG, "PYTHONOPTIMIZE: 2");
         nativeSetEnv("PYTHONOPTIMIZE", "2");
+        */
+        
         android.util.Log.v(TAG, "PYTHONHOME: " + mFilesDirectory);
         nativeSetEnv("PYTHONHOME", mFilesDirectory);
         android.util.Log.v(TAG, "PYTHONPATH: " + mFilesDirectory + "/lib");
