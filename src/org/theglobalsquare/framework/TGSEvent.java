@@ -28,7 +28,10 @@ public abstract class TGSEvent {
 	}
 	
 	public String toString() {
-		String out = (getSubject() + " " + getVerb());
+		String out = getVerb();
+		Object s = getSubject();
+		if(s != null)
+			out = s.toString() + " " + out;
 		TGSObject o = getObject();
 		if(o != null)
 			out += " " + o;
