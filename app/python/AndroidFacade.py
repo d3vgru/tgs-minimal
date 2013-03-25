@@ -17,20 +17,34 @@ TGSMessageSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSMessa
 TGSUserSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
 """
 
+# bindings
+def EventProxy():
+    return autoclass('org.theglobalsquare.framework.TGSEventProxy')
+    
+def Message():
+    return autoclass('org.theglobalsquare.framework.values.TGSMessage')
+    
+def SystemEvent():
+    return autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
+
+# main entry point
 def getMainActivity():
     PythonActivity = autoclass('org.kivy.android.PythonActivity')
-	return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
+    return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
 
+# convenience function to send event
 def sendEvent(event):
-	return getMainActivity().sendEvent(event)
+    return getMainActivity().sendEvent(event)
 	
+# convenience function to get next event
 def nextEvent():
-	return getMainActivity().getEvents().nextEvent()
+    return getMainActivity().getEvents().nextEvent()
 
+# convenience logging function
 def monitor(msg):
-    TGSMessage = autoclass('org.theglobalsquare.framework.values.TGSMessage')
+    TGSMessage = Message()
     message = TGSMessage()
-	message.setBody(msg)
-	TGSSystemEvent = autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
-	event = TGSSystemEvent.forLog(message)
-	sendEvent(event)
+    message.setBody(msg)
+    TGSSystemEvent = SystemEvent()
+    event = TGSSystemEvent.forLog(message)
+    sendEvent(event)
