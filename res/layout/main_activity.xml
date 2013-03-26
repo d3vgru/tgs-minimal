@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    >
     
     <!-- main fragment "tab group" -->
     <android.support.v4.view.ViewPager
@@ -68,7 +70,7 @@
         
     </LinearLayout>
 
-    <!-- text entry -->
+    <!-- status bar -->
     <LinearLayout
         android:id="@+id/mainActivityStatus"
         android:orientation="horizontal"
