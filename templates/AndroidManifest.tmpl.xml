@@ -13,7 +13,7 @@
 
     <activity android:name="org.theglobalsquare.app.TGSMainActivity"
               android:label="@string/iconName"
-              android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode"
+              android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode"
               android:launchMode="singleTask"
               android:process=":python"
               android:screenOrientation="{{ args.orientation }}"

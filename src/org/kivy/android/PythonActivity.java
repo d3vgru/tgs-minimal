@@ -1,6 +1,8 @@
 package org.kivy.android;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.widget.Toast;
@@ -40,6 +42,14 @@ public class PythonActivity extends SherlockFragmentActivity implements Runnable
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+		// landscape mode for large screens
+		if ((getResources().getConfiguration().screenLayout &
+				Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
+			setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		} else {
+			setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+		
         super.onCreate(savedInstanceState);
 
         Hardware.context = this;

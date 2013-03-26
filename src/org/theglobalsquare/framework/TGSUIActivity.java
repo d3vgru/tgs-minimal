@@ -6,6 +6,8 @@ import org.theglobalsquare.framework.values.TGSMessageEvent;
 import org.theglobalsquare.framework.values.TGSUser;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
