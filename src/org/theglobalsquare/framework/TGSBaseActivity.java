@@ -96,6 +96,7 @@ public class TGSBaseActivity extends PythonActivity {
 					menuRefresh.setVisible(visible);
 				if(menuShare != null)
 					menuShare.setVisible(visible);
+				setTab(tab);
 			}
         	
         });
@@ -106,7 +107,6 @@ public class TGSBaseActivity extends PythonActivity {
 	
 	public void setTab(int tab) {
 		getSupportActionBar().setSelectedNavigationItem(tab);
-//		mViewPager.setCurrentItem(tab);
 	}
 	
 	public static class TabsAdapter extends FragmentStatePagerAdapter implements
@@ -179,9 +179,11 @@ public class TGSBaseActivity extends PythonActivity {
 		}
 
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			// NOOP
 		}
 
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			// NOOP
 		}
 	}
 	
