@@ -91,7 +91,7 @@ public class TGSUIActivity extends TGSBaseActivity {
 	}
 	
 	public void monitor(String message) {
-		TGSUIActivity.monitorTxt += "\n" + message;
+		TGSUIActivity.monitorTxt = message + "\n" + TGSUIActivity.monitorTxt;
 		final TextView monitor = (TextView) findViewById(R.id.monitor);
 		if(monitor != null)
 			monitor.setText(TGSUIActivity.monitorTxt);

@@ -38,19 +38,23 @@ class MainLoop():
     def __init__(self):
         self.go = True
     def run(self):
+        """
         # http://stackoverflow.com/questions/1956142/how-to-redirect-stderr-in-python
         r, w = os.pipe()
         os.close(sys.stderr.fileno())
         os.dup2(w, sys.stderr.fileno())
         self.errs = r
+        """
 
         while self.process():
             pass
     def process(self):
+        """
         # read 1K from stderr and cc to monitor
         errMsg = os.read(self.errs, 1024)
         if errMsg is not None:
             AndroidFacade.monitor(errMsg)
+        """
         
         # TODO actually process the event
         nextEvent = AndroidFacade.nextEvent()
@@ -117,12 +121,13 @@ class TGS:
     #Public methods:
     ##################################
     def setupThreads(self):
-        AndroidFacade.monitor('starting dispersy threads')
         # start threads
         callback = Callback()
+        AndroidFacade.monitor('starting dispersy callback')
         callback.start(name="Dispersy")
-        AndroidFacade.monitor('callback started, but not registering')
-        """ following line causes an asynchronous(?) segfault """
+        #AndroidFacade.monitor('attempting to run callback loop in main thread')
+        #callback.loop()
+        AndroidFacade.monitor('registering self._dispersy')
         callback.register(self._dispersy, (callback,))
         if "--simulate" in sys.argv:
             callback.register(self._DEBUG_SIMULATION)

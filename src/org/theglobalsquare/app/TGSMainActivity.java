@@ -30,6 +30,11 @@ public class TGSMainActivity extends TGSUIActivity implements
 	}
 
 	private static Handler msgHandler = null;
+	
+	private CallbackThread callback = new CallbackThread();
+	public CallbackThread getCallback() {
+		return callback;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -38,8 +43,11 @@ public class TGSMainActivity extends TGSUIActivity implements
 
 		// initialize UI event handler
 		msgHandler = new MessageHandler(this);
+		
+		// initialize callback thread
+		callback.start();
 
-		// get events from python (or else AndroidFacade won't be able to send us events)
+		// get events from python (or else AndroidFacade won't be able to send us TGSSystemEvent)
 		events.addListener(TGSSystemEvent.class, this);
 	}
 

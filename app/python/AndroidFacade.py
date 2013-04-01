@@ -35,10 +35,12 @@ def getMainActivity():
 # convenience function to send event
 def sendEvent(event):
     return getMainActivity().sendEvent(event)
+    #pass
 	
 # convenience function to get next event
 def nextEvent():
     return getMainActivity().getEvents().nextEvent()
+    #pass
 
 # convenience logging function
 def monitor(msg):
@@ -48,3 +50,4 @@ def monitor(msg):
     TGSSystemEvent = SystemEvent()
     event = TGSSystemEvent.forLog(message)
     sendEvent(event)
+    #pass
