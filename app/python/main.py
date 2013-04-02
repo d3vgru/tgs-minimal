@@ -59,16 +59,20 @@ class MainLoop():
         # TODO actually process the event
         nextEvent = AndroidFacade.nextEvent()
         if nextEvent is not None:
-            AndroidFacade.monitor('got event from java')
+            AndroidFacade.monitor('MainLoop: got event from java')
         return self.go
 
 # for simple notifications of a recurring event
 class TGSSignal:
     def __init__(self, eventProto):
         self._eventProto = eventProto
+        self._pyEvent = None
     def emit(self):
         AndroidFacade.sendEvent(eventProto)
-
+# self._tgs.squareSearchUpdate.connect(self.onSquareSearchUpdate)
+    def connect(self, pyEvent):
+        self._pyEvent = pyEvent
+    # FIXME register to 
 
 #TODO: Separate the TGS stuff (dispersy threads setup et al, internal callbacks...) from the pure UI code and put it in this class:
 class TGS:
@@ -84,8 +88,11 @@ class TGS:
         self.callback = None
         self._discovery = None
         self._my_member = None
-        """
         AndroidFacade.monitor("TGS: setting up search signals")
+        TGSCommunitySearchEvent = AndroidFacade.CommunitySearchEvent()
+        self.squareSearchUpdateEvent = TGSCommunitySearchEvent()
+        self.squareSearchUpdate = TGSSignal(self.squareSearchUpdateEvent)
+        """
         self.memberSearchUpdateEvent = TGSUserSearchEvent()
         self.memberSearchUpdate = TGSSignal(self.memberSearchUpdateEvent)
         self.squareSearchUpdateEvent = TGSCommunitySearchEvent()
@@ -123,11 +130,11 @@ class TGS:
     def setupThreads(self):
         # start threads
         callback = Callback()
-        AndroidFacade.monitor('starting dispersy callback')
+        AndroidFacade.monitor('TGS: starting dispersy callback')
         callback.start(name="Dispersy")
         #AndroidFacade.monitor('attempting to run callback loop in main thread')
         #callback.loop()
-        AndroidFacade.monitor('registering self._dispersy')
+        AndroidFacade.monitor('TGS: registering self._dispersy')
         callback.register(self._dispersy, (callback,))
         if "--simulate" in sys.argv:
             callback.register(self._DEBUG_SIMULATION)
@@ -191,6 +198,11 @@ class TGS:
             yield 0.1
             dispersy.get_community(master.mid)
     	AndroidFacade.monitor('TGS: dispersy startup complete')
+        # let android know we're done initializing
+        # monitor will say "EVENT: TGSSystemEvent: start"
+        # light turns green
+        TGSSystemEvent = AndroidFacade.SystemEvent()
+        AndroidFacade.sendEvent(TGSSystemEvent.forStart())
 
     def _dispersy_onSearchResult(self, result):
         print "OnSearchResult", result
@@ -265,6 +277,8 @@ class ChatCore:
     ##################################
     """ some of these need to propagate events to UI, but Android layer handles all the business
     #TODO: Refactor the 3 search functions to 3 small ones and a generic one as they are basically the same.
+    
+    WNI
     def onMemberSearchUpdate(self, cache, event):
         #TODO:
         print "Received member search update"
@@ -280,6 +294,7 @@ class ChatCore:
         else:
             print "But the search window doesn't exist, dropping it..."
 
+    4---A - send event
     def onSquareSearchUpdate(self, cache, event):
         #TODO:
         print "Received Square search update"
@@ -295,6 +310,7 @@ class ChatCore:
         else:
             print "But the search window doesn't exist, dropping it..."
 
+    WNI
     def onTextSearchUpdate(self, cache, event):
         #TODO:
         print "Received text search update"
@@ -310,6 +326,7 @@ class ChatCore:
         else:
             print "But the search window doesn't exist, dropping it..."
 
+    3---A - send event
     def onTextMessageReceived(self, message):
         #Put the message in the overview list
         ChatMessageListItem(parent=self.mainwin.message_list, message=message)
@@ -322,6 +339,7 @@ class ChatCore:
         square_list_widget = self._communities_listwidgets[message.square.cid]
         ChatMessageListItem(parent=square_list_widget, message=message)
 
+    1---AP - check for event
     def onNickChanged(self, *argv, **kwargs):
         alias = self.mainwin.nick_line.text()
         print "Alias changed to:", alias
@@ -332,6 +350,7 @@ class ChatCore:
         else:
             print "Same or empty nick, doing nothing"
 
+    3---P - check for event
     def onMessageReadyToSend(self):
         message = self.mainwin.message_line.text()
         #TODO: Check if the community where we are sending the message has our member info up to date!!
@@ -352,6 +371,7 @@ class ChatCore:
         else:
             print "I categorically refuse to send an empty message."
 
+    2---P - check for event
     def onNewCommunityCreated(self, square):
         #TODO: We need to update the square list here.
         print "New square created", square
@@ -399,6 +419,7 @@ class ChatCore:
         square.events.connect(square.events, QtCore.SIGNAL('squareInfoUpdated'), list_item.onInfoUpdated)
         square.events.connect(square.events, QtCore.SIGNAL('messageReceived'), self.onTextMessageReceived)
 
+    5---AP - check for event
     def onJoinSuggestedCommunity(self):
         #TODO: disable the leave/join buttons if no square is selected
         print "Joining a new community!"
@@ -411,6 +432,7 @@ class ChatCore:
             msg_box.setText("Please, select which square you want to join from the suggested squares list.")
             msg_box.exec_()
 
+    6---AP - check for event
     def onLeaveCommunity(self):
         print "leaving community!"
         #Get currently selected community
@@ -427,6 +449,7 @@ class ChatCore:
             msg_box.setText("Please, select which square you want to leave from the top-left list first.")
             msg_box.exec_()
 
+    5---A - send event
     def onNewHotCommunitiesAvailable(self, squares, texts):
         print "New suggestions arrived", squares, texts
 
@@ -435,12 +458,12 @@ class ChatCore:
             list_item = SquareOverviewListItem(parent=self.mainwin.suggested_squares_list, square=square)
             list_item.square = square
 
+    2---A - check for event?
     def onCreateSquareBtnPushed(self):
         self.mainwin.createSquare_btn.setEnabled(False)
         self._square_edit_dialog = SquareEditDialog()
         self._square_edit_dialog.squareInfoReady.connect(self.onSquareCreateDialogFinished)
         self._square_edit_dialog.show()
-
     def onSquareCreateDialogFinished(self):
         square_info = self._square_edit_dialog.getSquareInfo()
 
@@ -449,6 +472,7 @@ class ChatCore:
         self._square_edit_dialog = None
         self.mainwin.createSquare_btn.setEnabled(True)
 
+    4---AP - check for event
     def onSearchSquareClicked(self):
         self.mainwin.search_square_btn.setEnabled(False)
         self._square_search_dialog = SquareSearchDialog()
@@ -456,30 +480,28 @@ class ChatCore:
         self._square_search_dialog.onSearchRequested.connect(self._tgs.startNewSquareSearch)
         self._square_search_dialog.onJoinSquareRequested.connect(self._tgs.joinSquare)
         self._square_search_dialog.show()
-
     def onSquareSearchDialogClosed(self):
         self.mainwin.search_square_btn.setEnabled(True)
 
+    WNI
     def onSearchMessageClicked(self):
         self.mainwin.search_message_btn.setEnabled(False)
         self._message_search_dialog = MessageSearchDialog()
         self._message_search_dialog.rejected.connect(self.onMessageSearchDialogClosed)
         self._message_search_dialog.onSearchRequested.connect(self._tgs.startNewTextSearch)
         self._message_search_dialog.show()
-
     def onMessageSearchDialogClosed(self):
         self.mainwin.search_message_btn.setEnabled(True)
-
     def onSearchMemberClicked(self):
         self.mainwin.search_member_btn.setEnabled(False)
         self._member_search_dialog = MemberSearchDialog()
         self._member_search_dialog.rejected.connect(self.onMemberSearchDialogClosed)
         self._member_search_dialog.onSearchRequested.connect(self._tgs.startNewMemberSearch)
         self._member_search_dialog.show()
-
     def onMemberSearchDialogClosed(self):
         self.mainwin.search_member_btn.setEnabled(True)
 
+    7---AP - check for event
     def onThumbnailButtonPressed(self):
         fileName = QtGui.QFileDialog.getOpenFileName(self.mainwin,
                     "Select your avatar", "", "Image Files (*.png *.jpg *.bmp *.gif)"
@@ -498,6 +520,7 @@ class ChatCore:
         self._config['Member']['Thumbnail'] = thumb_data.buffer().toBase64()
         self._config.write()
 
+    8---A - entirely android
     def onAttachButtonToggled(self, status):
         if status:
             self._message_attachment = QtGui.QFileDialog.getOpenFileName(self.mainwin,
@@ -507,6 +530,23 @@ class ChatCore:
             self._message_attachment = None
             self.mainwin.attach_btn.setToolTip('')
     """
+    def onSquareSearchUpdate(self, cache, event):
+        #TODO: send event to Android - 4
+        print "Received Square search update"
+        #TODO: Deal with status changes and notify user when search is done.
+        """
+        if self._square_search_dialog:
+            self._square_search_dialog.clearResultsList()
+            for suggestion in cache.suggestions:
+                square = suggestion.hit
+                if suggestion.state == 'done':
+                    self._square_search_dialog.addResult(square)
+            if event == "finished":
+                self._square_search_dialog.onSearchFinished()
+        else:
+            print "But the search window doesn't exist, dropping it..."
+        """
+
     ##################################
     #Public Methods
     ##################################
@@ -517,10 +557,12 @@ class ChatCore:
         #Setup TGS core
         AndroidFacade.monitor('ChatCore.run: dispersy startup')
         self._tgs = TGS(self._workdir)
+        
+        # FIXME hook up square search callback
 
-        """ ERK - re-enable once these have been replaced
-        self._tgs.memberSearchUpdate.connect(self.onMemberSearchUpdate)
+        """ ERK - replace
         self._tgs.squareSearchUpdate.connect(self.onSquareSearchUpdate)
+        self._tgs.memberSearchUpdate.connect(self.onMemberSearchUpdate)
         self._tgs.textSearchUpdate.connect(self.onTextSearchUpdate)
         """
 
@@ -539,18 +581,18 @@ class ChatCore:
         self.mainwin.avatar_btn.setIcon(QtGui.QIcon(pixmap))
 
         #Connect main window signals
-        self.mainwin.nick_line.editingFinished.connect(self.onNickChanged)
+        1A-->self.mainwin.nick_line.editingFinished.connect(self.onNickChanged)
         self.mainwin.avatar_btn.clicked.connect(self.onThumbnailButtonPressed)
-        self.mainwin.message_line.returnPressed.connect(
+        3A-->self.mainwin.message_line.returnPressed.connect(
                                                 self.onMessageReadyToSend)
-        self.mainwin.message_send_btn.clicked.connect(
+        3A-->self.mainwin.message_send_btn.clicked.connect(
                                                 self.onMessageReadyToSend)
         self.mainwin.attach_btn.toggled.connect(self.onAttachButtonToggled)
-        self.mainwin.join_square_btn.clicked.connect(self.onJoinSuggestedCommunity)
-        self.mainwin.leave_square_btn.clicked.connect(self.onLeaveCommunity)
-        self.mainwin.createSquare_btn.clicked.connect(self.onCreateSquareBtnPushed)
+        5A-->self.mainwin.join_square_btn.clicked.connect(self.onJoinSuggestedCommunity)
+        6A-->self.mainwin.leave_square_btn.clicked.connect(self.onLeaveCommunity)
+        2A-->self.mainwin.createSquare_btn.clicked.connect(self.onCreateSquareBtnPushed)
 
-        self.mainwin.search_square_btn.clicked.connect(self.onSearchSquareClicked)
+        4A-->self.mainwin.search_square_btn.clicked.connect(self.onSearchSquareClicked)
         self.mainwin.search_message_btn.clicked.connect(self.onSearchMessageClicked)
         self.mainwin.search_member_btn.clicked.connect(self.onSearchMemberClicked)
 
@@ -569,12 +611,7 @@ class ChatCore:
         AndroidFacade.monitor('ChatCore.run: setting up threads')
         self._tgs.setupThreads()
         
-        # let android know we're done initializing
-        # monitor will say "EVENT: TGSSystemEvent: start"
-        # light turns green
-        TGSSystemEvent = AndroidFacade.SystemEvent()
-        AndroidFacade.sendEvent(TGSSystemEvent.forStart())
-        
+        AndroidFacade.monitor('Chatcore.run: entering main loop')
         MainLoop().run()
 
         #Destroy dispersy threads before exiting

@@ -4,26 +4,42 @@ from jnius import cast
 
 # pyjnius bindings to java framework
 """ don't need yet
-TGSEventProxy = autoclass('org.theglobalsquare.framework.TGSEventProxy')
-TGSCommunity = autoclass('org.theglobalsquare.framework.values.TGSCommunity')
-TGSCommunityEvent = autoclass('org.theglobalsquare.framework.values.TGSCommunityEvent')
-TGSConfig = autoclass('org.theglobalsquare.framework.values.TGSConfig')
-TGSConfigEvent = autoclass('org.theglobalsquare.framework.values.TGSConfigEvent')
-TGSMessageEvent = autoclass('org.theglobalsquare.framework.values.TGSMessageEvent')
-TGSUser = autoclass('org.theglobalsquare.framework.values.TGSUser')
-TGSUserEvent = autoclass('org.theglobalsquare.framework.values.TGSUserEvent')
-TGSCommunitySearchEvent = autoclass('org.theglobalsquare.framework.values.TGSCommunitySearchEvent')
 TGSMessageSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSMessageSearchEvent')
 TGSUserSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
 """
 
-# bindings
+# model bindings
+def Config():
+    return autoclass('org.theglobalsquare.framework.values.TGSConfig')
+
+def Community():
+    return autoclass('org.theglobalsquare.framework.values.TGSCommunity')
+
 def EventProxy():
     return autoclass('org.theglobalsquare.framework.TGSEventProxy')
     
 def Message():
     return autoclass('org.theglobalsquare.framework.values.TGSMessage')
     
+def User():
+    return autoclass('org.theglobalsquare.framework.values.TGSUser')
+
+# event bindings
+def CommunityEvent():
+    return autoclass('org.theglobalsquare.framework.values.TGSCommunityEvent')
+
+def ConfigEvent():
+    return autoclass('org.theglobalsquare.framework.values.TGSConfigEvent')
+
+def MessageEvent():
+    return autoclass('org.theglobalsquare.framework.values.TGSMessageEvent')
+
+def UserEvent():
+    return autoclass('org.theglobalsquare.framework.values.TGSUserEvent')
+    
+def CommunitySearchEvent():
+    return autoclass('org.theglobalsquare.framework.values.TGSCommunitySearchEvent')
+
 def SystemEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
 
