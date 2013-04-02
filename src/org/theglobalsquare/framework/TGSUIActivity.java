@@ -1,23 +1,15 @@
 package org.theglobalsquare.framework;
 
 import org.theglobalsquare.app.R;
-import org.theglobalsquare.framework.values.TGSMessage;
-import org.theglobalsquare.framework.values.TGSMessageEvent;
-import org.theglobalsquare.framework.values.TGSUser;
+import org.theglobalsquare.framework.values.*;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -139,8 +131,9 @@ public class TGSUIActivity extends TGSBaseActivity {
 		        setTab(TAB_SEARCH);
 				break;
 			case R.id.menu_settings:
-				// TODO show settings dialog
-				Toast.makeText(this, R.string.settingsBtnLabel, Toast.LENGTH_SHORT).show();
+				Intent prefsIntent = new Intent();
+				prefsIntent.setClass(this, PreferenceActivity.class);
+				startActivity(prefsIntent);
 				break;
 			case R.id.menu_help:
 				// TODO show help dialog

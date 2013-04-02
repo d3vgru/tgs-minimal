@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="pref_alias"
+        android:title="@string/aliasLabel"
+        android:defaultValue="@string/anonLabel"
+        />
+    <CheckBoxPreference
+        android:key="pref_tor"
+        android:title="@string/requireTorLabel"
+        android:summary="@string/requireTorSummary"
+        android:defaultValue="false"
+        />
+</PreferenceScreen>

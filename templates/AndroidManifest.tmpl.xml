@@ -17,7 +17,6 @@
               android:launchMode="singleTask"
               android:process=":python"
               android:screenOrientation="{{ args.orientation }}"
-              android:windowSoftInputMode="stateAlwaysHidden"
             >
 
       {% if args.launcher %}
@@ -36,6 +35,11 @@
       {%if args.intent_filters %}
         {{ intent_filters }}
       {% endif %}
+    </activity>
+    <activity android:name="org.theglobalsquare.framework.PreferenceActivity"
+              android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode"
+              android:screenOrientation="{{ args.orientation }}"
+	      >
     </activity>
 
     {% if args.launcher %}

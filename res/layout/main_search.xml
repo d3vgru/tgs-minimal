@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <!-- TODO: use regular search interface -->
+    <!-- TODO: use regular search interface? -->
     <!-- search terms -->
     <EditText
         android:id="@+id/txt_search_terms" 
@@ -35,7 +35,7 @@
     <!-- search for community -->
     <Button
         android:id="@+id/btn_search_community"
-        android:text="@string/btnSearchCommunity"
+        android:text="@string/searchCommunityBtnLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"

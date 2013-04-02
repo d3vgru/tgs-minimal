@@ -24,7 +24,12 @@
     <string name="statusLabel">Status</string>
             
 	<string name="hintMainSearch">Keyword</string>
-    <string name="btnSearchText">Search For Text</string>
-    <string name="btnSearchUser">Search For User</string>
-    <string name="btnSearchCommunity">Search For Community</string>
+    <string name="searchTextBtnLabel">Search For Text</string>
+    <string name="searchUserBtnLabel">Search For User</string>
+    <string name="searchCommunityBtnLabel">Search For Community</string>
+    
+    <string name="aliasLabel">Alias</string>
+    <string name="anonLabel">Anonymous</string>
+    <string name="requireTorLabel">Require TOR</string>
+    <string name="requireTorSummary">Route all traffic through a SOCKS5 proxy like OrBot</string>
 </resources>
