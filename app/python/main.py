@@ -623,7 +623,9 @@ class ChatCore:
     ##################################
     def _getConfig(self):
         # FIXME hardcode config to private file
-	# TODO eventually store actual config on android side and use this for downloaded files only
+	    # TODO eventually store actual config on android side
+	    # right.
+	    
         """
         current_os = sys.platform
         if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
