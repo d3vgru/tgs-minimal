@@ -4,9 +4,11 @@ import java.lang.ref.WeakReference;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.widget.*;
 
+import org.kivy.android.PythonActivity;
 import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 
@@ -20,9 +22,24 @@ public class TGSMainActivity extends TGSUIActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		monitor(TGSMainActivity.TAG + ": INIT");
+	}
 
-		// initialize UI event handler
-		msgHandler = new MessageHandler(this);
+	@Override
+	protected void onResume() {
+		PythonActivity.mActivity = this;
+		super.onResume();
+	}
+
+	public static Handler getHandler() {
+		if(msgHandler == null) {
+			// initialize UI event handler
+			if(PythonActivity.mActivity == null) {
+				android.util.Log.w(TGSMainActivity.TAG, "mActivity is null");
+			} else {
+				msgHandler = new MessageHandler((TGSMainActivity)PythonActivity.mActivity);
+			}
+		}
+		return msgHandler;
 	}
 
 	// http://stackoverflow.com/questions/11407943/this-handler-class-should-be-static-or-leaks-might-occur-incominghandler
@@ -30,9 +47,10 @@ public class TGSMainActivity extends TGSUIActivity {
 		private final WeakReference<TGSMainActivity> mActivity;
 
 		MessageHandler(TGSMainActivity service) {
+			super(Looper.getMainLooper());
 			mActivity = new WeakReference<TGSMainActivity>(service);
 		}
-
+		
 		@Override
 		public void handleMessage(Message msg) {
 			// the TGSEvent object
@@ -80,6 +98,7 @@ public class TGSMainActivity extends TGSUIActivity {
 
 	// generic method to pass an object that needs to be handled by the UI
 	public static void handle(Object obj) {
+		Handler msgHandler = getHandler();
 		if (msgHandler != null) {
 			android.util.Log.d(TGSMainActivity.TAG, "msgHandler not null");
 			Message msg = new Message();

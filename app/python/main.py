@@ -55,11 +55,14 @@ class MainLoop():
         if errMsg is not None:
             AndroidFacade.monitor(errMsg)
         """
+        events = AndroidFacade.getFacade().getEvents()
+        AndroidFacade.monitor('MainLoop: TICK, ' + events.size() + ' events in queue')
         
         # TODO actually process the event
         nextEvent = AndroidFacade.nextEvent()
         if nextEvent is not None:
             AndroidFacade.monitor('MainLoop: got event from java')
+        time.sleep(3)
         return self.go
 
 # for simple notifications of a recurring event

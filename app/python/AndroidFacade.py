@@ -81,5 +81,14 @@ def monitor(msg):
 def getAlias():
     return getFacade().getAlias()
     
+def isEnableTor():
+    return getFacade().isEnableTor()
+
 def isRequireTor():
     return getFacade().isRequireTor()
+
+def getProxyHost():
+    return getFacade().getProxyHost()
+
+def getProxyPort():
+    return getFacade().getProxyPort()

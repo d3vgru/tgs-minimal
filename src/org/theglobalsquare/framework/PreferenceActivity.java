@@ -67,8 +67,9 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 	    	updateProxyPort();
 	    }
     	TGSConfigEvent changeEvent = TGSConfigEvent.forParamUpdated(c);
-    	boolean toPy = false;
-    	f.getEvents().sendEvent(changeEvent, toPy); // true to route to python
+    	boolean toPy = true; // true to route to python
+    	if(!f.getEvents().sendEvent(changeEvent, toPy))
+    		android.util.Log.w(PreferenceActivity.TAG, "offer rejected");
     	android.util.Log.i(PreferenceActivity.TAG, "event sent (toPy: " + toPy + ")");
 	}
 	
