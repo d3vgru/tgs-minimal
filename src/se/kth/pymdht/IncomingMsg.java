@@ -31,6 +31,7 @@ public class IncomingMsg {
 	private Map<ByteBuffer, Object> r_dict;
 	public Node src_node;
 	
+	@SuppressWarnings("unchecked")
 	public IncomingMsg(DatagramPacket datagram) throws MsgError{
 		_datagram = datagram;
 		

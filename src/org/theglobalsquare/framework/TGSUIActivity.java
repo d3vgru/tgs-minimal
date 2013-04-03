@@ -16,12 +16,10 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 // this class sets up and manages the main UI
-public class TGSUIActivity extends TGSBaseActivity {
+public class TGSUIActivity extends TGSTabActivity {
 	public final static String TAG = "TGSUI";
 	
 	private boolean composerShowing = false;
-	
-	protected static TGSEventProxy events = new TGSEventProxy();
 	
 	protected static String monitorTxt = "";
 	
@@ -69,7 +67,7 @@ public class TGSUIActivity extends TGSBaseActivity {
 				TGSMessageEvent event = new TGSMessageEvent();
 				event.setVerb(TGSMessage.SEND);
 				event.setSubject(subject);
-				events.sendEvent(event, true);
+				getFacade().getEvents().sendEvent(event, true);
 				
 				// clear text
 				et.setText(null);

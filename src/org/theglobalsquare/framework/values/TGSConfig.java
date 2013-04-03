@@ -18,14 +18,14 @@ public class TGSConfig extends TGSObject {
 		this.proxyEnabled = proxyEnabled;
 	}
 
-	private String proxyAddress;
+	private String proxyHost;
 	
-	public String getProxyAddress() {
-		return proxyAddress;
+	public String getProxyHost() {
+		return proxyHost;
 	}
 
-	public void setProxyAddress(String proxyAddress) {
-		this.proxyAddress = proxyAddress;
+	public void setProxyHost(String proxyHost) {
+		this.proxyHost = proxyHost;
 	}
 
 	private Integer proxyPort;

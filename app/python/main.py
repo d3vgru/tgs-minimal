@@ -625,7 +625,9 @@ class ChatCore:
         # FIXME hardcode config to private file
 	    # TODO eventually store actual config on android side
 	    # right.
-	    
+	    # use AndroidFacade to get config stuff
+	    # TEST that uninitialized config does what it should
+        AndroidFacade.monitor('TGS._getConfig: alias: ' + AndroidFacade.getAlias())
         """
         current_os = sys.platform
         if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):

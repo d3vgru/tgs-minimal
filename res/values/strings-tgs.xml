@@ -29,7 +29,16 @@
     <string name="searchCommunityBtnLabel">Search For Community</string>
     
     <string name="aliasLabel">Alias</string>
+    <string name="aliasSummary">A name, if you so choose.</string>
     <string name="anonLabel">Anonymous</string>
-    <string name="requireTorLabel">Require TOR</string>
+    <string name="enableTorLabel">Enable Proxy</string>
+    <string name="enableTorSummary">Allow using a SOCKS5 proxy like OrBot</string>
+    <string name="requireTorLabel">Require Proxy</string>
     <string name="requireTorSummary">Route all traffic through a SOCKS5 proxy like OrBot</string>
+    <string name="proxyHostLabel">Proxy Host</string>
+    <string name="proxyHostSummary">Host or IP address of proxy (default: localhost)</string>
+    <string name="localhostLabel">localhost</string>
+    <string name="proxyPortLabel">Proxy Port</string>
+    <string name="proxyPortSummary">Port number of proxy (default: 9050)</string>
+    <string name="proxyPortDefault">9050</string>
 </resources>

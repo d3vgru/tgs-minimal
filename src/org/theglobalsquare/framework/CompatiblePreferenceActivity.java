@@ -45,7 +45,6 @@ public class CompatiblePreferenceActivity extends PreferenceActivity
                 }
     }
 
-    @SuppressWarnings("deprecation")
     protected void AddResourceApiLessThan11()
     {
         addPreferencesFromResource(prefs);
@@ -71,7 +70,6 @@ public class CompatiblePreferenceActivity extends PreferenceActivity
     }
 
     //Sub-screen background glitch fix
-    @SuppressWarnings("deprecation")
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference)
     {

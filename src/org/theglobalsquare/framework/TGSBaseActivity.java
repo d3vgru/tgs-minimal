@@ -3,6 +3,7 @@ package org.theglobalsquare.framework;
 import java.util.*;
 
 import org.kivy.android.PythonActivity;
+import org.theglobalsquare.app.Facade;
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.ui.MonitorFragment;
 import org.theglobalsquare.ui.OverviewListFragment;
@@ -19,14 +20,15 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 // this class sets up and manages the tabs in the main_activity layout
+// TODO move tab stuff into TGSTabActivity
 
 // adapted from https://bitbucket.org/owentech/abstabsviewpager
 // depends on ActionBarSherlock
 public class TGSBaseActivity extends PythonActivity {
-	public final static int TAB_COUNT_BASE = 3;
-	public final static int TAB_SEARCH = 0;
-	public final static int TAB_OVERVIEW = 1;
-	public final static int TAB_MONITOR = 2;
+	public final static int TAB_COUNT_BASE = 3; // number of default tabs
+	public final static int TAB_SEARCH = 0; // search tab
+	public final static int TAB_OVERVIEW = 1; // my squares overview
+	public final static int TAB_MONITOR = 2; // debug monitor
 	
 	protected int selectedTab = -1;
 	
@@ -42,6 +44,10 @@ public class TGSBaseActivity extends PythonActivity {
 		return tab >= TAB_COUNT_BASE;
 	}
 	
+	public Facade getFacade() {
+		return (Facade)getApplication();
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

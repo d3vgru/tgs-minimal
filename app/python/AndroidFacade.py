@@ -3,10 +3,8 @@ from jnius import cast
 
 
 # pyjnius bindings to java framework
-""" don't need yet
-TGSMessageSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSMessageSearchEvent')
-TGSUserSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
-"""
+def Facade():
+    return autoclass('org.theglobalsquare.app.Facade')
 
 # model bindings
 def Config():
@@ -43,19 +41,31 @@ def CommunitySearchEvent():
 def SystemEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
 
+""" don't need yet
+TGSMessageSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSMessageSearchEvent')
+TGSUserSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
+"""
+
 # main entry point
 def getMainActivity():
     PythonActivity = autoclass('org.kivy.android.PythonActivity')
     return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
 
+# convenience method to get Facade
+def getFacade():
+    PythonActivity = autoclass('org.kivy.android.PythonActivity')
+    BaseActivity = cast('org.theglobalsquare.framework.TGSBaseActivity', PythonActivity.mActivity)
+    return BaseActivity.getFacade()
+
 # convenience function to send event
 def sendEvent(event):
-    return getMainActivity().sendEvent(event)
-    #pass
+    PythonActivity = autoclass('org.kivy.android.PythonActivity')
+    
+    return getFacade().getEvents().sendEvent(event)
 	
 # convenience function to get next event
 def nextEvent():
-    return getMainActivity().getEvents().nextEvent()
+    return getFacade().getEvents().nextEvent()
     #pass
 
 # convenience logging function
@@ -66,4 +76,10 @@ def monitor(msg):
     TGSSystemEvent = SystemEvent()
     event = TGSSystemEvent.forLog(message)
     sendEvent(event)
-    #pass
+
+# config
+def getAlias():
+    return getFacade().getAlias()
+    
+def isRequireTor():
+    return getFacade().isRequireTor()

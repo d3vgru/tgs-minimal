@@ -7,8 +7,9 @@
           >
 
   <application android:label="@string/appName"
-	  android:icon="@drawable/tgs_logo"
-	  android:theme="@style/PPSPTheme"
+               android:name="org.theglobalsquare.app.Facade"
+               android:icon="@drawable/tgs_logo"
+               android:theme="@style/PPSPTheme"
                >
 
     <activity android:name="org.theglobalsquare.app.TGSMainActivity"
@@ -17,7 +18,7 @@
               android:launchMode="singleTask"
               android:process=":python"
               android:screenOrientation="{{ args.orientation }}"
-            >
+              >
 
       {% if args.launcher %}
       <intent-filter>

@@ -1,7 +1,5 @@
 package org.theglobalsquare.app;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
 
 import android.os.Bundle;
@@ -13,29 +11,11 @@ import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 
 // this class defines interactions between java and python layers
-public class TGSMainActivity extends TGSUIActivity implements
-		PropertyChangeListener {
+public class TGSMainActivity extends TGSUIActivity {
 	public final static String TAG = "TGSMain";
-
-	@Override
-	public void propertyChange(PropertyChangeEvent event) {
-		android.util.Log.d(TGSMainActivity.TAG, "propertyChange:" + event);
-		if (msgHandler == null)
-			return;
-		Message message = new Message();
-		android.util.Log.v(TGSMainActivity.TAG, "android.os.Message obtained:"
-				+ message);
-		message.obj = event.getNewValue();
-		msgHandler.sendMessage(message);
-	}
 
 	private static Handler msgHandler = null;
 	
-	private CallbackThread callback = new CallbackThread();
-	public CallbackThread getCallback() {
-		return callback;
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,12 +23,6 @@ public class TGSMainActivity extends TGSUIActivity implements
 
 		// initialize UI event handler
 		msgHandler = new MessageHandler(this);
-		
-		// initialize callback thread
-		callback.start();
-
-		// get events from python (or else AndroidFacade won't be able to send us TGSSystemEvent)
-		events.addListener(TGSSystemEvent.class, this);
 	}
 
 	// http://stackoverflow.com/questions/11407943/this-handler-class-should-be-static-or-leaks-might-occur-incominghandler
@@ -104,21 +78,24 @@ public class TGSMainActivity extends TGSUIActivity implements
 		}
 	}
 
+	public static void handle(Object obj) {
+		if (msgHandler != null) {
+			android.util.Log.d(TGSMainActivity.TAG, "msgHandler not null");
+			Message msg = new Message();
+			android.util.Log.v(TGSMainActivity.TAG,
+					"android.os.Message obtained: " + msg);
+			msg.obj = obj;
+			android.util.Log.v(TGSMainActivity.TAG, "obj field of Message set");
+			msgHandler.sendMessage(msg);
+			android.util.Log.v(TGSMainActivity.TAG, "logged");
+		}
+	}
+
 	// to be used by python
 	public static void log(String message) {
 		// log() lets you see the event in logcat
-		android.util.Log.i(TGSMainActivity.TAG, "got message from python: "
-				+ message);
-		if (msgHandler != null) {
-			android.util.Log.i(TGSMainActivity.TAG, "msgHandler not null");
-			Message msg = new Message();
-			android.util.Log.i(TGSMainActivity.TAG,
-					"android.os.Message obtained: " + msg);
-			msg.obj = message;
-			android.util.Log.i(TGSMainActivity.TAG, "obj field of Message set");
-			msgHandler.sendMessage(msg);
-			android.util.Log.i(TGSMainActivity.TAG, "logged");
-		}
+		android.util.Log.i(TGSMainActivity.TAG, "got message from python: " + message);
+		handle(message);
 	}
 
 	public void monitor(String message) {
@@ -126,14 +103,4 @@ public class TGSMainActivity extends TGSUIActivity implements
 		super.monitor(message);
 	}
 
-	public TGSEventProxy getEvents() {
-		return events;
-	}
-
-	public static boolean sendEvent(TGSEvent e) {
-		if (TGSUIActivity.events == null)
-			return false;
-		TGSUIActivity.events.sendEvent(e);
-		return true;
-	}
 }
