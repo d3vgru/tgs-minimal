@@ -37,13 +37,16 @@ public class Facade extends Application  implements PropertyChangeListener {
 	public void onCreate() {
 		super.onCreate();
 
-		// get events from python (or else AndroidFacade won't be able to send us TGSSystemEvent)
+		// make sure config events are propagating
+		events.addListener(TGSConfigEvent.class, this);
+
+		// get events from python (or else AndroidFacade in python won't be able to send us TGSSystemEvent)
 		events.addListener(TGSSystemEvent.class, this);
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		android.util.Log.d(Facade.TAG, "propertyChange:" + event);
+		android.util.Log.d(Facade.TAG, "propertyChange: " + event + ", new value: " + event.getNewValue());
 		TGSMainActivity.handle(event.getNewValue());
 	}
 

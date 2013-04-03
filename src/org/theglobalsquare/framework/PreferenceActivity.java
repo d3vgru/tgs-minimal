@@ -17,17 +17,34 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 	public Facade getFacade() {
 		return (Facade)getApplication();
 	}
-
-	// FIXME this doesn't actually do anything
-	private void updateAlias() {
-    	android.util.Log.i(TAG, "updating alias");
+	
+	private void updatePref(String prefKey, String summary) {
+		Preference aliasPref = null;
 		PreferenceScreen prefScreen = getPreferenceScreen();
-		if(prefScreen == null)
+		if(prefScreen == null) {
+			android.util.Log.i(PreferenceActivity.TAG, "no PreferenceScreen");
+			// FIXME get a reference to the pref using Honeycomb style
 			return;
-		Preference aliasPref = prefScreen.findPreference(Facade.PREF_ALIAS);
+		} else {
+			aliasPref = prefScreen.findPreference(prefKey);
+		}
 		if(aliasPref == null)
 			return;
-    	aliasPref.setSummary(getFacade().getAlias());
+    	aliasPref.setSummary(summary);
+	}
+
+	private void updateAlias() {
+    	android.util.Log.i(TAG, "updating alias");
+		updatePref(Facade.PREF_ALIAS, getFacade().getAlias());
+	}
+
+	private void updateProxyHost() {
+    	android.util.Log.i(TAG, "updating proxy host");
+		updatePref(Facade.PREF_TOR_HOST, getFacade().getProxyHost());
+	}
+
+	private void updateProxyPort() {
+		updatePref(Facade.PREF_TOR_PORT, getFacade().getProxyPort());
 	}
 
 	// http://stackoverflow.com/questions/531427/how-do-i-display-the-current-value-of-an-android-preference-in-the-preference-su
@@ -36,7 +53,6 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 		Facade f = getFacade();
     	TGSConfig c = f.getConfig();
 	    if (key.equals(Facade.PREF_ALIAS)) {
-	    	android.util.Log.i(TAG, "new alias: " + f.getAlias());
 	    	c.setName(f.getAlias());
 			updateAlias();
 	    } else if(key.equals(Facade.PREF_ENABLE_TOR)) {
@@ -44,10 +60,16 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 	    } else if(key.equals(Facade.PREF_REQUIRE_TOR)) {
 	    	c.setProxyRequired(f.isRequireTor());
 	    } else if(key.equals(Facade.PREF_TOR_HOST)) {
-	    	
+	    	c.setProxyHost(f.getProxyHost());
+	    	updateProxyHost();
+	    } else if(key.equals(Facade.PREF_TOR_PORT)) {
+	    	c.setProxyPort(Integer.valueOf(f.getProxyPort()));
+	    	updateProxyPort();
 	    }
     	TGSConfigEvent changeEvent = TGSConfigEvent.forParamUpdated(c);
-    	f.getEvents().sendEvent(changeEvent, true);
+    	boolean toPy = false;
+    	f.getEvents().sendEvent(changeEvent, toPy); // true to route to python
+    	android.util.Log.i(PreferenceActivity.TAG, "event sent (toPy: " + toPy + ")");
 	}
 	
 	@Override
@@ -60,6 +82,8 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 	protected void onResume() {
 		super.onResume();
 		updateAlias();
+		updateProxyHost();
+		updateProxyPort();
 		getFacade().getPrefs().registerOnSharedPreferenceChangeListener(this);
 	}
 

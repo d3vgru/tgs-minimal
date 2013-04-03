@@ -78,6 +78,7 @@ public class TGSMainActivity extends TGSUIActivity {
 		}
 	}
 
+	// generic method to pass an object that needs to be handled by the UI
 	public static void handle(Object obj) {
 		if (msgHandler != null) {
 			android.util.Log.d(TGSMainActivity.TAG, "msgHandler not null");
@@ -88,7 +89,7 @@ public class TGSMainActivity extends TGSUIActivity {
 			android.util.Log.v(TGSMainActivity.TAG, "obj field of Message set");
 			msgHandler.sendMessage(msg);
 			android.util.Log.v(TGSMainActivity.TAG, "logged");
-		}
+		} else android.util.Log.d(TGSMainActivity.TAG, "msgHandler null");
 	}
 
 	// to be used by python

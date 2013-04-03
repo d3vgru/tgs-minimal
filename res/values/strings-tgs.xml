@@ -28,9 +28,12 @@
     <string name="searchUserBtnLabel">Search For User</string>
     <string name="searchCommunityBtnLabel">Search For Community</string>
     
+    <string name="generalSettingsLabel">Settings</string>
     <string name="aliasLabel">Alias</string>
     <string name="aliasSummary">A name, if you so choose.</string>
     <string name="anonLabel">Anonymous</string>
+    
+    <string name="proxySettingsLabel">Proxy</string>
     <string name="enableTorLabel">Enable Proxy</string>
     <string name="enableTorSummary">Allow using a SOCKS5 proxy like OrBot</string>
     <string name="requireTorLabel">Require Proxy</string>

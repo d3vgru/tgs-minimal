@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory 
+        android:title="@string/generalSettingsLabel"
+        android:key="pref_cat_general">
     <EditTextPreference
         android:key="pref_alias"
         android:title="@string/aliasLabel"
         android:summary="@string/aliasSummary"
         android:defaultValue="@string/anonLabel"
         />
-    <CheckBoxPreference
-        android:key="pref_enable_tor"
-        android:title="@string/enableTorLabel"
-        android:summary="@string/enableTorSummary"
-        android:defaultValue="false"
-        />
-    <CheckBoxPreference
-        android:key="pref_require_tor"
-        android:title="@string/requireTorLabel"
-        android:summary="@string/requireTorSummary"
-        android:defaultValue="false"
-        />
-    <EditTextPreference
-        android:key="pref_tor_host"
-        android:title="@string/proxyHostLabel"
-        android:summary="@string/proxyHostSummary"
-        android:defaultValue="@string/localhostLabel"
-        />
-    <EditTextPreference
-        android:key="pref_tor_port"
-        android:title="@string/proxyPortLabel"
-        android:summary="@string/proxyPortSummary"
-        android:defaultValue="@string/proxyPortDefault"
-        />
+    </PreferenceCategory>
+    <PreferenceCategory 
+        android:title="@string/proxySettingsLabel"
+        android:key="pref_cat_proxy">
+	    <CheckBoxPreference
+	        android:key="pref_enable_tor"
+	        android:title="@string/enableTorLabel"
+	        android:summary="@string/enableTorSummary"
+	        android:defaultValue="false"
+	        />
+	    <CheckBoxPreference
+	        android:key="pref_require_tor"
+	        android:title="@string/requireTorLabel"
+	        android:summary="@string/requireTorSummary"
+	        android:defaultValue="false"
+	        android:dependency="pref_enable_tor"
+	        />
+	    <EditTextPreference
+	        android:key="pref_tor_host"
+	        android:title="@string/proxyHostLabel"
+	        android:summary="@string/proxyHostSummary"
+	        android:defaultValue="@string/localhostLabel"
+	        android:dependency="pref_enable_tor"
+	        />
+	    <EditTextPreference
+	        android:key="pref_tor_port"
+	        android:title="@string/proxyPortLabel"
+	        android:summary="@string/proxyPortSummary"
+	        android:defaultValue="@string/proxyPortDefault"
+	        android:dependency="pref_enable_tor"
+	        />
+	</PreferenceCategory>
 </PreferenceScreen>
