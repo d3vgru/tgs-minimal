@@ -47,4 +47,8 @@ public class TGSEventProxy {
 		// returns null if no events
 		return this.qToPy.poll();
 	}
+	
+	public int size() {
+		return this.qToPy.size();
+	}
 }

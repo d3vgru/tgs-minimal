@@ -54,6 +54,8 @@ def getMainActivity():
 # convenience method to get Facade
 def getFacade():
     PythonActivity = autoclass('org.kivy.android.PythonActivity')
+    # init TGSConfig class?
+    Config()
     BaseActivity = cast('org.theglobalsquare.framework.TGSBaseActivity', PythonActivity.mActivity)
     return BaseActivity.getFacade()
 

@@ -56,7 +56,7 @@ class MainLoop():
             AndroidFacade.monitor(errMsg)
         """
         events = AndroidFacade.getFacade().getEvents()
-        AndroidFacade.monitor('MainLoop: TICK, ' + events.size() + ' events in queue')
+        AndroidFacade.monitor('MainLoop: TICK, {} events in queue'.format(events.size()))
         
         # TODO actually process the event
         nextEvent = AndroidFacade.nextEvent()
