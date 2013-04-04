@@ -55,13 +55,13 @@ class MainLoop():
         if errMsg is not None:
             AndroidFacade.monitor(errMsg)
         """
-        events = AndroidFacade.getFacade().getEvents()
-        AndroidFacade.monitor('MainLoop: TICK, {} events in queue'.format(events.size()))
+        f = AndroidFacade.getFacade()
+        AndroidFacade.monitor('MainLoop: TICK, {} events in queue'.format(f.queueSize()))
         
         # TODO actually process the event
         nextEvent = AndroidFacade.nextEvent()
         if nextEvent is not None:
-            AndroidFacade.monitor('MainLoop: got event from java')
+            AndroidFacade.monitor('MainLoop: got event from java: {}'.format(nextEvent))
         time.sleep(3)
         return self.go
 
@@ -683,5 +683,9 @@ if __name__ == '__main__':
     exit_exception = None
     if exit_exception:
         raise exit_exception
+    """
+    EventProxy = AndroidFacade.EventProxy()
+    AndroidFacade.getFacade().setEvents(EventProxy())
+    """
     chat = ChatCore()
     chat.run()

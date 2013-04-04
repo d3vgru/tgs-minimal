@@ -34,10 +34,10 @@
     <string name="anonLabel">Anonymous</string>
     
     <string name="proxySettingsLabel">Proxy</string>
-    <string name="enableTorLabel">Enable Proxy</string>
-    <string name="enableTorSummary">Allow using a SOCKS5 proxy like OrBot</string>
-    <string name="requireTorLabel">Require Proxy</string>
-    <string name="requireTorSummary">Route all traffic through a SOCKS5 proxy like OrBot</string>
+    <string name="enableProxyLabel">Enable Proxy</string>
+    <string name="enableProxySummary">Allow using a SOCKS5 proxy like Orbot</string>
+    <string name="requireProxyLabel">Require Proxy</string>
+    <string name="requireProxySummary">Route all traffic through a SOCKS5 proxy like Orbot</string>
     <string name="proxyHostLabel">Proxy Host</string>
     <string name="proxyHostSummary">Host or IP address of proxy (default: localhost)</string>
     <string name="localhostLabel">localhost</string>

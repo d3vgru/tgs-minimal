@@ -12,9 +12,15 @@ def Config():
 
 def Community():
     return autoclass('org.theglobalsquare.framework.values.TGSCommunity')
+    
+def Event():
+    return autoclass('org.theglobalsquare.framework.TGSEvent')
 
+"""
 def EventProxy():
+    Event()
     return autoclass('org.theglobalsquare.framework.TGSEventProxy')
+"""
     
 def Message():
     return autoclass('org.theglobalsquare.framework.values.TGSMessage')
@@ -37,14 +43,15 @@ def UserEvent():
     
 def CommunitySearchEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSCommunitySearchEvent')
+    
+def MessageSearchEvent():
+    return autoclass('org.theglobalsquare.framework.values.TGSMessageSearchEvent')
 
 def SystemEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSSystemEvent')
 
-""" don't need yet
-TGSMessageSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSMessageSearchEvent')
-TGSUserSearchEvent = autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
-"""
+def UserSearchEvent():
+    return autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
 
 # main entry point
 def getMainActivity():
@@ -54,21 +61,20 @@ def getMainActivity():
 # convenience method to get Facade
 def getFacade():
     PythonActivity = autoclass('org.kivy.android.PythonActivity')
-    # init TGSConfig class?
+    # init TGSConfig class or reflect fails
     Config()
     BaseActivity = cast('org.theglobalsquare.framework.TGSBaseActivity', PythonActivity.mActivity)
     return BaseActivity.getFacade()
 
 # convenience function to send event
 def sendEvent(event):
-    PythonActivity = autoclass('org.kivy.android.PythonActivity')
-    
-    return getFacade().getEvents().sendEvent(event)
+#    PythonActivity = autoclass('org.kivy.android.PythonActivity')
+    return getFacade().sendEvent(event)
 	
 # convenience function to get next event
 def nextEvent():
-    return getFacade().getEvents().nextEvent()
-    #pass
+    Event()
+    return getFacade().nextEvent()
 
 # convenience logging function
 def monitor(msg):
@@ -83,11 +89,11 @@ def monitor(msg):
 def getAlias():
     return getFacade().getAlias()
     
-def isEnableTor():
-    return getFacade().isEnableTor()
+def isProxyEnabled():
+    return getFacade().isProxyEnabled()
 
-def isRequireTor():
-    return getFacade().isRequireTor()
+def isProxyRequired():
+    return getFacade().isProxyRequired()
 
 def getProxyHost():
     return getFacade().getProxyHost()

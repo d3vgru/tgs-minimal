@@ -1,5 +1,7 @@
 package org.theglobalsquare.app;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
 
 import android.os.Bundle;
@@ -13,7 +15,7 @@ import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 
 // this class defines interactions between java and python layers
-public class TGSMainActivity extends TGSUIActivity {
+public class TGSMainActivity extends TGSUIActivity implements PropertyChangeListener {
 	public final static String TAG = "TGSMain";
 
 	private static Handler msgHandler = null;
@@ -21,6 +23,9 @@ public class TGSMainActivity extends TGSUIActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// get events from python (or else AndroidFacade in python won't be able to send us TGSSystemEvent)
+		getFacade().addListener(TGSSystemEvent.class, this);		
+
 		monitor(TGSMainActivity.TAG + ": INIT");
 	}
 
@@ -28,6 +33,12 @@ public class TGSMainActivity extends TGSUIActivity {
 	protected void onResume() {
 		PythonActivity.mActivity = this;
 		super.onResume();
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		android.util.Log.d(Facade.TAG, "propertyChange: " + event + ", new value: " + event.getNewValue());
+		TGSMainActivity.handle(event.getNewValue());
 	}
 
 	public static Handler getHandler() {

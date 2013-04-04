@@ -40,11 +40,11 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 
 	private void updateProxyHost() {
     	android.util.Log.i(TAG, "updating proxy host");
-		updatePref(Facade.PREF_TOR_HOST, getFacade().getProxyHost());
+		updatePref(Facade.PREF_PROXY_HOST, getFacade().getProxyHost());
 	}
 
 	private void updateProxyPort() {
-		updatePref(Facade.PREF_TOR_PORT, getFacade().getProxyPort());
+		updatePref(Facade.PREF_PROXY_PORT, getFacade().getProxyPort());
 	}
 
 	// http://stackoverflow.com/questions/531427/how-do-i-display-the-current-value-of-an-android-preference-in-the-preference-su
@@ -55,22 +55,22 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 	    if (key.equals(Facade.PREF_ALIAS)) {
 	    	c.setName(f.getAlias());
 			updateAlias();
-	    } else if(key.equals(Facade.PREF_ENABLE_TOR)) {
-	    	c.setProxyEnabled(f.isEnableTor());
-	    } else if(key.equals(Facade.PREF_REQUIRE_TOR)) {
-	    	c.setProxyRequired(f.isRequireTor());
-	    } else if(key.equals(Facade.PREF_TOR_HOST)) {
+	    } else if(key.equals(Facade.PREF_ENABLE_PROXY)) {
+	    	c.setProxyEnabled(f.isProxyEnabled());
+	    } else if(key.equals(Facade.PREF_REQUIRE_PROXY)) {
+	    	c.setProxyRequired(f.isProxyRequired());
+	    } else if(key.equals(Facade.PREF_PROXY_HOST)) {
 	    	c.setProxyHost(f.getProxyHost());
 	    	updateProxyHost();
-	    } else if(key.equals(Facade.PREF_TOR_PORT)) {
+	    } else if(key.equals(Facade.PREF_PROXY_PORT)) {
 	    	c.setProxyPort(Integer.valueOf(f.getProxyPort()));
 	    	updateProxyPort();
 	    }
     	TGSConfigEvent changeEvent = TGSConfigEvent.forParamUpdated(c);
     	boolean toPy = true; // true to route to python
-    	if(!f.getEvents().sendEvent(changeEvent, toPy))
-    		android.util.Log.w(PreferenceActivity.TAG, "offer rejected");
-    	android.util.Log.i(PreferenceActivity.TAG, "event sent (toPy: " + toPy + ")");
+    	if(!f.sendEvent(changeEvent, toPy))
+    		android.util.Log.w(PreferenceActivity.TAG, "qToPy.add rejected");
+    	else android.util.Log.i(PreferenceActivity.TAG, "event sent (toPy: " + toPy + ")");
 	}
 	
 	@Override

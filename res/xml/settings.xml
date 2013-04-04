@@ -14,31 +14,31 @@
         android:title="@string/proxySettingsLabel"
         android:key="pref_cat_proxy">
 	    <CheckBoxPreference
-	        android:key="pref_enable_tor"
-	        android:title="@string/enableTorLabel"
-	        android:summary="@string/enableTorSummary"
+	        android:key="pref_enable_proxy"
+	        android:title="@string/enableProxyLabel"
+	        android:summary="@string/enableProxySummary"
 	        android:defaultValue="false"
 	        />
 	    <CheckBoxPreference
-	        android:key="pref_require_tor"
-	        android:title="@string/requireTorLabel"
-	        android:summary="@string/requireTorSummary"
+	        android:key="pref_require_proxy"
+	        android:title="@string/requireProxyLabel"
+	        android:summary="@string/requireProxySummary"
 	        android:defaultValue="false"
-	        android:dependency="pref_enable_tor"
+	        android:dependency="pref_enable_proxy"
 	        />
 	    <EditTextPreference
-	        android:key="pref_tor_host"
+	        android:key="pref_proxy_host"
 	        android:title="@string/proxyHostLabel"
 	        android:summary="@string/proxyHostSummary"
 	        android:defaultValue="@string/localhostLabel"
-	        android:dependency="pref_enable_tor"
+	        android:dependency="pref_enable_proxy"
 	        />
 	    <EditTextPreference
-	        android:key="pref_tor_port"
+	        android:key="pref_proxy_port"
 	        android:title="@string/proxyPortLabel"
 	        android:summary="@string/proxyPortSummary"
 	        android:defaultValue="@string/proxyPortDefault"
-	        android:dependency="pref_enable_tor"
+	        android:dependency="pref_enable_proxy"
 	        />
 	</PreferenceCategory>
 </PreferenceScreen>

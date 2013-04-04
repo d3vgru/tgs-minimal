@@ -8,12 +8,23 @@ import java.util.concurrent.*;
 
 // A queue of events passing between the java (UI) and python (dispersy) layers.
 public class TGSEventProxy {
+	public final static String TAG = "TGSEventProxy";
+	
 	private Map<Class<? extends TGSEvent>, Set<PropertyChangeListener>> listeners;
-	private Queue<TGSEvent> qToPy;
+	
 	public TGSEventProxy() {
 		listeners = new HashMap<Class<? extends TGSEvent>, Set<PropertyChangeListener>>();
-		qToPy = new ConcurrentLinkedQueue<TGSEvent>();
+//		qToPy = new ConcurrentLinkedQueue<TGSEvent>();
 	}
+	/*
+	private static TGSEventProxy _instance = null;
+	public static TGSEventProxy getInstance() {
+		if(_instance == null)
+			_instance = new TGSEventProxy();
+		return _instance;
+	}
+
+	*/
 	public void addListener(Class<? extends TGSEvent> c, PropertyChangeListener l) {
 		Set<PropertyChangeListener> ls = this.listeners.get(c);
 		if(ls == null) {
@@ -22,6 +33,7 @@ public class TGSEventProxy {
 		}
 		ls.add(l);
 	}
+	
 	public boolean sendEvent(TGSEvent e) {
 		// python calls sendEvent(e) to send to java
 		// java calls sendEvent(e, true); to send to python
@@ -29,8 +41,17 @@ public class TGSEventProxy {
 		return sendEvent(e, false);
 	}
 	public boolean sendEvent(TGSEvent e, boolean toPy) {
-		if(toPy)
-			return this.qToPy.offer(e);
+		// TODO handle IllegalStateException
+		if(toPy) {
+			/*
+			boolean added = qToPy.add(e);
+			android.util.Log.i(TGSEventProxy.TAG, (added ? "added": "did NOT add") +
+					" " + e + " to queue " + qToPy + ", size now: " + qToPy.size());
+			android.util.Log.i(TGSEventProxy.TAG, "peek(): " + qToPy.peek());
+			return added;
+			*/
+			return false;
+		}
 		for(Class<? extends TGSEvent> c : this.listeners.keySet()) {
 			if(c == null // want to know all events
 					|| e.getClass().isAssignableFrom(c)) { // e instanceof c
@@ -41,14 +62,17 @@ public class TGSEventProxy {
 		}
 		return true;
 	}
+
+	/*
 	public TGSEvent nextEvent() {
 		// python calls nextEvent() to get from java
 		// java uses PropertyChangeListener to get from python
 		// returns null if no events
-		return this.qToPy.poll();
+		return qToPy.poll();
 	}
 	
 	public int size() {
-		return this.qToPy.size();
+		return qToPy.size();
 	}
+	*/
 }
