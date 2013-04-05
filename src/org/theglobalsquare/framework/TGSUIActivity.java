@@ -20,7 +20,7 @@ import com.actionbarsherlock.view.MenuItem;
 public class TGSUIActivity extends TGSTabActivity {
 	public final static String TAG = "TGSUI";
 	
-	public final static int PREFERENCES = 1;
+	public final static int PREFERENCES = 1001001;
 	
 	private boolean composerShowing = false;
 	
@@ -152,10 +152,15 @@ public class TGSUIActivity extends TGSTabActivity {
 	}
 	
 	@Override
-	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
-		android.util.Log.w(TGSUIActivity.TAG, "activity " + arg0 + " returned code " + arg1);
-		freshenConfig();
-		super.onActivityResult(arg0, arg1, arg2);
+	protected void onActivityResult(int request, int result, Intent data) {
+		switch(request) {
+			case PREFERENCES:
+				freshenConfig();
+				break;
+			default:
+				break;
+		}
+		super.onActivityResult(request, result, data);
 	}
 	
 	public void freshenConfig() {
