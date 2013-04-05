@@ -2,12 +2,7 @@ package org.theglobalsquare.app;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.*;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -26,64 +21,42 @@ public class Facade extends Application {
 	public final static String PREF_PROXY_HOST = "pref_proxy_host";
 	public final static String PREF_PROXY_PORT = "pref_proxy_port";
 	
-	private Map<Class<? extends TGSEvent>, Set<PropertyChangeListener>> listeners;
-
-	private Queue<TGSEvent> qToPy;
-	public int queueSize() {
-		return qToPy.size();
-	}
-
-	/*
-	private TGSEventProxy events = null;
-	public void setEvents(TGSEventProxy events) {
-		android.util.Log.w(TGSEventProxy.TAG, "NEW EVENT PROXY");
-
-		// get events from python (or else AndroidFacade in python won't be able to send us TGSSystemEvent)
-		events.addListener(TGSSystemEvent.class, this);		
-
-		this.events = events;
-	}
-	public TGSEventProxy getEvents() {
-		if(events == null) {
-			android.util.Log.w(TGSEventProxy.TAG, "EVENTS NULL");
-		}
-		return events;
-	}
-	*/
-	
-	public TGSEvent nextEvent() {
-		return qToPy.poll();
-	}
-
-	public boolean sendEvent(TGSEvent e) {
-		return sendEvent(e, false);
-	}
-	public boolean sendEvent(TGSEvent e, boolean toPy) {
-		if(toPy)
-			return qToPy.add(e);
-		for(Class<? extends TGSEvent> c : this.listeners.keySet()) {
-			if(c == null // want to know all events
-					|| e.getClass().isAssignableFrom(c)) { // e instanceof c
-				Set<PropertyChangeListener> ls = this.listeners.get(c);
-				for(PropertyChangeListener l : ls)
-					l.propertyChange(new PropertyChangeEvent(this, "qFromPy", null, e));
-			}
-		}
-		return true;
-	}
+	private static Map<Class<? extends TGSEvent>, Set<PropertyChangeListener>> listeners = null;
+	private static TGSEvent event = null;
+	static TGSEvent pyEvent = null; 
 
 	@Override
 	public void onCreate() {
-		listeners = new HashMap<Class<? extends TGSEvent>, Set<PropertyChangeListener>>();
-		qToPy = new ConcurrentLinkedQueue<TGSEvent>();
+		if(listeners == null) {
+			android.util.Log.d(Facade.TAG, "NEW LISTENERS");
+			listeners = new HashMap<Class<? extends TGSEvent>, Set<PropertyChangeListener>>();
+		}
 		super.onCreate();
 	}
 	
+	public static boolean sendEvent(TGSEvent e) {
+		for(Class<? extends TGSEvent> c : listeners.keySet()) {
+			if(c == null // want to know all events
+					|| e.getClass().isAssignableFrom(c)) { // e instanceof c
+				Set<PropertyChangeListener> ls = listeners.get(c);
+				for(PropertyChangeListener l : ls)
+					l.propertyChange(new PropertyChangeEvent(Facade.class, "qFromPy", null, e));
+			}
+		}
+		Facade.event = e;
+		return true;
+	}
+	public static TGSEvent getEvent() {
+		return event;
+	}
+	public static void setEvent(TGSEvent e) {
+		pyEvent = e;
+	}
 	public void addListener(Class<? extends TGSEvent> c, PropertyChangeListener l) {
-		Set<PropertyChangeListener> ls = this.listeners.get(c);
+		Set<PropertyChangeListener> ls = listeners.get(c);
 		if(ls == null) {
 			ls = new HashSet<PropertyChangeListener>();
-			this.listeners.put(c, ls);
+			listeners.put(c, ls);
 		}
 		ls.add(l);
 	}

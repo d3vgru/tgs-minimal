@@ -3,6 +3,8 @@ package org.theglobalsquare.app;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,12 +21,72 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 	public final static String TAG = "TGSMain";
 
 	private static Handler msgHandler = null;
+	private static Queue<TGSEvent> qToPy = null;
+	private static TGSEvent pyEvent = null;
 	
+	public static int queueSize() {
+		return qToPy.size();
+	}
+
+	public static TGSEvent getPyEvent() {
+		return pyEvent;
+	}
+	
+	public static TGSEvent nextEvent() {
+//		android.util.Log.w(TGSMainActivity.TAG, "NEXT: currently " + qToPy.size() + " items in queue " + qToPy.hashCode());
+//		android.util.Log.i(TGSMainActivity.TAG, "event: " + Facade.getEvent() + ", FACADE.pyEvent: " + Facade.pyEvent);
+		return qToPy.poll();
+	}
+
+	public static boolean sendEvent(TGSEvent e) {
+		return sendEvent(e, false);
+	}
+	public static boolean sendEvent(TGSEvent e, boolean toPy) {
+		if(toPy) {
+			pyEvent = e;
+			if(qToPy == null) {
+				android.util.Log.d(TGSMainActivity.TAG, "NEW QUEUE ON SEND EVENT");
+				qToPy = new ConcurrentLinkedQueue<TGSEvent>();
+			}
+			boolean success = qToPy.add(e);
+//			android.util.Log.w(TGSMainActivity.TAG, "SEND: currently " + qToPy.size() + " items in queue " + qToPy.hashCode());
+//			android.util.Log.i(TGSMainActivity.TAG, "MAIN.pyEvent: " + pyEvent);
+			return success;
+		}
+		return Facade.sendEvent(e);
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if(qToPy == null) {
+			android.util.Log.d(TGSMainActivity.TAG, "NEW QUEUE");
+			qToPy = new ConcurrentLinkedQueue<TGSEvent>();
+		}
+
 		// get events from python (or else AndroidFacade in python won't be able to send us TGSSystemEvent)
 		getFacade().addListener(TGSSystemEvent.class, this);		
+
+		/* ping test
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				boolean keepGoing = true;
+				while(keepGoing) {
+					TGSMessage m = new TGSMessage();
+					m.setBody("PING");
+					TGSSystemEvent e = TGSSystemEvent.forLog(m);
+					sendEvent(e, true);
+					try {
+						Thread.sleep(5000);
+					} catch(InterruptedException ex) {
+						keepGoing = false;
+					}
+				}
+			}
+		}).start();
+		*/
 
 		monitor(TGSMainActivity.TAG + ": INIT");
 	}
@@ -32,12 +94,13 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 	@Override
 	protected void onResume() {
 		PythonActivity.mActivity = this;
+		//freshenConfig();
 		super.onResume();
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		android.util.Log.d(Facade.TAG, "propertyChange: " + event + ", new value: " + event.getNewValue());
+		android.util.Log.d(TGSMainActivity.TAG, "propertyChange: " + event + ", new value: " + event.getNewValue());
 		TGSMainActivity.handle(event.getNewValue());
 	}
 

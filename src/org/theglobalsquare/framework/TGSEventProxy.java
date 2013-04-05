@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import java.util.*;
-import java.util.concurrent.*;
 
 // A queue of events passing between the java (UI) and python (dispersy) layers.
 public class TGSEventProxy {

@@ -56,6 +56,7 @@ def UserSearchEvent():
 # main entry point
 def getMainActivity():
     PythonActivity = autoclass('org.kivy.android.PythonActivity')
+    MainActivity = autoclass('org.theglobalsquare.app.TGSMainActivity')
     return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
 
 # convenience method to get Facade
@@ -69,12 +70,12 @@ def getFacade():
 # convenience function to send event
 def sendEvent(event):
 #    PythonActivity = autoclass('org.kivy.android.PythonActivity')
-    return getFacade().sendEvent(event)
+    return Facade().sendEvent(event)
 	
 # convenience function to get next event
 def nextEvent():
     Event()
-    return getFacade().nextEvent()
+    return getMainActivity().nextEvent()
 
 # convenience logging function
 def monitor(msg):

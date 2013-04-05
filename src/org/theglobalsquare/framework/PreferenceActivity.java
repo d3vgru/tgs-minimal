@@ -1,9 +1,8 @@
 package org.theglobalsquare.framework;
 
-import org.theglobalsquare.app.Facade;
+import org.theglobalsquare.app.*;
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.values.TGSConfig;
-import org.theglobalsquare.framework.values.TGSConfigEvent;
 
 import android.content.*;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -23,7 +22,7 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 		PreferenceScreen prefScreen = getPreferenceScreen();
 		if(prefScreen == null) {
 			android.util.Log.i(PreferenceActivity.TAG, "no PreferenceScreen");
-			// FIXME get a reference to the pref using Honeycomb style
+			// FIXME get a reference to the preference Honeycomb style
 			return;
 		} else {
 			aliasPref = prefScreen.findPreference(prefKey);
@@ -34,12 +33,10 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 	}
 
 	private void updateAlias() {
-    	android.util.Log.i(TAG, "updating alias");
 		updatePref(Facade.PREF_ALIAS, getFacade().getAlias());
 	}
 
 	private void updateProxyHost() {
-    	android.util.Log.i(TAG, "updating proxy host");
 		updatePref(Facade.PREF_PROXY_HOST, getFacade().getProxyHost());
 	}
 
@@ -66,11 +63,13 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 	    	c.setProxyPort(Integer.valueOf(f.getProxyPort()));
 	    	updateProxyPort();
 	    }
+	    /* this does not do what you think it does
     	TGSConfigEvent changeEvent = TGSConfigEvent.forParamUpdated(c);
     	boolean toPy = true; // true to route to python
-    	if(!f.sendEvent(changeEvent, toPy))
+    	if(!TGSMainActivity.sendEvent(changeEvent, toPy))
     		android.util.Log.w(PreferenceActivity.TAG, "qToPy.add rejected");
     	else android.util.Log.i(PreferenceActivity.TAG, "event sent (toPy: " + toPy + ")");
+    	*/
 	}
 	
 	@Override

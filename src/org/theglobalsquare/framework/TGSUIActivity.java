@@ -1,6 +1,7 @@
 package org.theglobalsquare.framework;
 
 import org.theglobalsquare.app.R;
+import org.theglobalsquare.app.TGSMainActivity;
 import org.theglobalsquare.framework.values.*;
 
 import android.content.Context;
@@ -18,6 +19,8 @@ import com.actionbarsherlock.view.MenuItem;
 // this class sets up and manages the main UI
 public class TGSUIActivity extends TGSTabActivity {
 	public final static String TAG = "TGSUI";
+	
+	public final static int PREFERENCES = 1;
 	
 	private boolean composerShowing = false;
 	
@@ -67,7 +70,7 @@ public class TGSUIActivity extends TGSTabActivity {
 				TGSMessageEvent event = new TGSMessageEvent();
 				event.setVerb(TGSMessage.SEND);
 				event.setSubject(subject);
-				getFacade().getEvents().sendEvent(event, true);
+				TGSMainActivity.sendEvent(event, true);
 				
 				// clear text
 				et.setText(null);
@@ -131,7 +134,7 @@ public class TGSUIActivity extends TGSTabActivity {
 			case R.id.menu_settings:
 				Intent prefsIntent = new Intent();
 				prefsIntent.setClass(this, PreferenceActivity.class);
-				startActivity(prefsIntent);
+				startActivityForResult(prefsIntent, PREFERENCES);
 				break;
 			case R.id.menu_help:
 				// TODO show help dialog
@@ -148,6 +151,18 @@ public class TGSUIActivity extends TGSTabActivity {
 		return true;
 	}
 	
+	@Override
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+		android.util.Log.w(TGSUIActivity.TAG, "activity " + arg0 + " returned code " + arg1);
+		freshenConfig();
+		super.onActivityResult(arg0, arg1, arg2);
+	}
+	
+	public void freshenConfig() {
+		TGSConfigEvent e = TGSConfigEvent.forParamUpdated(getFacade().getConfig());
+		TGSMainActivity.sendEvent(e, true);
+	}
+
 	@Override
 	public void onBackPressed() {
 		if(composerShowing)
