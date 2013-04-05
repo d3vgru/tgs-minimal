@@ -4,10 +4,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.os.Build;
 
+import org.theglobalsquare.app.config.EditPreferences;
 import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 
@@ -31,6 +34,7 @@ public class Facade extends Application {
 			android.util.Log.d(Facade.TAG, "NEW LISTENERS");
 			listeners = new HashMap<Class<? extends TGSEvent>, Set<PropertyChangeListener>>();
 		}
+
 		super.onCreate();
 	}
 	
@@ -63,20 +67,27 @@ public class Facade extends Application {
 
 	private static TGSConfig config = null;
 	
+	@SuppressLint("InlinedApi")
 	public SharedPreferences getPrefs() {
-		return PreferenceManager.getDefaultSharedPreferences(this);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			return getSharedPreferences(EditPreferences.SHARED_PREFS_KEY, Context.MODE_MULTI_PROCESS);
+		return getSharedPreferences(EditPreferences.SHARED_PREFS_KEY, Context.MODE_PRIVATE);
 	}
 	
 	public TGSConfig getConfig() {
 		if(config == null) {
 			config = new TGSConfig();
-			config.setName(getAlias());
-			config.setProxyRequired(isProxyRequired());
-			config.setProxyEnabled(isProxyEnabled());
-			config.setProxyHost(getProxyHost());
-			config.setProxyPort(Integer.valueOf(getProxyPort()));
 		}
+		refreshConfig();
 		return config;
+	}
+	
+	private void refreshConfig() {
+		config.setName(getAlias());
+		config.setProxyRequired(isProxyRequired());
+		config.setProxyEnabled(isProxyEnabled());
+		config.setProxyHost(getProxyHost());
+		config.setProxyPort(Integer.valueOf(getProxyPort()));
 	}
 	
 	public String getAlias() {
@@ -84,7 +95,9 @@ public class Facade extends Application {
 	}
 	
 	public boolean isProxyEnabled() {
-		return getPrefs().getBoolean(PREF_ENABLE_PROXY, false);
+		boolean proxyEnabled = getPrefs().getBoolean(PREF_ENABLE_PROXY, false);
+		android.util.Log.i(Facade.TAG, "proxyEnabled: " + proxyEnabled);
+		return proxyEnabled;
 	}
 
 	public boolean isProxyRequired() {

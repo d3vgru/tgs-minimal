@@ -15,12 +15,6 @@ def Community():
     
 def Event():
     return autoclass('org.theglobalsquare.framework.TGSEvent')
-
-"""
-def EventProxy():
-    Event()
-    return autoclass('org.theglobalsquare.framework.TGSEventProxy')
-"""
     
 def Message():
     return autoclass('org.theglobalsquare.framework.values.TGSMessage')
@@ -53,28 +47,30 @@ def SystemEvent():
 def UserSearchEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
 
+# convenience method to get underlying Facade (android.app.Application subclass)
+def getFacade():
+    PythonActivity = autoclass('org.kivy.android.PythonActivity')
+    # WTF: init TGSConfig class or reflect fails
+    Config()
+    BaseActivity = cast('org.theglobalsquare.framework.TGSBaseActivity', PythonActivity.mActivity)
+    return BaseActivity.getFacade()
+
+# convenience method to get config
+def getConfig():
+    return getFacade().getConfig()
+
 # main entry point
 def getMainActivity():
     PythonActivity = autoclass('org.kivy.android.PythonActivity')
     MainActivity = autoclass('org.theglobalsquare.app.TGSMainActivity')
     return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
 
-# convenience method to get Facade
-def getFacade():
-    PythonActivity = autoclass('org.kivy.android.PythonActivity')
-    # init TGSConfig class or reflect fails
-    Config()
-    BaseActivity = cast('org.theglobalsquare.framework.TGSBaseActivity', PythonActivity.mActivity)
-    return BaseActivity.getFacade()
-
 # convenience function to send event
 def sendEvent(event):
-#    PythonActivity = autoclass('org.kivy.android.PythonActivity')
     return Facade().sendEvent(event)
 	
 # convenience function to get next event
 def nextEvent():
-    Event()
     return getMainActivity().nextEvent()
 
 # convenience logging function

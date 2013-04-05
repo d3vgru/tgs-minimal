@@ -2,6 +2,7 @@ package org.theglobalsquare.framework;
 
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.app.TGSMainActivity;
+import org.theglobalsquare.app.config.*;
 import org.theglobalsquare.framework.values.*;
 
 import android.content.Context;
@@ -20,7 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 public class TGSUIActivity extends TGSTabActivity {
 	public final static String TAG = "TGSUI";
 	
-	public final static int PREFERENCES = 1001001;
+	public final static int PREFERENCES = 1001;
 	
 	private boolean composerShowing = false;
 	
@@ -47,9 +48,8 @@ public class TGSUIActivity extends TGSTabActivity {
 		
         // setup the default tabs
         configureTabs();
-        
 	}
-
+	
 	protected void configureButtons() {
 		ImageButton sendBtn = (ImageButton)findViewById(R.id.sendBtn);
 		sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +133,7 @@ public class TGSUIActivity extends TGSTabActivity {
 				break;
 			case R.id.menu_settings:
 				Intent prefsIntent = new Intent();
-				prefsIntent.setClass(this, PreferenceActivity.class);
+				prefsIntent.setClass(this, EditPreferences.class);
 				startActivityForResult(prefsIntent, PREFERENCES);
 				break;
 			case R.id.menu_help:
@@ -164,7 +164,8 @@ public class TGSUIActivity extends TGSTabActivity {
 	}
 	
 	public void freshenConfig() {
-		TGSConfigEvent e = TGSConfigEvent.forParamUpdated(getFacade().getConfig());
+		TGSConfig config = getFacade().getConfig();
+		TGSConfigEvent e = TGSConfigEvent.forParamUpdated(config);
 		TGSMainActivity.sendEvent(e, true);
 	}
 

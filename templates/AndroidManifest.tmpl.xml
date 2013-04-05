@@ -37,7 +37,7 @@
         {{ intent_filters }}
       {% endif %}
     </activity>
-    <activity android:name="org.theglobalsquare.framework.PreferenceActivity"
+    <activity android:name="org.theglobalsquare.app.config.EditPreferences"
               android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode"
               android:screenOrientation="{{ args.orientation }}"
 	      >

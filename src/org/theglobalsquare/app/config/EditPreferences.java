@@ -1,35 +1,35 @@
-package org.theglobalsquare.framework;
+package org.theglobalsquare.app.config;
+
+import net.saik0.android.unifiedpreference.UnifiedPreferenceFragment;
+import net.saik0.android.unifiedpreference.UnifiedSherlockPreferenceActivity;
 
 import org.theglobalsquare.app.*;
-import org.theglobalsquare.app.R;
+
 import org.theglobalsquare.framework.values.TGSConfig;
 
+import android.annotation.SuppressLint;
 import android.content.*;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
 
-public class PreferenceActivity extends CompatiblePreferenceActivity
+public class EditPreferences extends UnifiedSherlockPreferenceActivity
 		implements OnSharedPreferenceChangeListener {
 	public final static String TAG = "PreferenceActivity";
+	public final static String SHARED_PREFS_KEY = "tgs_shared_prefs";
 
 	public Facade getFacade() {
 		return (Facade)getApplication();
 	}
 	
 	private void updatePref(String prefKey, String summary) {
-		Preference aliasPref = null;
-		PreferenceScreen prefScreen = getPreferenceScreen();
-		if(prefScreen == null) {
-			android.util.Log.i(PreferenceActivity.TAG, "no PreferenceScreen");
-			// FIXME get a reference to the preference Honeycomb style
+		// FIXME get a reference to the preference Honeycomb style
+		Preference pref = findPreference(prefKey);
+		if(pref == null)
 			return;
-		} else {
-			aliasPref = prefScreen.findPreference(prefKey);
-		}
-		if(aliasPref == null)
-			return;
-    	aliasPref.setSummary(summary);
+    	pref.setSummary(summary);
 	}
 
 	private void updateAlias() {
@@ -63,21 +63,34 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 	    	c.setProxyPort(Integer.valueOf(f.getProxyPort()));
 	    	updateProxyPort();
 	    }
-	    /* this does not do what you think it does
-    	TGSConfigEvent changeEvent = TGSConfigEvent.forParamUpdated(c);
-    	boolean toPy = true; // true to route to python
-    	if(!TGSMainActivity.sendEvent(changeEvent, toPy))
-    		android.util.Log.w(PreferenceActivity.TAG, "qToPy.add rejected");
-    	else android.util.Log.i(PreferenceActivity.TAG, "event sent (toPy: " + toPy + ")");
-    	*/
 	}
 	
+	@SuppressLint("InlinedApi")
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		setPrefs(R.xml.settings);
+	public void onCreate(Bundle savedInstanceState) {
+		// Set header resource MUST BE CALLED BEFORE super.onCreate 
+		setHeaderRes(R.xml.preference_headers);
+		// Set desired preference file and mode (optional)
+		setSharedPreferencesName(SHARED_PREFS_KEY);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			setSharedPreferencesMode(Context.MODE_MULTI_PROCESS);
+		else setSharedPreferencesMode(Context.MODE_PRIVATE);
 		super.onCreate(savedInstanceState);
-	}
 	
+	  /*
+	  if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
+	    addPreferencesFromResource(R.xml.settings);
+	  }
+	  */
+	}
+	/*
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public void onBuildHeaders(List<Header> target) {
+	  loadHeadersFromResource(R.xml.preference_headers, target);
+	}
+	*/
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -93,4 +106,5 @@ public class PreferenceActivity extends CompatiblePreferenceActivity
 		getFacade().getPrefs().unregisterOnSharedPreferenceChangeListener(this);
 	}
 
+	public static class Fragment extends UnifiedPreferenceFragment {}
 }

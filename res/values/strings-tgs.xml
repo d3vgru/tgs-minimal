@@ -28,7 +28,7 @@
     <string name="searchUserBtnLabel">Search For User</string>
     <string name="searchCommunityBtnLabel">Search For Community</string>
     
-    <string name="generalSettingsLabel">Settings</string>
+    <string name="generalSettingsLabel">General</string>
     <string name="aliasLabel">Alias</string>
     <string name="aliasSummary">A name, if you so choose.</string>
     

@@ -19,7 +19,7 @@ from tgscore.dispersy.dprint import dprint
 from tgscore.dispersy.crypto import (ec_generate_key,
         ec_to_public_bin, ec_to_private_bin)
 
-from configobj import ConfigObj
+#from configobj import ConfigObj
 
 
 
@@ -31,39 +31,8 @@ from configobj import ConfigObj
 
 
 # from whirm/tgs-pc tgs_pc/main.py
-CONFIG_FILE_NAME='tgs.conf'
+#CONFIG_FILE_NAME='tgs.conf'
 
-
-class MainLoop():
-    def __init__(self):
-        self.go = True
-    def run(self):
-        """
-        # http://stackoverflow.com/questions/1956142/how-to-redirect-stderr-in-python
-        r, w = os.pipe()
-        os.close(sys.stderr.fileno())
-        os.dup2(w, sys.stderr.fileno())
-        self.errs = r
-        """
-
-        while self.process():
-            pass
-    def process(self):
-        """
-        # read 1K from stderr and cc to monitor
-        errMsg = os.read(self.errs, 1024)
-        if errMsg is not None:
-            AndroidFacade.monitor(errMsg)
-        """
-        #f = AndroidFacade.getMainActivity()
-        #AndroidFacade.monitor('MainLoop: TICK, {} events in queue'.format(f.queueSize()))
-        
-        # TODO actually process the event
-        nextEvent = AndroidFacade.nextEvent()
-        if nextEvent is not None:
-            AndroidFacade.monitor('MainLoop: got event from java: {}'.format(nextEvent))
-        time.sleep(1)
-        return self.go
 
 # for simple notifications of a recurring event
 class TGSSignal:
@@ -75,7 +44,7 @@ class TGSSignal:
 # self._tgs.squareSearchUpdate.connect(self.onSquareSearchUpdate)
     def connect(self, pyEvent):
         self._pyEvent = pyEvent
-    # FIXME register to 
+    # FIXME I don't even
 
 #TODO: Separate the TGS stuff (dispersy threads setup et al, internal callbacks...) from the pure UI code and put it in this class:
 class TGS:
@@ -615,11 +584,21 @@ class ChatCore:
         self._tgs.setupThreads()
         
         AndroidFacade.monitor('Chatcore.run: entering main loop')
-        MainLoop().run()
+        mainLoop = MainLoop()
+        mainLoop.setChatCore(self)
+        mainLoop.run()
 
         #Destroy dispersy threads before exiting
         AndroidFacade.monitor('ChatCore.run: destroying threads')
         self._tgs.stopThreads()
+        
+    def getConfig(self):
+        return self._config
+        
+    def setConfig(self, config):
+        self._config = config
+        AndroidFacade.monitor('config refreshed, proxyEnabled: {}'.format(self._config.isProxyEnabled()))
+
 
     ##################################
     #Private Methods
@@ -649,25 +628,25 @@ class ChatCore:
 
         #Create app data dir if it doesn't exist
         if not os.path.exists(config_path):
-#            AndroidFacade.monitor('ChatCore: making config dir')
+            AndroidFacade.monitor('ChatCore: making config dir')
             os.makedirs(config_path)
-
+        """
+        
         config_file_path = os.path.join(config_path, CONFIG_FILE_NAME)
-
-#        AndroidFacade.monitor('ChatCore: ConfigObjing it up')
+        
+        AndroidFacade.monitor('ChatCore: ConfigObjing it up')
         config = ConfigObj(config_file_path, encoding='utf-8')
-
         if not os.path.exists(config_file_path):
-#            AndroidFacade.monitor('ChatCore: using defaults')
+            AndroidFacade.monitor('ChatCore: using defaults')
             #Set default values
             config['Member'] = {
                 'Alias': u'Anon',
                 'Thumbnail': ''
                 }
             config.write()
-
+        """
         self._workdir = unicode(config_path)
-        self._config = config
+        self._config = AndroidFacade.getConfig()
 
     def _propagateMemberInfoToAll(self):
         #TODO: Check if the community has up to date info before sending unnecessary updates
@@ -675,17 +654,52 @@ class ChatCore:
             self._setMemberInfo(community)
 
     def _setMemberInfo(self, community):
-        alias = self._config['Member']['Alias']
+        alias = self._config.getAlias()
         thumbnail = '' #str(self._config['Member']['Thumbnail']) #TODO: Setup this correctly when swift gets integrated
         self._tgs.setMemberInfo(community, alias, thumbnail)
+
+class MainLoop():
+    def __init__(self):
+        self.go = True
+        self._chatCore = None
+    def setChatCore(self, chatCore):
+        self._chatCore = chatCore
+    def run(self):
+        """
+        # http://stackoverflow.com/questions/1956142/how-to-redirect-stderr-in-python
+        r, w = os.pipe()
+        os.close(sys.stderr.fileno())
+        os.dup2(w, sys.stderr.fileno())
+        self.errs = r
+        """
+
+        while self.process():
+            pass
+    def process(self):
+        """
+        # read 1K from stderr and cc to monitor
+        errMsg = os.read(self.errs, 1024)
+        if errMsg is not None:
+            AndroidFacade.monitor(errMsg)
+        """
+        #f = AndroidFacade.getMainActivity()
+        #AndroidFacade.monitor('MainLoop: TICK, {} events in queue'.format(f.queueSize()))
+        nextEvent = AndroidFacade.nextEvent()
+        if nextEvent is not None:
+            eventClass = nextEvent.getClass().getName()
+            configEvent = cast(eventClass, nextEvent)
+#            AndroidFacade.monitor('MainLoop: got event from java, class: {}'.format(eventClass))
+            if(eventClass == 'org.theglobalsquare.framework.values.TGSConfigEvent'):
+                # update config using latest values
+                AndroidFacade.monitor('fromPy: proxyEnabled: {}'.format(AndroidFacade.getFacade().isProxyEnabled()))
+                self._chatCore.setConfig(AndroidFacade.getConfig())
+        time.sleep(1)
+        return self.go
+
 
 if __name__ == '__main__':
     exit_exception = None
     if exit_exception:
         raise exit_exception
-    """
-    EventProxy = AndroidFacade.EventProxy()
-    AndroidFacade.getFacade().setEvents(EventProxy())
-    """
     chat = ChatCore()
     chat.run()

@@ -3,12 +3,12 @@
     <PreferenceCategory 
         android:title="@string/generalSettingsLabel"
         android:key="pref_cat_general">
-    <EditTextPreference
-        android:key="pref_alias"
-        android:title="@string/aliasLabel"
-        android:summary="@string/aliasSummary"
-        android:defaultValue="@string/anonLabel"
-        />
+        <EditTextPreference
+            android:key="pref_alias"
+            android:title="@string/aliasLabel"
+            android:summary="@string/aliasSummary"
+            android:defaultValue="@string/anonLabel"
+            />
     </PreferenceCategory>
     <PreferenceCategory 
         android:title="@string/proxySettingsLabel"
@@ -19,6 +19,7 @@
 	        android:summary="@string/enableProxySummary"
 	        android:defaultValue="false"
 	        />
+	    <!--
 	    <CheckBoxPreference
 	        android:key="pref_require_proxy"
 	        android:title="@string/requireProxyLabel"
@@ -26,6 +27,7 @@
 	        android:defaultValue="false"
 	        android:dependency="pref_enable_proxy"
 	        />
+	    -->
 	    <EditTextPreference
 	        android:key="pref_proxy_host"
 	        android:title="@string/proxyHostLabel"

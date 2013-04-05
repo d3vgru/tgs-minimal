@@ -25,16 +25,16 @@
         android:icon="@drawable/content_new"
         />
     <item
+        android:id="@+id/menu_settings"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/settingsBtnLabel"
+        android:icon="@drawable/action_settings"
+        />
+    <item
         android:id="@+id/menu_search"
         android:showAsAction="withText"
         android:title="@string/searchBtnLabel"
         android:icon="@drawable/action_search"
-        />
-    <item
-        android:id="@+id/menu_settings"
-        android:showAsAction="withText"
-        android:title="@string/settingsBtnLabel"
-        android:icon="@drawable/action_settings"
         />
     <item
         android:id="@+id/menu_help"
@@ -42,10 +42,12 @@
         android:title="@string/helpBtnLabel"
         android:icon="@drawable/action_help"
         />
+    <!--
     <item
         android:id="@+id/menu_about"
         android:showAsAction="never"
         android:title="@string/aboutBtnLabel"
         android:icon="@drawable/action_about"
         />
+    -->
 </menu>
