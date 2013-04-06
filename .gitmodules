@@ -4,6 +4,3 @@
 [submodule "spydroid"]
 	path = spydroid
 	url = git://github.com/d3vgru/spydroid-ipcamera.git
-[submodule "libstreaming"]
-path = libstreaming
-	url = git://github.com/d3vgru/libstreaming.git
