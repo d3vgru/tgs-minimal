@@ -136,7 +136,8 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 		// monitor() shows the event in the monitor tab
 		super.monitor(message);
 	}
-	
+
+	// ITGSActivity impl
 	public void submitSearch(EditText et) {
 		String term = "";
 		Editable e = et.getText();

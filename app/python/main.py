@@ -687,12 +687,20 @@ class MainLoop():
         nextEvent = AndroidFacade.nextEvent()
         if nextEvent is not None:
             eventClass = nextEvent.getClass().getName()
-            configEvent = cast(eventClass, nextEvent)
 #            AndroidFacade.monitor('MainLoop: got event from java, class: {}'.format(eventClass))
             if(eventClass == 'org.theglobalsquare.framework.values.TGSConfigEvent'):
                 # update config using latest values
                 AndroidFacade.monitor('fromPy: proxyEnabled: {}'.format(AndroidFacade.getFacade().isProxyEnabled()))
-                self._chatCore.setConfig(AndroidFacade.getConfig())
+                configEvent = cast(eventClass, nextEvent)
+                self._chatCore.setConfig(configEvent.getSubject())
+            elif(eventClass == 'org.theglobalsquare.framework.values.TGSCommunitySearchEvent'):
+                searchEvent = cast('org.theglobalsquare.framework.TGSEvent', nextEvent)
+                community = cast('org.theglobalsquare.framework.values.TGSCommunity', searchEvent.getSubject())
+                if(community is not None):
+#                    AndroidFacade.monitor('got search terms: {}'.format(community)) #.getName()))
+                    AndroidFacade.monitor('got search event') #: {}'.format(searchEvent))
+                else:
+                    AndroidFacade.monitor('got null search')
         time.sleep(1)
         return self.go
 
