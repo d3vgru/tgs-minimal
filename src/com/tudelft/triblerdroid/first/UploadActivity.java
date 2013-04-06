@@ -12,11 +12,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+//import java.io.BufferedReader;
+//import java.io.InputStreamReader;
 
 import org.theglobalsquare.app.R;
-import se.kth.pymdht.Pymdht;
+//import se.kth.pymdht.Pymdht;
 
 
 public class UploadActivity extends Activity {
@@ -72,6 +72,7 @@ public class UploadActivity extends Activity {
 	}
 
 	protected void startDHT(String hash){
+		/* FIXME python side will do this
 		BufferedReader unstable = new BufferedReader(new InputStreamReader(this.getResources().openRawResource(R.raw.bootstrap_unstable)));
 		BufferedReader stable = new BufferedReader(new InputStreamReader(this.getResources().openRawResource(R.raw.bootstrap_stable)));
 		final Pymdht dht = new Pymdht(9999, unstable, stable, hash, true);
@@ -83,6 +84,7 @@ public class UploadActivity extends Activity {
 		};
 		Thread dht_thread = new Thread(runnable_dht);
 		dht_thread.start();
+		*/
 	}
 
 

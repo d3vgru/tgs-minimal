@@ -39,8 +39,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.theglobalsquare.app.R;
+/*
 import se.kth.pymdht.Id;
 import se.kth.pymdht.Id.IdError;
+*/
 
 @SuppressLint("NewApi") public class IntroActivity extends FragmentActivity implements LiveIPDialogFragment.LiveIPDialogListener 
 {
@@ -122,6 +124,7 @@ import se.kth.pymdht.Id.IdError;
 			});
 			return;
 		}
+		/* FIXME get from python
 		try{
 			@SuppressWarnings("unused")
 			Id id = new Id(hash);
@@ -131,6 +134,7 @@ import se.kth.pymdht.Id.IdError;
 			showDialog(INVALID_ID_DIALOG);
 			return;
 		}
+		*/
 		boolean showWarning = false;
 		if (Util.isMobileConnectivity(getBaseContext())){
 			// we are connected via mobile connectivity. Show warning, if preference checked.

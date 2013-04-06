@@ -27,12 +27,12 @@ import android.widget.VideoView;
 
 import com.tudelft.triblerdroid.swift.NativeLib;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+//import java.io.BufferedReader;
+//import java.io.InputStreamReader;
 import java.util.List;
 
 import org.theglobalsquare.app.R;
-import se.kth.pymdht.Pymdht;
+//import se.kth.pymdht.Pymdht;
 
 public class VideoPlayerActivity extends Activity {
 	NativeLib nativelib = null;
@@ -176,6 +176,7 @@ public class VideoPlayerActivity extends Activity {
 	}
 
 	protected void startDHT(String hash){
+		/* FIXME python side will do this
 		BufferedReader unstable = new BufferedReader(new InputStreamReader(this.getResources().openRawResource(R.raw.bootstrap_unstable)));
 		BufferedReader stable = new BufferedReader(new InputStreamReader(this.getResources().openRawResource(R.raw.bootstrap_stable)));
 		final Pymdht dht = new Pymdht(9999, unstable, stable, hash, false);
@@ -187,6 +188,7 @@ public class VideoPlayerActivity extends Activity {
 		};
 		Thread dht_thread = new Thread(runnable_dht);
 		dht_thread.start();
+		*/
 	}
 	
 
