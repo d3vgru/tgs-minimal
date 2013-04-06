@@ -5,7 +5,7 @@
     <string name="fileBtnLabel">Attach</string>
     <string name="sendBtnLabel">Send</string>
     <string name="searchBtnLabel">Search</string>
-    <string name="createBtnLabel">Create</string>
+    <string name="createBtnLabel">New</string>
     <string name="saveBtnLabel">Save</string>
     <string name="cancelBtnLabel">Cancel</string>
     <string name="settingsBtnLabel">Settings</string>
@@ -30,15 +30,12 @@
     
     <string name="generalSettingsLabel">General</string>
     <string name="aliasLabel">Alias</string>
-    <string name="aliasSummary">A name, if you so choose.</string>
-    
+
     <string name="proxySettingsLabel">Proxy</string>
     <string name="enableProxyLabel">Enable Proxy</string>
     <string name="enableProxySummary">Allow using a SOCKS5 proxy like Orbot</string>
     <string name="requireProxyLabel">Require Proxy</string>
     <string name="requireProxySummary">Route all traffic through a SOCKS5 proxy like Orbot</string>
     <string name="proxyHostLabel">Proxy Host</string>
-    <string name="proxyHostSummary">Host or IP address of proxy (default: localhost)</string>
     <string name="proxyPortLabel">Proxy Port</string>
-    <string name="proxyPortSummary">Port number of proxy (default: 9050)</string>
 </resources>

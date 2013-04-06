@@ -1,35 +1,24 @@
 package org.theglobalsquare.framework;
 
-import org.theglobalsquare.app.*;
-import org.theglobalsquare.app.config.*;
-import org.theglobalsquare.framework.values.*;
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.*;
 import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.theglobalsquare.app.*;
+import org.theglobalsquare.app.config.*;
+
 // this class sets up and manages the main UI
 public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListener {
 	public final static String TAG = "TGSUI";
 	
 	public final static int PREFERENCES = 1001;
-	
-	private boolean composerShowing = false;
-	
-	protected static String monitorTxt = "";
-	
-	public String getMonitorTxt() {
-		return monitorTxt;
-	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,70 +29,28 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 		getLayoutInflater().inflate(R.layout.main_activity, mainLayout);
 		
 		monitor(TAG + ": INIT");
+		
 		// set the window title
         setTitle(getString(R.string.short_name));
         
         // attach click handlers
         configureButtons();
-		
+
         // setup the default tabs
         configureTabs();
-	}
-	
-	protected void configureButtons() {
-		ImageButton sendBtn = (ImageButton)findViewById(R.id.sendBtn);
-		sendBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// SEND A MESSAGE
-				
-				// get text from input
-				EditText et = (EditText)findViewById(R.id.messageTxt);
-				String body = et.getText().toString();
-				
-				// create message
-				TGSMessage subject = new TGSMessage();
-				subject.setFrom(TGSUser.getMe());
-				subject.setBody(body);
-				
-				// send message to event queue
-				TGSMessageEvent event = new TGSMessageEvent();
-				event.setVerb(TGSMessage.SEND);
-				event.setSubject(subject);
-				Facade.sendEvent(event, true);
-				
-				// clear text
-				et.setText(null);
-				
-				if(composerShowing)
-					hideComposer();
-				
-				monitor(TGSUIActivity.TAG + ": sent message: " + body);
-			}
-		});
-	}
-	
-	public void monitor(String message) {
-		TGSUIActivity.monitorTxt = message + "\n" + TGSUIActivity.monitorTxt;
-		final TextView monitor = (TextView) findViewById(R.id.monitor);
-		if(monitor != null)
-			monitor.setText(TGSUIActivity.monitorTxt);
-		final TextView status = (TextView)findViewById(R.id.statusMessage);
-		if(status != null)
-			status.setText(message);
-	}
+}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 	    inflater.inflate(R.menu.main_menu, menu);
-	    boolean visible = showActionButtons(selectedTab);
-		menuCompose = menu.findItem(R.id.menu_compose);
-		menuCompose.setVisible(visible);
-		menuRefresh = menu.findItem(R.id.menu_refresh);
-		menuRefresh.setVisible(visible);
-		menuShare = menu.findItem(R.id.menu_share);
-		menuShare.setVisible(visible);
+	    boolean visible = showActionButtons(mSelectedTab);
+		mMenuCompose = menu.findItem(R.id.menu_compose);
+		mMenuCompose.setVisible(visible);
+		mMenuRefresh = menu.findItem(R.id.menu_refresh);
+		mMenuRefresh.setVisible(visible);
+		mMenuShare = menu.findItem(R.id.menu_share);
+		mMenuShare.setVisible(visible);
 	    return true;
 	}
 
@@ -112,7 +59,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 		// FIXME disable until startup complete
 		switch(item.getItemId()) {
 			case R.id.menu_compose:
-				if(composerShowing)
+				if(mComposerShowing)
 					hideComposer();
 				else showComposer();
 				break;
@@ -124,8 +71,14 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 				Toast.makeText(this, R.string.shareBtnLabel, Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.menu_create:
-				// TODO show new square dialog
-				Toast.makeText(this, R.string.createBtnLabel, Toast.LENGTH_SHORT).show();
+				if(mSelectedTab == TAB_SEARCH) {
+					// show search terms
+					((EditText)findViewById(R.id.txt_search_terms)).setText(null);
+					findViewById(R.id.group_search_terms).setVisibility(View.VISIBLE);
+				} else {
+					// TODO show new square dialog
+					Toast.makeText(this, R.string.createBtnLabel, Toast.LENGTH_SHORT).show();
+				}
 				break;
 			case R.id.menu_search:
 				// select Search tab
@@ -151,6 +104,8 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 		return true;
 	}
 	
+	
+	
 	@Override
 	protected void onActivityResult(int request, int result, Intent data) {
 		switch(request) {
@@ -165,31 +120,9 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 	
 	@Override
 	public void onBackPressed() {
-		if(composerShowing)
+		if(mComposerShowing)
 			hideComposer();
 		else super.onBackPressed();
-	}
-
-	public void dismissKeyboardFor(EditText editText) {
-		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-	}
-	
-	private ViewGroup getComposer() {
-		return (ViewGroup)findViewById(R.id.mainActivityComposer);
-	}
-	
-	public void showComposer() {
-		getComposer().setVisibility(View.VISIBLE);
-		findViewById(R.id.messageTxt).requestFocus();
-		composerShowing = true;
-	}
-	
-	public void hideComposer() {
-		// http://stackoverflow.com/questions/3553779/android-dismiss-keyboard
-		dismissKeyboardFor((EditText)findViewById(R.id.messageTxt));
-		getComposer().setVisibility(View.GONE);
-		composerShowing = false;
 	}
 
 	@Override
@@ -202,7 +135,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
         	if(view instanceof EditText) {
         		// make sure this is the search terms field
         		if(view.getId() == R.id.txt_search_terms) {
-        			submitSearch((EditText)view);
+        			submitSearch((EditText)view, sSearchFragment);
         			return true;
         		}
         	}

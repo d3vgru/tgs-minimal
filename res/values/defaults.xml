@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="anonLabel">Anonymous</string>
+    <string name="aliasSummary">%s</string>
     <string name="localhostLabel">localhost</string>
+    <string name="proxyHostSummary">%s</string>
     <string name="proxyPortDefault">9050</string>
+    <string name="proxyPortSummary">%s</string>
 </resources>

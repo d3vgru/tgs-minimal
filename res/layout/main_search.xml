@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_search_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
     <!-- search terms -->
     <LinearLayout
+    	android:id="@+id/group_search_terms"
 	    android:layout_width="match_parent"
     	android:layout_height="wrap_content"
     	android:orientation="vertical"
-    	android:id="@+id/group_search_terms"
     	>
 	    <EditText
 	        android:id="@+id/txt_search_terms" 
 	        android:hint="@string/hintMainSearch"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:layout_margin="5dp"
-	        android:padding="5dp"
+			android:inputType="textMultiLine"
+            android:lines="2"
+            android:minLines="2"
+            android:maxLines="2"
+            android:padding="5dp"
+            android:layout_marginBottom="20dp"
 	        />
 	    
 	    <!-- search for text
@@ -42,7 +48,7 @@
 	        android:id="@+id/btn_search_community"
 	        android:text="@string/searchCommunityBtnLabel"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="50dp"
 	        android:layout_margin="5dp"
 	        />
     </LinearLayout>

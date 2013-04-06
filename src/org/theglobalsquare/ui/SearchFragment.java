@@ -2,7 +2,7 @@ package org.theglobalsquare.ui;
 
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.app.TGSMainActivity;
-import org.theglobalsquare.framework.TGSFragment;
+import org.theglobalsquare.framework.*;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class SearchFragment extends TGSFragment {
+	private TGSListFragment resultsFragment = null;
+
+	public TGSListFragment getResultsFragment() {
+		return resultsFragment;
+	}
+
+	public void setResultsFragment(TGSListFragment resultsFragment) {
+		this.resultsFragment = resultsFragment;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,7 +37,7 @@ public class SearchFragment extends TGSFragment {
 		searchButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mainActivity.submitSearch(terms);
+				mainActivity.submitSearch(terms, SearchFragment.this);
 			}
 		});
 		return view;

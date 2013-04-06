@@ -4,11 +4,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
 
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
+import android.view.View;
 import android.widget.*;
 
 import org.kivy.android.PythonActivity;
@@ -19,7 +21,7 @@ import org.theglobalsquare.framework.values.*;
 public class TGSMainActivity extends TGSUIActivity implements PropertyChangeListener {
 	public final static String TAG = "TGSMain";
 
-	private static Handler msgHandler = null;
+	private static Handler sMsgHandler = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,15 +47,15 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 	}
 
 	public static Handler getHandler() {
-		if(msgHandler == null) {
+		if(sMsgHandler == null) {
 			// initialize UI event handler
 			if(PythonActivity.mActivity == null) {
 				android.util.Log.w(TGSMainActivity.TAG, "mActivity is null");
 			} else {
-				msgHandler = new MessageHandler((TGSMainActivity)PythonActivity.mActivity);
+				sMsgHandler = new MessageHandler((TGSMainActivity)PythonActivity.mActivity);
 			}
 		}
-		return msgHandler;
+		return sMsgHandler;
 	}
 
 	// http://stackoverflow.com/questions/11407943/this-handler-class-should-be-static-or-leaks-might-occur-incominghandler
@@ -138,7 +140,8 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 	}
 
 	// ITGSActivity impl
-	public void submitSearch(EditText et) {
+	@Override
+	public void submitSearch(EditText et, TGSFragment searchFragment) {
 		String term = "";
 		Editable e = et.getText();
 		if(e != null)
@@ -153,6 +156,32 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 		s.setSubject(c);
 		Facade.sendEvent(s, true);
 		
+		// manage results in searchFragment
+		if(searchFragment != null) {
+			// hide search box
+			findViewById(R.id.group_search_terms).setVisibility(View.GONE);
+			
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+			// remove existing results
+			if(sSearchResults != null) {
+				// unregister with results events
+				getFacade().removeListener(TGSSearchEvent.class, sSearchResults);
+				
+				ft.remove(sSearchResults);
+			}
+			
+			// add new results
+			sSearchResults = new TGSListFragment();
+			
+			if(sSearchResults != null) {
+				// register with results events
+				getFacade().addListener(TGSSearchEvent.class, sSearchResults);
+				
+				ft.add(R.id.layout_search_main, sSearchResults);
+			}
+			ft.commit();
+		}
 		android.util.Log.i(TGSUIActivity.TAG, "search: " + term);
 	}
 	

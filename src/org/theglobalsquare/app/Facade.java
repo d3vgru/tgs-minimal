@@ -92,11 +92,18 @@ public class Facade extends Application {
 		}
 		ls.add(l);
 	}
+	public void removeListener(Class<? extends TGSEvent> c, PropertyChangeListener l) {
+		Set<PropertyChangeListener> ls = listeners.get(c);
+		if(ls != null) {
+			ls.remove(l);
+		}
+	}
 
 	private static TGSConfig config = null;
 	
 	@SuppressLint("InlinedApi")
 	public SharedPreferences getPrefs() {
+		// multi process or changes won't be reflected immediately
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			return getSharedPreferences(EditPreferences.SHARED_PREFS_KEY, Context.MODE_MULTI_PROCESS);
 		return getSharedPreferences(EditPreferences.SHARED_PREFS_KEY, Context.MODE_PRIVATE);

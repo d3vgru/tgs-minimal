@@ -24,12 +24,18 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 	public final static int TAB_OVERVIEW = 1; // my squares overview
 	public final static int TAB_MONITOR = 2; // debug monitor
 	
-	protected int selectedTab = -1;
+	protected int mSelectedTab = -1;
     protected TabsAdapter mTabsAdapter;
+	protected ViewPager mViewPager;
 
     protected boolean showActionButtons(int tab) {
 		return tab >= TAB_COUNT_BASE;
 	}
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);    	
+    }
 	
 	protected void configureTabs() {
 		ActionBar bar = getSupportActionBar();
@@ -69,14 +75,14 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 			@Override
 			public void onPageSelected(int tab) {
 				// hide action buttons if not viewing a square
-				selectedTab = tab;
+				mSelectedTab = tab;
 				boolean visible = showActionButtons(tab);
-				if(menuCompose != null)
-					menuCompose.setVisible(visible);
-				if(menuRefresh != null)
-					menuRefresh.setVisible(visible);
-				if(menuShare != null)
-					menuShare.setVisible(visible);
+				if(mMenuCompose != null)
+					mMenuCompose.setVisible(visible);
+				if(mMenuRefresh != null)
+					mMenuRefresh.setVisible(visible);
+				if(mMenuShare != null)
+					mMenuShare.setVisible(visible);
 				setTab(tab);
 			}
         	
@@ -133,8 +139,12 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 		@Override
 		public Fragment getItem(int position) {
 			TabInfo info = mTabs.get(position);
-			return Fragment.instantiate(mContext, info.clss.getName(),
+			Fragment f = Fragment.instantiate(mContext, info.clss.getName(),
 		            info.args);
+			if(f instanceof SearchFragment) {
+				sSearchFragment = (SearchFragment)f;
+			}
+			return f;
 		}
 		
 		public void onPageScrolled(int position, float positionOffset,
