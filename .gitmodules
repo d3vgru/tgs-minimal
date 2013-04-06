@@ -1,6 +1,3 @@
 [submodule "dispersy"]
         path = app/python/tgscore/dispersy
         url = git://github.com/d3vgru/dispersy.git
-[submodule "spydroid"]
-	path = spydroid
-	url = git://github.com/d3vgru/spydroid-ipcamera.git
