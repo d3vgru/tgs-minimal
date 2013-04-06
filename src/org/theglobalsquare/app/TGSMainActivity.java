@@ -145,7 +145,13 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 		et.setText(null);
 		dismissKeyboardFor(et);
 
-		// TODO make a search event and put it in the queue
+		// make a search event and put it in the queue
+		TGSCommunity c = new TGSCommunity();
+		c.setName(term);
+		TGSSearchEvent s = new TGSCommunitySearchEvent();
+		s.setSubject(c);
+		Facade.sendEvent(s, true);
+		
 		android.util.Log.i(TGSUIActivity.TAG, "search: " + term);
 	}
 	
