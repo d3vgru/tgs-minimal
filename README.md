@@ -11,5 +11,5 @@ Dependencies
 
     * [Dispersy](https://github.com/d3vgru/dispersy/tree/tgs-android)
 
-    * [PyMDHT](https://github.com/d3vgru/pymdht/tree/tgs-android)
+    * [pymdht](https://github.com/d3vgru/pymdht/tree/tgs-android)
 
