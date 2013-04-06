@@ -1,3 +1,6 @@
 [submodule "dispersy"]
         path = app/python/tgscore/dispersy
-        url = git://github.com/d3vgru/dispersy.git
+        url = https://github.com/d3vgru/dispersy.git
+[submodule "app/python/pymdht"]
+	path = app/python/pymdht
+	url = https://github.com/d3vgru/pymdht.git
