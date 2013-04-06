@@ -19,7 +19,7 @@ public class Controller {
 
 	private static final int MAX_EMPTY_HEARTBEATS = 10000;
 	private static final int CHECK_BOOSTER_EACH = 20000; //milliseconds
-	private Id _my_id;
+//	private Id _my_id;
 	private SwiftTracker swift_tracker = new SwiftTracker();
 	private GetPeersLookup lookup;
 	private OverlayBootstrapper bootstrapper;
@@ -30,7 +30,7 @@ public class Controller {
 	
 	public Controller(BufferedReader unstable, BufferedReader stable, String hash, boolean checkBooster){
 		this.checkBooster = checkBooster;
-		this._my_id = new RandomId();
+//		this._my_id = new RandomId();
 		this.bootstrapper = new OverlayBootstrapper(unstable, stable);
 		try {
 			this.hash = new Id(hash);

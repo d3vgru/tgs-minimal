@@ -47,7 +47,7 @@ public class SwiftTracker{
 //			System.out.println((int)(char)data[i]);
 //		}
 		int pos = 0;
-		byte[] local_cid = Arrays.copyOfRange(data, pos, pos + CHANNEL_SIZE);
+//		byte[] local_cid = Arrays.copyOfRange(data, pos, pos + CHANNEL_SIZE);
 //		if (!local_cid.equals(CHANNEL_ZERO)){
 //			System.out.println("not CHANNEL_ZERO");
 //			System.out.println(local_cid[0]);

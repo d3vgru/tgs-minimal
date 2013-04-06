@@ -16,6 +16,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -63,7 +64,7 @@ public class VideoPlayerActivity extends Activity {
 
 		hash = extras.getString("hash");
 		tracker = extras.getString("tracker");
-		destination = "/sdcard/swift/video.ts";
+		destination = Environment.getExternalStorageDirectory().getPath() + "/swift/video.ts";
 		live = extras.getBoolean("live",false);
 		if (hash == null){
 			return;
@@ -342,11 +343,11 @@ public class VideoPlayerActivity extends Activity {
 				try {//TODO: catch InterruptedException (onDestroy)
 	
 					NativeLib nativelib = new NativeLib();
-					boolean play = false, pause=false;
+//					boolean play = false, pause=false;
 	
 					String h = args[0];
-					String t = args[1];
-					String f = args[2];
+//					String t = args[1];
+//					String f = args[2];
 					while(true) {
 						int callid = nativelib.asyncGetHTTPProgress(h);
 						String progstr = "n/a";
@@ -373,7 +374,7 @@ public class VideoPlayerActivity extends Activity {
 						else
 							progressDialog.setMax((int)(asize/1024));
 	
-						_seqCompInt = new Integer((int)(seqcomp/1024));
+						_seqCompInt = Integer.valueOf((int)(seqcomp/1024));
 	
 						Log.w("SwiftStats", "SeqComp   " + seqcomp );
 						

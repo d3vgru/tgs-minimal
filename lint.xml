@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="DefaultLocale" severity="ignore">
+        <ignore path="src/com/tudelft/triblerdroid/first/SourceActivity.java" />
+    </issue>
     <issue id="SelectableText" severity="ignore">
         <ignore path="res/layout/main_activity.xml" />
+    </issue>
+    <issue id="UselessParent">
+        <ignore path="res/layout/main_search.xml" />
     </issue>
 </lint>

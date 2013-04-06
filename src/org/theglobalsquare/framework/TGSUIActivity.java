@@ -1,7 +1,6 @@
 package org.theglobalsquare.framework;
 
-import org.theglobalsquare.app.R;
-import org.theglobalsquare.app.TGSMainActivity;
+import org.theglobalsquare.app.*;
 import org.theglobalsquare.app.config.*;
 import org.theglobalsquare.framework.values.*;
 
@@ -10,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.*;
+import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
@@ -18,7 +18,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 // this class sets up and manages the main UI
-public class TGSUIActivity extends TGSTabActivity {
+public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListener {
 	public final static String TAG = "TGSUI";
 	
 	public final static int PREFERENCES = 1001;
@@ -70,7 +70,7 @@ public class TGSUIActivity extends TGSTabActivity {
 				TGSMessageEvent event = new TGSMessageEvent();
 				event.setVerb(TGSMessage.SEND);
 				event.setSubject(subject);
-				TGSMainActivity.sendEvent(event, true);
+				Facade.sendEvent(event, true);
 				
 				// clear text
 				et.setText(null);
@@ -163,19 +163,12 @@ public class TGSUIActivity extends TGSTabActivity {
 		super.onActivityResult(request, result, data);
 	}
 	
-	public void freshenConfig() {
-		TGSConfig config = getFacade().getConfig();
-		TGSConfigEvent e = TGSConfigEvent.forParamUpdated(config);
-		TGSMainActivity.sendEvent(e, true);
-	}
-
 	@Override
 	public void onBackPressed() {
 		if(composerShowing)
 			hideComposer();
 		else super.onBackPressed();
 	}
-	
 
 	public void dismissKeyboardFor(EditText editText) {
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -199,10 +192,23 @@ public class TGSUIActivity extends TGSTabActivity {
 		composerShowing = false;
 	}
 
-	// http://stackoverflow.com/questions/13179620/force-overflow-menu-in-actionbarsherlock
-	// Also need to update com.actionbarsherlock.internal.view.menu.ActionMenuPresenter
 	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
+	public boolean onKey(View view, int keyCode, KeyEvent event) {
+		// http://stackoverflow.com/questions/1489852/android-handle-enter-in-an-edittext
+        // If the event is a key-down event on the "enter" button
+        if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+        		(keyCode == KeyEvent.KEYCODE_ENTER)) {
+        	// Perform action on key press
+        	if(view instanceof EditText) {
+        		// make sure this is the search terms field
+        		if(view.getId() == R.id.txt_search_terms) {
+        			submitSearch((EditText)view);
+        			return true;
+        		}
+        	}
+        }
+    	// http://stackoverflow.com/questions/13179620/force-overflow-menu-in-actionbarsherlock
+    	// Also need to update com.actionbarsherlock.internal.view.menu.ActionMenuPresenter
 	    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 	        if (event.getAction() == KeyEvent.ACTION_UP &&
 	            keyCode == KeyEvent.KEYCODE_MENU) {
@@ -210,7 +216,7 @@ public class TGSUIActivity extends TGSTabActivity {
 	            return true;
 	        }
 	    }
-	    return super.onKeyUp(keyCode, event);
+		return false;
 	}
 	
 }

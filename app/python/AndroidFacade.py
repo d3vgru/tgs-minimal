@@ -71,7 +71,7 @@ def sendEvent(event):
 	
 # convenience function to get next event
 def nextEvent():
-    return getMainActivity().nextEvent()
+    return getFacade().nextEvent()
 
 # convenience logging function
 def monitor(msg):

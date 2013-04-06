@@ -1,17 +1,11 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:unified="http://schemas.android.com/apk/res-auto">
-
 <header
     unified:fragment="org.theglobalsquare.app.config.EditPreferences$Fragment"
-    unified:title="@string/settingsBtnLabel"
+    unified:title="@string/generalSettingsLabel"
     unified:preferenceRes="@xml/settings" />
-<!--
-	<header
-		android:fragment="org.theglobalsquare.app.config.StockPreferenceFragment"
-		android:title="@string/settingsBtnLabel">
-		<extra
-			android:name="resource"
-			android:value="settings"/>
-	</header>
--->
+<header
+    unified:fragment="org.theglobalsquare.app.config.EditPreferences$Fragment"
+    unified:title="@string/proxySettingsLabel"
+    unified:preferenceRes="@xml/proxy_settings" />
 </preference-headers>

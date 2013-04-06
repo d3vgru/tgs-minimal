@@ -3,13 +3,12 @@ package org.theglobalsquare.app;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
 import android.widget.*;
 
 import org.kivy.android.PythonActivity;
@@ -21,72 +20,13 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 	public final static String TAG = "TGSMain";
 
 	private static Handler msgHandler = null;
-	private static Queue<TGSEvent> qToPy = null;
-	private static TGSEvent pyEvent = null;
 	
-	public static int queueSize() {
-		return qToPy.size();
-	}
-
-	public static TGSEvent getPyEvent() {
-		return pyEvent;
-	}
-	
-	public static TGSEvent nextEvent() {
-//		android.util.Log.w(TGSMainActivity.TAG, "NEXT: currently " + qToPy.size() + " items in queue " + qToPy.hashCode());
-//		android.util.Log.i(TGSMainActivity.TAG, "event: " + Facade.getEvent() + ", FACADE.pyEvent: " + Facade.pyEvent);
-		return qToPy.poll();
-	}
-
-	public static boolean sendEvent(TGSEvent e) {
-		return sendEvent(e, false);
-	}
-	public static boolean sendEvent(TGSEvent e, boolean toPy) {
-		if(toPy) {
-			pyEvent = e;
-			if(qToPy == null) {
-				android.util.Log.d(TGSMainActivity.TAG, "NEW QUEUE ON SEND EVENT");
-				qToPy = new ConcurrentLinkedQueue<TGSEvent>();
-			}
-			boolean success = qToPy.add(e);
-//			android.util.Log.w(TGSMainActivity.TAG, "SEND: currently " + qToPy.size() + " items in queue " + qToPy.hashCode());
-//			android.util.Log.i(TGSMainActivity.TAG, "MAIN.pyEvent: " + pyEvent);
-			return success;
-		}
-		return Facade.sendEvent(e);
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if(qToPy == null) {
-			android.util.Log.d(TGSMainActivity.TAG, "NEW QUEUE");
-			qToPy = new ConcurrentLinkedQueue<TGSEvent>();
-		}
-
 		// get events from python (or else AndroidFacade in python won't be able to send us TGSSystemEvent)
 		getFacade().addListener(TGSSystemEvent.class, this);		
-
-		/* ping test
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				boolean keepGoing = true;
-				while(keepGoing) {
-					TGSMessage m = new TGSMessage();
-					m.setBody("PING");
-					TGSSystemEvent e = TGSSystemEvent.forLog(m);
-					sendEvent(e, true);
-					try {
-						Thread.sleep(5000);
-					} catch(InterruptedException ex) {
-						keepGoing = false;
-					}
-				}
-			}
-		}).start();
-		*/
 
 		monitor(TGSMainActivity.TAG + ": INIT");
 	}
@@ -196,5 +136,17 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 		// monitor() shows the event in the monitor tab
 		super.monitor(message);
 	}
+	
+	public void submitSearch(EditText et) {
+		String term = "";
+		Editable e = et.getText();
+		if(e != null)
+			term = e.toString();
+		et.setText(null);
+		dismissKeyboardFor(et);
 
+		// TODO make a search event and put it in the queue
+		android.util.Log.i(TGSUIActivity.TAG, "search: " + term);
+	}
+	
 }

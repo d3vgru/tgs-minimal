@@ -3,6 +3,7 @@ package org.theglobalsquare.app;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -35,10 +36,37 @@ public class Facade extends Application {
 			listeners = new HashMap<Class<? extends TGSEvent>, Set<PropertyChangeListener>>();
 		}
 
+		if(qToPy == null) {
+			android.util.Log.d(TGSMainActivity.TAG, "NEW QUEUE");
+			qToPy = new ConcurrentLinkedQueue<TGSEvent>();
+		}
+
 		super.onCreate();
 	}
 	
+	private static Queue<TGSEvent> qToPy = null;
+	
+	public static int queueSize() {
+		return qToPy.size();
+	}
+
+	public static TGSEvent nextEvent() {
+		return qToPy.poll();
+	}
+
 	public static boolean sendEvent(TGSEvent e) {
+		return sendEvent(e, false);
+	}
+	public static boolean sendEvent(TGSEvent e, boolean toPy) {
+		if(toPy) {
+			pyEvent = e;
+			if(qToPy == null) {
+				android.util.Log.d(TGSMainActivity.TAG, "NEW QUEUE ON SEND EVENT");
+				qToPy = new ConcurrentLinkedQueue<TGSEvent>();
+			}
+			boolean success = qToPy.add(e);
+			return success;
+		}
 		for(Class<? extends TGSEvent> c : listeners.keySet()) {
 			if(c == null // want to know all events
 					|| e.getClass().isAssignableFrom(c)) { // e instanceof c
@@ -111,4 +139,5 @@ public class Facade extends Application {
 	public String getProxyPort() {
 		return getPrefs().getString(PREF_PROXY_PORT, getResources().getString(R.string.proxyPortDefault));
 	}
+
 }

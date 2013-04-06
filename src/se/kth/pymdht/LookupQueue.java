@@ -57,9 +57,9 @@ class LookupQueue {
 			assert this.closest_responded_qnodes.size() <= REPLICA_SIZE;
 //			System.out.println(closest_responded_qnodes.size() + " closest qnodes");
 
-			for(QueuedNode qnode : closest_responded_qnodes){
+//			for(QueuedNode qnode : closest_responded_qnodes){
 //				System.out.println("closest log: " + qnode.distance.log);
-			}
+//			}
 			if (this.closest_responded_qnodes.size() < REPLICA_SIZE ||
 					candidate_qnode.distance.compareTo(this.closest_responded_qnodes.last().distance) < 0){
 				this.closest_responded_qnodes.add(candidate_qnode);

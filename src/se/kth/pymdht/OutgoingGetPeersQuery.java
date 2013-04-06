@@ -10,7 +10,7 @@ public class OutgoingGetPeersQuery {
 	/*
 	 */
 	public OutgoingGetPeersQuery(Id src_id, Id info_hash){
-		ByteBuffer version = ByteBuffer.wrap("An00".getBytes());
+//		ByteBuffer version = ByteBuffer.wrap("An00".getBytes());
 		TreeMap<ByteBuffer, Object> root_dict = new TreeMap<ByteBuffer, Object>();
 		this._bencode = new Bencode();
 		this._bencode.setRootElement(root_dict);

@@ -1,12 +1,15 @@
 package com.tudelft.triblerdroid.first;
 
-import java.net.InetAddress;
+//import java.net.InetAddress;
 
 //ARNOAPI12
+import net.majorkernelpanic.streaming.misc.*;
+import net.majorkernelpanic.streaming.*;
+//import net.majorkernelpanic.streaming.rtp.*;
 //import com.tudelft.majorkernelpanic.streaming.audio.AACStream;
-import com.tudelft.majorkernelpanic.streaming.video.H264Stream;
-import com.tudelft.majorkernelpanic.streaming.video.VideoQuality;
-import com.tudelft.majorkernelpanic.spydroid.*;
+import net.majorkernelpanic.streaming.video.H264Stream;
+import net.majorkernelpanic.streaming.video.VideoQuality;
+//import net.majorkernelpanic.spydroid.*;
 import com.tudelft.triblerdroid.swift.NativeLib;
 
 import android.app.Activity;
@@ -21,22 +24,24 @@ import android.hardware.Camera.CameraInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+//import android.os.Handler;
+//import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 //import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.view.Display;
+//import android.util.Log;
+//import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+/*
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
+*/
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,21 +55,23 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         
         static final public String TAG = "SpydroidActivity"; 
         
-        private ImageView logo, led;
+//        private ImageView logo;
+        private ImageView led;
         private PowerManager.WakeLock wl;
         private RtspServer rtspServer = null;
-        private SurfaceHolder holder;
+//        private SurfaceHolder holder;
         private SurfaceView camera;
-        private TextView console, status;
+//        private TextView console;
+        private TextView status;
         private VideoQuality defaultVideoQuality = new VideoQuality();
-        private Display display;
+//        private Display display;
         private Context context;
         
         // Arno
         private Session _session;
         private Button  _b1;
         private Button  _b2;
-        private int 	_oldNALULength;
+//        private int 	_oldNALULength;
         static public String  _swarmid;
         
     public void onCreate(Bundle savedInstanceState) {
@@ -77,10 +84,10 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         setContentView(R.layout.source);
 
         camera = (SurfaceView)findViewById(R.id.smallcameraview);
-        logo = (ImageView)findViewById(R.id.logo);
+//        logo = (ImageView)findViewById(R.id.logo);
         //console = (TextView) findViewById(R.id.console);
         status = (TextView) findViewById(R.id.status);
-        display = getWindowManager().getDefaultDisplay();
+//        display = getWindowManager().getDefaultDisplay();
         context = this.getApplicationContext();
         led = (ImageView)findViewById(R.id.led);
         
@@ -89,16 +96,19 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         //ARNOAPI12 AACStream.setAACSupported(android.os.Build.VERSION.SDK_INT>=14);
         defaultVideoQuality.resX = settings.getInt("video_resX", 640);
         defaultVideoQuality.resY = settings.getInt("video_resY", 480);
+        // FIXME apply changes from com.tudelft versions of spydroid
+        /*
         defaultVideoQuality.frameRate = Integer.parseInt(settings.getString("video_framerate", "15"));
         defaultVideoQuality.bitRate = Integer.parseInt(settings.getString("video_bitrate", "500"))*1000; // 500 kb/s
         
         String s = "QUALITY" + defaultVideoQuality.resX + " " + defaultVideoQuality.resY + " " + defaultVideoQuality.frameRate + " " + defaultVideoQuality.bitRate + " " + defaultVideoQuality.orientation;
         Log.w("Swift", s );
+        */
         
         settings.registerOnSharedPreferenceChangeListener(this);
        	
         camera.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        holder = camera.getHolder();
+//        holder = camera.getHolder();
 		
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "net.majorkernelpanic.spydroid.wakelock");
@@ -110,11 +120,14 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
 			log("<b>Spydroid</b>");
 		}*/
         
+        // FIXME apply changes from com.tudelft versions of spydroid
+        /*
         Session.setSurfaceHolder(holder);
         Session.setDefaultVideoQuality(defaultVideoQuality);
         // Arno: No audio
         Session.setDefaultAudioEncoder(settings.getBoolean("stream_audio", false)?Integer.parseInt(settings.getString("audio_encoder", "1")):0);
         Session.setDefaultVideoEncoder(settings.getBoolean("stream_video", true)?Integer.parseInt(settings.getString("video_encoder", "1")):0);
+        */
         
         //if (settings.getBoolean("enable_rtsp", true)) rtspServer = new RtspServer(8086, handler);
 
@@ -123,7 +136,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         /*
          * ARNO
          */
-        _oldNALULength = -1;
+//        _oldNALULength = -1;
         
 		// Arno, 2012-11-26: Hardcoded swarm id of live swarm
         // FUSETODO: let user pick name for broadcast, or let IP keep it unique
@@ -135,7 +148,9 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         // Create new Session
         try
         {
-        	_session = new Session(InetAddress.getByName("127.0.0.1"),handler);
+            // FIXME apply changes from com.tudelft versions of spydroid
+
+//        	_session = new Session(InetAddress.getByName("127.0.0.1"),handler);
 		}
 		catch(Exception e)
 		{
@@ -185,7 +200,9 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
 
         
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        	if (key.equals("video_resX")) {
+        	// FIXME apply changes from com.tudelft versions of spydroid
+        	/*
+         	if (key.equals("video_resX")) {
         		defaultVideoQuality.resX = sharedPreferences.getInt("video_resX", 640);
         		Session.setDefaultVideoQuality(defaultVideoQuality);
         	}
@@ -214,6 +231,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         			if (rtspServer != null) rtspServer = null;
         		}
         	}	
+        	*/
         }
         
         public void onStart() {
@@ -316,13 +334,15 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
             } 
         };
         
-        private boolean streaming = false;
+//        private boolean streaming = false;
         
         // The Handler that gets information back from the RtspServer
-        private final Handler handler = new Handler() {
+/*
+        private static Handler handler = new Handler() {
         	
-        	public void handleMessage(Message msg) { 
+        	public void handleMessage(Message msg) {
         		switch (msg.what) {
+        		// FIXME apply changes from com.tudelft versions of spydroid
         		case RtspServer.MESSAGE_LOG:
         			log((String)msg.obj);
         			break;
@@ -342,10 +362,13 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         		case Session.MESSAGE_ERROR:
         			log((String)msg.obj);
         			break;
+        		default:
+        			break;
         		}
         	}
         	
         };
+        */
         
         private String getIPAddress()
         {
@@ -379,27 +402,27 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         	console.append(Html.fromHtml(s+"<br />"));*/
         	Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
         }
-
+/*
     	private Runnable logoAnimation = new Runnable() {
     		public void run() {
     			runLogoAnimation();
     			handler.postDelayed(this,7000);
     		}
     	};
-        
-    	private boolean ledState = true; 
+        // FIXME merge this with main led code
+//    	private boolean ledState = true; 
     	
     	private void toggleLed() {
-
-    		status.setText( "Stream " + getIPAddress() + " * " + com.tudelft.majorkernelpanic.rtp.H264Packetizer.arnoLastNALULength );
+    		// FIXME apply changes from com.tudelft versions of spydroid
+    		status.setText( "Stream " + getIPAddress() + " * " + H264Packetizer.arnoLastNALULength );
 
     		// Arno: show stall in encoder
-    		if (_oldNALULength == com.tudelft.majorkernelpanic.rtp.H264Packetizer.arnoLastNALULength)
+    		if (_oldNALULength == H264Packetizer.arnoLastNALULength)
     		{
     			led.setImageResource(R.drawable.led_red);
     			return;
     		}
-    		_oldNALULength = com.tudelft.majorkernelpanic.rtp.H264Packetizer.arnoLastNALULength;
+    		_oldNALULength = H264Packetizer.arnoLastNALULength;
     		if (ledState) {
     			ledState = false;
     			led.setImageResource(R.drawable.led_green);
@@ -408,7 +431,6 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
     			led.setImageResource(getResources().getColor(android.R.color.transparent));
     		}
     	}
-    	
     	private Runnable ledAnimation = new Runnable() {
     		public void run() {
     			toggleLed();
@@ -453,6 +475,5 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
     		logo.setVisibility(View.VISIBLE);
     		
     	}
+    	*/
 }
-    
-    

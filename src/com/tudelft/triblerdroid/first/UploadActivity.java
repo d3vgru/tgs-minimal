@@ -20,11 +20,11 @@ import se.kth.pymdht.Pymdht;
 
 
 public class UploadActivity extends Activity {
-    private static final int SELECT_VIDEO_FILE_REQUEST_CODE = 200;
+//    private static final int SELECT_VIDEO_FILE_REQUEST_CODE = 200;
 
     public static final String PREFS_NAME = "settings.dat";
 
-	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 100;
+//	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 100;
 //    CheckBox cb_showIntro;
     boolean user_set_default_now = false;
     public int INVALID_ID_DIALOG = 0;
@@ -91,9 +91,9 @@ public class UploadActivity extends Activity {
 	 */
 	private class SeedTask extends AsyncTask<String, Integer, String> {
 	
-		private int upSpeed;
+//		private int upSpeed;
 		private String upSpeedStr;
-		private String numConnectionsStr;
+//		private String numConnectionsStr;
 		private int numSeeders;
 
 		protected String doInBackground(String... args) {

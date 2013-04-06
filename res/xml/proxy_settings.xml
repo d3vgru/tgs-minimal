@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	    <CheckBoxPreference
+	        android:key="pref_enable_proxy"
+	        android:title="@string/enableProxyLabel"
+	        android:summary="@string/enableProxySummary"
+	        android:defaultValue="false"
+	        />
+	    <!--
+	    <CheckBoxPreference
+	        android:key="pref_require_proxy"
+	        android:title="@string/requireProxyLabel"
+	        android:summary="@string/requireProxySummary"
+	        android:defaultValue="false"
+	        android:dependency="pref_enable_proxy"
+	        />
+	    -->
+	    <EditTextPreference
+	        android:key="pref_proxy_host"
+	        android:title="@string/proxyHostLabel"
+	        android:summary="@string/proxyHostSummary"
+	        android:defaultValue="@string/localhostLabel"
+	        android:dependency="pref_enable_proxy"
+	        />
+	    <EditTextPreference
+	        android:key="pref_proxy_port"
+	        android:title="@string/proxyPortLabel"
+	        android:summary="@string/proxyPortSummary"
+	        android:defaultValue="@string/proxyPortDefault"
+	        android:dependency="pref_enable_proxy"
+	        />
+</PreferenceScreen>

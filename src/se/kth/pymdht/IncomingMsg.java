@@ -108,6 +108,7 @@ public class IncomingMsg {
 		return nodes;
 	}
 	
+	@SuppressWarnings("unused")
 	private Vector<InetSocketAddress> uncompact_peers(List<ByteBuffer> c_peers) throws MsgError{
 		Vector<InetSocketAddress> peers = new Vector<InetSocketAddress>();
 		Inet4Address addr;
