@@ -19,11 +19,11 @@ public abstract class TGSEvent {
 	}
 
 	// to what is it happening?
-	private TGSObject object = null;
-	public TGSObject getObject() {
+	private ITGSObject object = null;
+	public ITGSObject getObject() {
 		return object;
 	}
-	public void setObject(TGSObject object) {
+	public void setObject(ITGSObject object) {
 		this.object = object;
 	}
 	
@@ -32,7 +32,7 @@ public abstract class TGSEvent {
 		Object s = getSubject();
 		if(s != null)
 			out = s.toString() + " " + out;
-		TGSObject o = getObject();
+		ITGSObject o = getObject();
 		if(o != null)
 			out += " " + o;
 		return out;

@@ -61,18 +61,26 @@ class MainLoop():
         if nextEvent is not None:
             eventClassName = nextEvent.getClass().getName()
             concreteEvent = cast(eventClassName, nextEvent)
+            superEvent = cast('org.theglobalsquare.framework.TGSEvent', nextEvent)
 #            AndroidFacade.monitor('MainLoop: got event from java, class: {}'.format(eventClass))
             if(eventClassName == 'org.theglobalsquare.framework.values.TGSConfigEvent'):
                 # update config using latest values
+                # hmm, subject seems to work here
                 self._chatCore.setConfig(concreteEvent.getSubject())
             elif(eventClassName == 'org.theglobalsquare.framework.values.TGSCommunitySearchEvent'):
-                searchEvent = cast('org.theglobalsquare.framework.TGSEvent', nextEvent)
-                communityObj = searchEvent.getObject()
+                communityObj = superEvent.getObject()
                 if(communityObj is not None):
                     terms = communityObj.getName()
                     AndroidFacade.monitor('ChatCore: got community search terms: {}'.format(terms))
                     # really start search
                     self._chatCore.startNewSquareSearch(terms)
+            elif(eventClassName == 'org.theglobalsquare.framework.values.TGSCommunityEvent'):
+                # subject works as long as we're the main thread
+                subjectObj = cast('org.theglobalsquare.framework.values.TGSCommunity', concreteEvent.getSubject())
+                AndroidFacade.monitor('got a community from subject: {}'.format(subjectObj.getName()))
+                
+                # TODO create the community
+                
         time.sleep(.1)
         return self.go
 
@@ -102,6 +110,7 @@ class TGSSignal:
         community.setName(cache.terms[0][1])
 
         # cast or else jnius freaks
+        # setting subject doesn't work either (because it's a callback?)
         tgsObject = cast('org.theglobalsquare.framework.TGSObject', community)
         event.setObject(tgsObject)
         AndroidFacade.monitor('Signal: emitting event of type {} with cache {}'.format(self._eventProtoClass, cache))

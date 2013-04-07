@@ -1,5 +1,6 @@
 package org.theglobalsquare.framework.values;
 
+import org.theglobalsquare.framework.ITGSObject;
 import org.theglobalsquare.framework.TGSObject;
 
 public class TGSMessage extends TGSObject {
@@ -46,14 +47,14 @@ public class TGSMessage extends TGSObject {
 	}
 	
 	// who or what is the intended recipient?
-	private TGSObject destination;
+	private ITGSObject destination;
 	
 
-	public TGSObject getDestination() {
+	public ITGSObject getDestination() {
 		return destination;
 	}
 
-	public void setDestination(TGSObject destination) {
+	public void setDestination(ITGSObject destination) {
 		assert destination instanceof TGSUser || destination instanceof TGSCommunity;
 		this.destination = destination;
 	}

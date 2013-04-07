@@ -1,4 +1,4 @@
-package org.theglobalsquare.framework;
+package org.theglobalsquare.framework.activity;
 
 import android.content.Intent;
 import android.os.Build;

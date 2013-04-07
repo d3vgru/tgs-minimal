@@ -13,6 +13,9 @@ def Config():
 def Community():
     return autoclass('org.theglobalsquare.framework.values.TGSCommunity')
     
+def CommunityList():
+    return autoclass('org.theglobalsquare.framework.values.TGSCommunityList')
+    
 def Event():
     return autoclass('org.theglobalsquare.framework.TGSEvent')
     

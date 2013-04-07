@@ -1,4 +1,4 @@
-package org.theglobalsquare.framework;
+package org.theglobalsquare.framework.activity;
 
 import java.util.ArrayList;
 

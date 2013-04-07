@@ -1,13 +1,10 @@
-package org.theglobalsquare.framework;
+package org.theglobalsquare.framework.activity;
 
 import org.kivy.android.PythonActivity;
 import org.theglobalsquare.app.Facade;
 import org.theglobalsquare.app.R;
-import org.theglobalsquare.framework.values.TGSConfig;
-import org.theglobalsquare.framework.values.TGSConfigEvent;
-import org.theglobalsquare.framework.values.TGSMessage;
-import org.theglobalsquare.framework.values.TGSMessageEvent;
-import org.theglobalsquare.framework.values.TGSUser;
+import org.theglobalsquare.framework.*;
+import org.theglobalsquare.framework.values.*;
 import org.theglobalsquare.ui.SearchFragment;
 
 import android.content.Context;

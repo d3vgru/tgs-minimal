@@ -17,78 +17,71 @@ import org.theglobalsquare.framework.TGSDialogFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
 
 public class NewCommunityFragment extends TGSDialogFragment {
-	// community
-	private TGSCommunity mCommunity = null;
+	private View mView = null;
 	
 	// TODO location, radius, avatar
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mCommunity = new TGSCommunity();
-		View view = inflater.inflate(R.layout.community_new, null);
+		mView = inflater.inflate(R.layout.community_new, null);
 		final ITGSActivity tgsActivity = (ITGSActivity)getActivity();
 		
-		final EditText etName = (EditText)view.findViewById(R.id.txt_community_name);
-		etName.setOnKeyListener(new OnKeyListener() {
+		OnKeyListener enterListener = new OnKeyListener() {
 			@Override
 			public boolean onKey(View view, int keyCode, KeyEvent event) {
-				if(listenForEnter(tgsActivity, view, keyCode, event))
-					return true;
 				if(event.getAction() == KeyEvent.ACTION_UP) {
-					String name = "";
-					Editable eName = etName.getText();
-					if(eName != null)
-						name = eName.toString();
-					mCommunity.setName(name);
-					return true;
+					if(listenForEnter(tgsActivity, view, keyCode, event))
+						return true;
 				}
 				return false;
 			}
-		});
+		};
 		
-		final EditText etDescription = (EditText)view.findViewById(R.id.txt_community_description);
-		etDescription.setOnKeyListener(new OnKeyListener() {
-			@Override
-			public boolean onKey(View view, int keyCode, KeyEvent event) {
-				if(listenForEnter(tgsActivity, view, keyCode, event))
-					return true;
-				if(event.getAction() == KeyEvent.ACTION_UP) {
-					String description = "";
-					Editable eDescription = etDescription.getText();
-					if(eDescription != null)
-						description = eDescription.toString();
-					mCommunity.setDescription(description);
-					return true;
-				}
-				return false;
-			}
-		});
+		EditText etName = (EditText)mView.findViewById(R.id.txt_community_name);
+		etName.setOnKeyListener(enterListener);
 
-		Button createButton = (Button)view.findViewById(R.id.btn_create_community);
+		EditText etDescription = (EditText)mView.findViewById(R.id.txt_community_description);
+		etDescription.setOnKeyListener(enterListener);
+
+		Button createButton = (Button)mView.findViewById(R.id.btn_create_community);
 		createButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				createCommunity(tgsActivity);
 			}
 		});
-		return view;
+		return mView;
 	}
 	
 	protected void createCommunity(ITGSActivity tgsActivity) {
-		tgsActivity.createCommunity(mCommunity);
+		TGSCommunity c = new TGSCommunity();
+		EditText etName = (EditText)mView.findViewById(R.id.txt_community_name);
+		Editable eName = etName.getText();
+		String name = eName == null ? "" : eName.toString();
+		c.setName(name);
+		EditText etDescription = (EditText)mView.findViewById(R.id.txt_community_description);
+		Editable eDescription = etDescription.getText(); 
+		String description = eDescription == null ? "" : eDescription.toString();
+		c.setDescription(description);
+		android.util.Log.i("NewCommunity", "-community: " + c);
+		tgsActivity.createCommunity(c);
 		NewCommunityFragment.this.dismiss();
 	}
 	
 	public boolean listenForEnter(ITGSActivity tgsActivity, View view, int keyCode, KeyEvent event) {
+		if(keyCode != KeyEvent.KEYCODE_ENTER)
+			return false;
 		int viewId = view.getId();
 		// if it's the name, advance to description
 		if(viewId == R.id.txt_community_name) {
+			android.util.Log.i("NewCommunity", "advancing to description");
 			NewCommunityFragment.this.getView().findViewById(R.id.txt_community_description).requestFocus();
 			return true;
 		}
 		// if it's description, submit
 		if(viewId == R.id.txt_community_description) {
+			android.util.Log.i("NewCommunity", "creating community");
 			createCommunity(tgsActivity);
 			return true;
 		}
