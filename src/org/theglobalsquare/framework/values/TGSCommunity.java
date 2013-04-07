@@ -15,6 +15,16 @@ public class TGSCommunity extends TGSObject {
 	public static final String CREATED = "created";
 	public static final String DATA = "data";
 
+	private String description;
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	private List<TGSMessage> messages;
 	
 	public List<TGSMessage> getMessages() {

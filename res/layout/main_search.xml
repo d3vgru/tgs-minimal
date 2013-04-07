@@ -16,7 +16,7 @@
 	        android:id="@+id/txt_search_terms" 
 	        android:hint="@string/hintMainSearch"
 	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
+	        android:layout_height="wrap_content"
 	        android:layout_margin="5dp"
 			android:inputType="textMultiLine"
             android:lines="2"

@@ -19,6 +19,10 @@
     <string name="noSquaresMsg">You haven\'t joined any squares yet.
             Search for a square to join or create a new one to get started.</string>
             
+    <string name="communityNameLabel">Community Name</string>
+    <string name="communityDescriptionLabel">Community Description</string>
+    <string name="createCommunityBtnLabel">Create Community</string>
+    
     <string name="coreLabel">Core</string>
     <string name="monitorLabel">Monitor</string>
     <string name="statusLabel">Status</string>

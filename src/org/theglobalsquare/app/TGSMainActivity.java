@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
@@ -141,7 +142,16 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 
 	// ITGSActivity impl
 	@Override
-	public void submitSearch(EditText et, TGSFragment searchFragment) {
+	public void createCommunity(TGSCommunity c) {
+		// make create community event
+		TGSCommunityEvent e = TGSCommunityEvent.forCreateSquare(c);
+		
+		// put it in the event queue
+		Facade.sendEvent(e, true);
+	}
+	
+	@Override
+	public void submitCommunitySearch(EditText et, Fragment searchFragment) {
 		String term = "";
 		Editable e = et.getText();
 		if(e != null)
@@ -192,5 +202,23 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 		
 		android.util.Log.i(TGSMainActivity.TAG, "queued search for: " + term);
 	}
-	
+
+	@Override
+	public void joinCommunity(TGSCommunity c) {
+		// TODO send join community event to python
+		
+	}
+
+	@Override
+	public void leaveCommunity(TGSCommunity c) {
+		// TODO send leave community event to python
+		
+	}
+
+	@Override
+	public void postMessage(TGSCommunity c, TGSMessage m) {
+		// TODO send post message event to python
+		
+	}
+
 }

@@ -87,27 +87,25 @@ class TGSSignal:
 #        AndroidFacade.Event()
         event = self._eventProtoClass()
         # TODO put cache in results
+        
         cache = argv[0]
         event.setVerb(argv[1])
         community = self._communityProtoClass()
         AndroidFacade.monitor('Signal: community: {}'.format(community))
+
+        # terms[0] is the (first set of?) terms
         AndroidFacade.monitor('Signal: terms[0]: {}'.format(cache.terms[0]))
-        community.setName('searching for terms: {}'.format(cache.terms[0][1]))
+
+        # terms[0][0] is the length of the shortest term
+        # terms[0][1] is the name
+        # get the name of the first term
+        community.setName(cache.terms[0][1])
+
+        # cast or else jnius freaks
         tgsObject = cast('org.theglobalsquare.framework.TGSObject', community)
         event.setObject(tgsObject)
         AndroidFacade.monitor('Signal: emitting event of type {} with cache {}'.format(self._eventProtoClass, cache))
         AndroidFacade.sendEvent(event)
-
-"""    
-class TGSCallback:
-    def __init__(self, eventClass):
-        self._eventClass = eventClass
-    def newInstance(self):
-        autoclass('org.theglobalsquare.framework.TGSEvent')
-        autoclass('org.theglobalsquare.framework.values.TGSCommunitySearchEvent')
-        return self._eventClass()
-    
-"""
 
 #TODO: Separate the TGS stuff (dispersy threads setup et al, internal callbacks...) from the pure UI code and put it in this class:
 class TGS:
@@ -556,6 +554,7 @@ class ChatCore:
             self._message_attachment = None
             self.mainwin.attach_btn.setToolTip('')
     """
+    # not really sure we need this
     def onSquareSearchUpdate(self, cache, event):
         #TODO: send event to Android - 4
         AndroidFacade.monitor('Received Square search update')

@@ -37,7 +37,7 @@ public class SearchFragment extends TGSFragment {
 		searchButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mainActivity.submitSearch(terms, SearchFragment.this);
+				mainActivity.submitCommunitySearch(terms, SearchFragment.this);
 			}
 		});
 		return view;

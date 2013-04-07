@@ -58,7 +58,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// FIXME disable until startup complete
+		// FIXME disable until startup complete?
 		switch(item.getItemId()) {
 			case R.id.menu_compose:
 				if(mComposerShowing)
@@ -80,8 +80,8 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 					findViewById(R.id.group_search_terms).setVisibility(View.VISIBLE);
 					showKeyboardFor(et);
 				} else {
-					// TODO show new square dialog
-					Toast.makeText(this, R.string.createBtnLabel, Toast.LENGTH_SHORT).show();
+					// show New Community dialog
+					showDialog(new NewCommunityFragment());
 				}
 				break;
 			case R.id.menu_search:
@@ -98,7 +98,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 				Toast.makeText(this, R.string.helpBtnLabel, Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.menu_about:
-				// TODO show about dialog
+				// show about dialog
 				showDialog(new AboutFragment());
 				break;
 			default:
@@ -139,7 +139,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
         	if(view instanceof EditText) {
         		// make sure this is the search terms field
         		if(view.getId() == R.id.txt_search_terms) {
-        			submitSearch((EditText)view, sSearchFragment);
+        			submitCommunitySearch((EditText)view, sSearchFragment);
         			return true;
         		}
         	}
