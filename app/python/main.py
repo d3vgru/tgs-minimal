@@ -694,9 +694,11 @@ class MainLoop():
                 self._chatCore.setConfig(configEvent.getSubject())
             elif(eventClass == 'org.theglobalsquare.framework.values.TGSCommunitySearchEvent'):
                 searchEvent = cast('org.theglobalsquare.framework.TGSEvent', nextEvent)
-                communityObj = searchEvent.getSubject()
+                AndroidFacade.monitor('got search event {}'.format(searchEvent))
+#                community = AndroidFacade.Community()
+#                communityObj = searchEvent.getSubject()
+#                community = cast('org.theglobalsquare.framework.values.TGSCommunity', communityObj)
                 """
-                community = cast('org.theglobalsquare.framework.values.TGSCommunity', communityObj)
                 if(community is not None):
 #                    AndroidFacade.monitor('got search term: {}'.format(community)) #.getName()))
                     AndroidFacade.monitor('got search event') #: {}'.format(searchEvent))
