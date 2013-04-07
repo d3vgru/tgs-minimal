@@ -19,9 +19,6 @@ from tgscore.dispersy.dprint import dprint
 from tgscore.dispersy.crypto import (ec_generate_key,
         ec_to_public_bin, ec_to_private_bin)
 
-#from configobj import ConfigObj
-
-
 
 # FIXME use new event model
 # dispersy depends on this, so... wtf is it?
@@ -104,8 +101,6 @@ class TGS:
         callback = Callback()
         AndroidFacade.monitor('TGS: starting dispersy callback')
         callback.start(name="Dispersy")
-        #AndroidFacade.monitor('attempting to run callback loop in main thread')
-        #callback.loop()
         AndroidFacade.monitor('TGS: registering self._dispersy')
         callback.register(self._dispersy, (callback,))
         if "--simulate" in sys.argv:
@@ -243,6 +238,10 @@ class ChatCore:
         self._communities_listwidgets = {}
         self._square_search_dialog = None
         self._message_attachment = None
+        self._oldAlias = None
+        
+    def startNewSquareSearch(self, search_terms):
+        self._tgs.startNewSquareSearch(search_terms)
 
     ##################################
     #Slots:
@@ -310,17 +309,6 @@ class ChatCore:
         #Put the message in the square specific list
         square_list_widget = self._communities_listwidgets[message.square.cid]
         ChatMessageListItem(parent=square_list_widget, message=message)
-
-    1---AP - check for event
-    def onNickChanged(self, *argv, **kwargs):
-        alias = self.mainwin.nick_line.text()
-        print "Alias changed to:", alias
-        if alias and alias != self._config['Member']['Alias']:
-            self._config['Member']['Alias'] = alias
-            self._propagateMemberInfoToAll()
-            self._config.write()
-        else:
-            print "Same or empty nick, doing nothing"
 
     3---P - check for event
     def onMessageReadyToSend(self):
@@ -430,7 +418,7 @@ class ChatCore:
             list_item = SquareOverviewListItem(parent=self.mainwin.suggested_squares_list, square=square)
             list_item.square = square
 
-    2---A - check for event?
+    2---A - check for event
     def onCreateSquareBtnPushed(self):
         self.mainwin.createSquare_btn.setEnabled(False)
         self._square_edit_dialog = SquareEditDialog()
@@ -504,7 +492,7 @@ class ChatCore:
     """
     def onSquareSearchUpdate(self, cache, event):
         #TODO: send event to Android - 4
-        print "Received Square search update"
+        AndroidFacade.monitor('Received Square search update')
         #TODO: Deal with status changes and notify user when search is done.
         """
         if self._square_search_dialog:
@@ -553,7 +541,7 @@ class ChatCore:
         self.mainwin.avatar_btn.setIcon(QtGui.QIcon(pixmap))
 
         #Connect main window signals
-        1A-->self.mainwin.nick_line.editingFinished.connect(self.onNickChanged)
+        +1A-->self.mainwin.nick_line.editingFinished.connect(self.onNickChanged)
         self.mainwin.avatar_btn.clicked.connect(self.onThumbnailButtonPressed)
         3A-->self.mainwin.message_line.returnPressed.connect(
                                                 self.onMessageReadyToSend)
@@ -564,7 +552,7 @@ class ChatCore:
         6A-->self.mainwin.leave_square_btn.clicked.connect(self.onLeaveCommunity)
         2A-->self.mainwin.createSquare_btn.clicked.connect(self.onCreateSquareBtnPushed)
 
-        4A-->self.mainwin.search_square_btn.clicked.connect(self.onSearchSquareClicked)
+        +4A-->self.mainwin.search_square_btn.clicked.connect(self.onSearchSquareClicked)
         self.mainwin.search_message_btn.clicked.connect(self.onSearchMessageClicked)
         self.mainwin.search_member_btn.clicked.connect(self.onSearchMemberClicked)
 
@@ -592,12 +580,22 @@ class ChatCore:
         AndroidFacade.monitor('ChatCore.run: destroying threads')
         self._tgs.stopThreads()
         
+    # +1---AP - check for event
+    def onNickChanged(self, *argv, **kwargs):
+        oldAlias = self._oldAlias
+        newAlias = self._config.getAlias()
+        if newAlias and newAlias != oldAlias:
+            self._propagateMemberInfoToAll()
+
     def getConfig(self):
         return self._config
         
     def setConfig(self, config):
+        if self._config is not None:
+            self._oldAlias = self._config.getAlias()
         self._config = config
-        AndroidFacade.monitor('config refreshed, proxyEnabled: {}'.format(self._config.isProxyEnabled()))
+        self.onNickChanged()
+#        AndroidFacade.monitor('config refreshed, proxyEnabled: {}'.format(self._config.isProxyEnabled()))
 
 
     ##################################
@@ -609,47 +607,18 @@ class ChatCore:
 	    # right.
 	    # use AndroidFacade to get config stuff
 	    # TEST that uninitialized config does what it should
-        AndroidFacade.monitor('TGS._getConfig: alias: ' + AndroidFacade.getAlias())
-        """
-        current_os = sys.platform
-        if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
-            config_path = unicode(sys.argv[1])
-        elif current_os in ('win32','cygwin'):
-            config_path = os.path.join(os.environ['AppData'], 'TheGlobalSquare')
-        elif current_os.startswith('linux'):
-            config_path = os.path.join(os.environ['HOME'], '.config', 'TheGlobalSquare')
-        elif current_os == 'darwin':
-            config_path = os.path.join('/Users', os.environ['USER'], 'Library', 'Preferences', 'TheGlobalSquare')
-        else:
-            print "I don't know where to store my config in this operating system and didn't receive an existing dir as first argument. (%s)\nExiting." % current_os
-            sys.exit(10)
-        """
         config_path = '/data/data/org.theglobalsquare.app/files/tgs'
 
         #Create app data dir if it doesn't exist
         if not os.path.exists(config_path):
             AndroidFacade.monitor('ChatCore: making config dir')
             os.makedirs(config_path)
-        """
-        
-        config_file_path = os.path.join(config_path, CONFIG_FILE_NAME)
-        
-        AndroidFacade.monitor('ChatCore: ConfigObjing it up')
-        config = ConfigObj(config_file_path, encoding='utf-8')
-        if not os.path.exists(config_file_path):
-            AndroidFacade.monitor('ChatCore: using defaults')
-            #Set default values
-            config['Member'] = {
-                'Alias': u'Anon',
-                'Thumbnail': ''
-                }
-            config.write()
-        """
         self._workdir = unicode(config_path)
         self._config = AndroidFacade.getConfig()
 
     def _propagateMemberInfoToAll(self):
         #TODO: Check if the community has up to date info before sending unnecessary updates
+        AndroidFacade.monitor('ChatCore: propagating member info')
         for community in self._communities.itervalues():
             self._setMemberInfo(community)
 
@@ -697,9 +666,9 @@ class MainLoop():
                 communityObj = searchEvent.getObject()
 #                AndroidFacade.monitor('got community: {} '.format(communityObj))
                 if(communityObj is not None):
-                    AndroidFacade.monitor('got search term: {}'.format(communityObj.getName()))
-                    # TODO really start search
-                    
+                    AndroidFacade.monitor('ChatCore: got community search term: {}'.format(communityObj.getName()))
+                    # really start search
+                    self._chatCore.startNewSquareSearch(communityObj.getName())
         time.sleep(.1)
         return self.go
 

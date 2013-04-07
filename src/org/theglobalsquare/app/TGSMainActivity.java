@@ -153,7 +153,8 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 		TGSCommunity c = new TGSCommunity();
 		c.setName(term);
 		TGSSearchEvent s = new TGSCommunitySearchEvent();
-		s.setSubject(c);
+// jnius can't seem to access the subject field
+//		s.setSubject(c);
 		s.setObject(c);
 		s.setVerb(TGSSearchEvent.START);
 		Facade.sendEvent(s, true);

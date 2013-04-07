@@ -42,7 +42,7 @@ BLACKLIST_PATTERNS = [
     # pyc/py
     '*.pyc',
 # disable for __debug__ to work with modules
-#    '*.py',
+    '*.py',
 
     # temp files
     '~',
