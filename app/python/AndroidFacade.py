@@ -67,8 +67,8 @@ def getMainActivity():
 
 # convenience function to send event
 def sendEvent(event):
-    Event()
-    return Facade().sendEvent(event)
+    tgsEvent = cast('org.theglobalsquare.framework.TGSEvent', event)
+    return Facade().sendEvent(tgsEvent)
 	
 # convenience function to get next event
 def nextEvent():

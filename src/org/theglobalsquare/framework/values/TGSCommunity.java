@@ -28,4 +28,8 @@ public class TGSCommunity extends TGSObject {
 	public TGSCommunity() {
 		this.messages = new ArrayList<TGSMessage>();
 	}
+	
+	public String toString() {
+		return getName();
+	}
 }

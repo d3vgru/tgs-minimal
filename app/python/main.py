@@ -59,36 +59,55 @@ class MainLoop():
         #AndroidFacade.monitor('MainLoop: TICK, {} events in queue'.format(f.queueSize()))
         nextEvent = AndroidFacade.nextEvent()
         if nextEvent is not None:
-            eventClass = nextEvent.getClass().getName()
+            eventClassName = nextEvent.getClass().getName()
+            concreteEvent = cast(eventClassName, nextEvent)
 #            AndroidFacade.monitor('MainLoop: got event from java, class: {}'.format(eventClass))
-            if(eventClass == 'org.theglobalsquare.framework.values.TGSConfigEvent'):
+            if(eventClassName == 'org.theglobalsquare.framework.values.TGSConfigEvent'):
                 # update config using latest values
-                configEvent = cast(eventClass, nextEvent)
-                self._chatCore.setConfig(configEvent.getSubject())
-            elif(eventClass == 'org.theglobalsquare.framework.values.TGSCommunitySearchEvent'):
+                self._chatCore.setConfig(concreteEvent.getSubject())
+            elif(eventClassName == 'org.theglobalsquare.framework.values.TGSCommunitySearchEvent'):
                 searchEvent = cast('org.theglobalsquare.framework.TGSEvent', nextEvent)
                 communityObj = searchEvent.getObject()
-#                AndroidFacade.monitor('got community: {} '.format(communityObj))
                 if(communityObj is not None):
-                    AndroidFacade.monitor('ChatCore: got community search term: {}'.format(communityObj.getName()))
+                    terms = communityObj.getName()
+                    AndroidFacade.monitor('ChatCore: got community search terms: {}'.format(terms))
                     # really start search
-                    self._chatCore.startNewSquareSearch(communityObj.getName())
+                    self._chatCore.startNewSquareSearch(terms)
         time.sleep(.1)
         return self.go
 
 
 # for simple notifications of a recurring event
 class TGSSignal:
-    def __init__(self, eventProto):
-        self._eventProto = eventProto
-        self._pyEvent = None
+    def __init__(self, eventProtoClass):
+        self._eventProtoClass = eventProtoClass
+        self._communityProtoClass = autoclass('org.theglobalsquare.framework.values.TGSCommunity')
     def emit(self, *argv, **kwargs):
-        AndroidFacade.Event()
-        AndroidFacade.sendEvent(self._eventProto())
-# self._tgs.squareSearchUpdate.connect(self.onSquareSearchUpdate)
-    def connect(self, pyEvent):
-        self._pyEvent = pyEvent
-    # FIXME I don't even
+# argv is something like (<tgscore.discovery.community.SearchCache object at 0x454ad050>, 'finished')
+#        AndroidFacade.Event()
+        event = self._eventProtoClass()
+        # TODO put cache in results
+        cache = argv[0]
+        event.setVerb(argv[1])
+        community = self._communityProtoClass()
+        AndroidFacade.monitor('Signal: community: {}'.format(community))
+        AndroidFacade.monitor('Signal: terms[0]: {}'.format(cache.terms[0]))
+        community.setName('searching for terms: {}'.format(cache.terms[0][1]))
+        tgsObject = cast('org.theglobalsquare.framework.TGSObject', community)
+        event.setObject(tgsObject)
+        AndroidFacade.monitor('Signal: emitting event of type {} with cache {}'.format(self._eventProtoClass, cache))
+        AndroidFacade.sendEvent(event)
+
+"""    
+class TGSCallback:
+    def __init__(self, eventClass):
+        self._eventClass = eventClass
+    def newInstance(self):
+        autoclass('org.theglobalsquare.framework.TGSEvent')
+        autoclass('org.theglobalsquare.framework.values.TGSCommunitySearchEvent')
+        return self._eventClass()
+    
+"""
 
 #TODO: Separate the TGS stuff (dispersy threads setup et al, internal callbacks...) from the pure UI code and put it in this class:
 class TGS:

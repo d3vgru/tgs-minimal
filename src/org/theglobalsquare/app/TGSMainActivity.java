@@ -149,16 +149,6 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 		et.setText(null);
 		dismissKeyboardFor(et);
 
-		// make a search event and put it in the queue
-		TGSCommunity c = new TGSCommunity();
-		c.setName(term);
-		TGSSearchEvent s = new TGSCommunitySearchEvent();
-// jnius can't seem to access the subject field
-//		s.setSubject(c);
-		s.setObject(c);
-		s.setVerb(TGSSearchEvent.START);
-		Facade.sendEvent(s, true);
-		
 		// manage results in searchFragment
 		if(searchFragment != null) {
 			// hide search box
@@ -171,6 +161,8 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 				// unregister with results events
 				getFacade().removeListener(TGSSearchEvent.class, sSearchResults);
 				
+				android.util.Log.i(TGSMainActivity.TAG, "REMOVING listener: " + sSearchResults);
+
 				ft.remove(sSearchResults);
 			}
 			
@@ -179,13 +171,26 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 			
 			if(sSearchResults != null) {
 				// register with results events
-				getFacade().addListener(TGSSearchEvent.class, sSearchResults);
+				getFacade().addListener(TGSCommunitySearchEvent.class, sSearchResults);
 				
+				android.util.Log.i(TGSMainActivity.TAG, "registering listener: " + sSearchResults);
+
 				ft.add(R.id.layout_search_main, sSearchResults);
 			}
 			ft.commit();
 		}
-		android.util.Log.i(TGSUIActivity.TAG, "search: " + term);
+		
+		// make a search event and put it in the queue
+		TGSCommunity c = new TGSCommunity();
+		c.setName(term);
+		TGSSearchEvent s = new TGSCommunitySearchEvent();
+// jnius can't seem to access the subject field
+//		s.setSubject(c);
+		s.setObject(c);
+		s.setVerb(TGSSearchEvent.START);
+		Facade.sendEvent(s, true);
+		
+		android.util.Log.i(TGSMainActivity.TAG, "queued search for: " + term);
 	}
 	
 }
