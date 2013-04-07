@@ -78,7 +78,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 					EditText et = (EditText)findViewById(R.id.txt_search_terms);
 					et.setText(null);
 					findViewById(R.id.group_search_terms).setVisibility(View.VISIBLE);
-					et.requestFocus();
+					showKeyboardFor(et);
 				} else {
 					// TODO show new square dialog
 					Toast.makeText(this, R.string.createBtnLabel, Toast.LENGTH_SHORT).show();

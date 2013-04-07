@@ -100,19 +100,34 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 	}
 	
 	public void showComposer() {
+		if(mComposerShowing)
+			return;
 		getComposer().setVisibility(View.VISIBLE);
-		findViewById(R.id.messageTxt).requestFocus();
+		showKeyboardFor((EditText)findViewById(R.id.messageTxt));
 		mComposerShowing = true;
 	}
 	
 	public void hideComposer() {
+		if(!mComposerShowing)
+			return;
 		// http://stackoverflow.com/questions/3553779/android-dismiss-keyboard
 		dismissKeyboardFor((EditText)findViewById(R.id.messageTxt));
 		getComposer().setVisibility(View.GONE);
 		mComposerShowing = false;
 	}
+	
+	public void showKeyboardFor(EditText editText) {
+		if(editText == null)
+			return;
+		editText.requestFocus();
+		// FIXME make sure we don't have a hardware keyboard open
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);		
+	}
 
 	public void dismissKeyboardFor(EditText editText) {
+		if(editText == null)
+			return;
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 	}
