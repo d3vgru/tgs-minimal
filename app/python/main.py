@@ -699,6 +699,7 @@ class MainLoop():
                 if(communityObj is not None):
                     AndroidFacade.monitor('got search term: {}'.format(communityObj.getName()))
                     # TODO really start search
+                    
         time.sleep(.1)
         return self.go
 
