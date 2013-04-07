@@ -67,6 +67,7 @@ def getMainActivity():
 
 # convenience function to send event
 def sendEvent(event):
+    Event()
     return Facade().sendEvent(event)
 	
 # convenience function to get next event

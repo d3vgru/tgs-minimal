@@ -31,13 +31,60 @@ from tgscore.dispersy.crypto import (ec_generate_key,
 #CONFIG_FILE_NAME='tgs.conf'
 
 
+class MainLoop():
+    def __init__(self):
+        self.go = True
+        self._chatCore = None
+    def setChatCore(self, chatCore):
+        self._chatCore = chatCore
+    def run(self):
+        """
+        # http://stackoverflow.com/questions/1956142/how-to-redirect-stderr-in-python
+        r, w = os.pipe()
+        os.close(sys.stderr.fileno())
+        os.dup2(w, sys.stderr.fileno())
+        self.errs = r
+        """
+
+        while self.process():
+            pass
+    def process(self):
+        """
+        # read 1K from stderr and cc to monitor
+        errMsg = os.read(self.errs, 1024)
+        if errMsg is not None:
+            AndroidFacade.monitor(errMsg)
+        """
+        #f = AndroidFacade.getMainActivity()
+        #AndroidFacade.monitor('MainLoop: TICK, {} events in queue'.format(f.queueSize()))
+        nextEvent = AndroidFacade.nextEvent()
+        if nextEvent is not None:
+            eventClass = nextEvent.getClass().getName()
+#            AndroidFacade.monitor('MainLoop: got event from java, class: {}'.format(eventClass))
+            if(eventClass == 'org.theglobalsquare.framework.values.TGSConfigEvent'):
+                # update config using latest values
+                configEvent = cast(eventClass, nextEvent)
+                self._chatCore.setConfig(configEvent.getSubject())
+            elif(eventClass == 'org.theglobalsquare.framework.values.TGSCommunitySearchEvent'):
+                searchEvent = cast('org.theglobalsquare.framework.TGSEvent', nextEvent)
+                communityObj = searchEvent.getObject()
+#                AndroidFacade.monitor('got community: {} '.format(communityObj))
+                if(communityObj is not None):
+                    AndroidFacade.monitor('ChatCore: got community search term: {}'.format(communityObj.getName()))
+                    # really start search
+                    self._chatCore.startNewSquareSearch(communityObj.getName())
+        time.sleep(.1)
+        return self.go
+
+
 # for simple notifications of a recurring event
 class TGSSignal:
     def __init__(self, eventProto):
         self._eventProto = eventProto
         self._pyEvent = None
-    def emit(self):
-        AndroidFacade.sendEvent(eventProto)
+    def emit(self, *argv, **kwargs):
+        AndroidFacade.Event()
+        AndroidFacade.sendEvent(self._eventProto())
 # self._tgs.squareSearchUpdate.connect(self.onSquareSearchUpdate)
     def connect(self, pyEvent):
         self._pyEvent = pyEvent
@@ -59,7 +106,7 @@ class TGS:
         self._my_member = None
         AndroidFacade.monitor("TGS: setting up search signals")
         TGSCommunitySearchEvent = AndroidFacade.CommunitySearchEvent()
-        self.squareSearchUpdateEvent = TGSCommunitySearchEvent()
+        self.squareSearchUpdateEvent = TGSCommunitySearchEvent
         self.squareSearchUpdate = TGSSignal(self.squareSearchUpdateEvent)
         """
         self.memberSearchUpdateEvent = TGSUserSearchEvent()
@@ -583,8 +630,9 @@ class ChatCore:
     # +1---AP - check for event
     def onNickChanged(self, *argv, **kwargs):
         oldAlias = self._oldAlias
-        newAlias = self._config.getAlias()
-        if newAlias and newAlias != oldAlias:
+        newAlias = self._config.getName()
+        AndroidFacade.monitor('old: {}, new: {}'.format(oldAlias, newAlias))
+        if newAlias and (newAlias != oldAlias):
             self._propagateMemberInfoToAll()
 
     def getConfig(self):
@@ -592,10 +640,10 @@ class ChatCore:
         
     def setConfig(self, config):
         if self._config is not None:
-            self._oldAlias = self._config.getAlias()
-        self._config = config
-        self.onNickChanged()
-#        AndroidFacade.monitor('config refreshed, proxyEnabled: {}'.format(self._config.isProxyEnabled()))
+            self._config = config
+            self.onNickChanged()
+            self._oldAlias = self._config.getName()
+#            AndroidFacade.monitor('config refreshed, proxyEnabled: {}'.format(self._config.isProxyEnabled()))
 
 
     ##################################
@@ -615,6 +663,7 @@ class ChatCore:
             os.makedirs(config_path)
         self._workdir = unicode(config_path)
         self._config = AndroidFacade.getConfig()
+        self._oldAlias = self._config.getName()
 
     def _propagateMemberInfoToAll(self):
         #TODO: Check if the community has up to date info before sending unnecessary updates
@@ -626,51 +675,6 @@ class ChatCore:
         alias = self._config.getAlias()
         thumbnail = '' #str(self._config['Member']['Thumbnail']) #TODO: Setup this correctly when swift gets integrated
         self._tgs.setMemberInfo(community, alias, thumbnail)
-
-class MainLoop():
-    def __init__(self):
-        self.go = True
-        self._chatCore = None
-    def setChatCore(self, chatCore):
-        self._chatCore = chatCore
-    def run(self):
-        """
-        # http://stackoverflow.com/questions/1956142/how-to-redirect-stderr-in-python
-        r, w = os.pipe()
-        os.close(sys.stderr.fileno())
-        os.dup2(w, sys.stderr.fileno())
-        self.errs = r
-        """
-
-        while self.process():
-            pass
-    def process(self):
-        """
-        # read 1K from stderr and cc to monitor
-        errMsg = os.read(self.errs, 1024)
-        if errMsg is not None:
-            AndroidFacade.monitor(errMsg)
-        """
-        #f = AndroidFacade.getMainActivity()
-        #AndroidFacade.monitor('MainLoop: TICK, {} events in queue'.format(f.queueSize()))
-        nextEvent = AndroidFacade.nextEvent()
-        if nextEvent is not None:
-            eventClass = nextEvent.getClass().getName()
-#            AndroidFacade.monitor('MainLoop: got event from java, class: {}'.format(eventClass))
-            if(eventClass == 'org.theglobalsquare.framework.values.TGSConfigEvent'):
-                # update config using latest values
-                configEvent = cast(eventClass, nextEvent)
-                self._chatCore.setConfig(configEvent.getSubject())
-            elif(eventClass == 'org.theglobalsquare.framework.values.TGSCommunitySearchEvent'):
-                searchEvent = cast('org.theglobalsquare.framework.TGSEvent', nextEvent)
-                communityObj = searchEvent.getObject()
-#                AndroidFacade.monitor('got community: {} '.format(communityObj))
-                if(communityObj is not None):
-                    AndroidFacade.monitor('ChatCore: got community search term: {}'.format(communityObj.getName()))
-                    # really start search
-                    self._chatCore.startNewSquareSearch(communityObj.getName())
-        time.sleep(.1)
-        return self.go
 
 
 if __name__ == '__main__':
