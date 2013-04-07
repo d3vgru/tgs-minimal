@@ -32,14 +32,20 @@
         />
     <item
         android:id="@+id/menu_search"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="withText"
         android:title="@string/searchBtnLabel"
         android:icon="@drawable/action_search"
         />
     <item
         android:id="@+id/menu_help"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="withText"
         android:title="@string/helpBtnLabel"
         android:icon="@drawable/action_help"
+        />
+    <item
+        android:id="@+id/menu_about"
+        android:showAsAction="withText"
+        android:title="@string/aboutBtnLabel"
+        android:icon="@drawable/action_about"
         />
 </menu>

@@ -3,6 +3,7 @@ package org.theglobalsquare.framework;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.*;
 import android.view.View.OnKeyListener;
 import android.widget.*;
@@ -13,6 +14,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.theglobalsquare.app.*;
 import org.theglobalsquare.app.config.*;
+import org.theglobalsquare.ui.*;
 
 // this class sets up and manages the main UI
 public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListener {
@@ -97,7 +99,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 				break;
 			case R.id.menu_about:
 				// TODO show about dialog
-				Toast.makeText(this, R.string.aboutBtnLabel, Toast.LENGTH_SHORT).show();
+				showDialog(new AboutFragment());
 				break;
 			default:
 				// unknown option, maybe a superclass can handle it
@@ -152,6 +154,10 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 	        }
 	    }
 		return false;
+	}
+	
+	public void showDialog(DialogFragment df) {
+		df.show(getSupportFragmentManager(), "dialog");
 	}
 	
 }

@@ -154,6 +154,8 @@ public class TGSMainActivity extends TGSUIActivity implements PropertyChangeList
 		c.setName(term);
 		TGSSearchEvent s = new TGSCommunitySearchEvent();
 		s.setSubject(c);
+		s.setObject(c);
+		s.setVerb(TGSSearchEvent.START);
 		Facade.sendEvent(s, true);
 		
 		// manage results in searchFragment

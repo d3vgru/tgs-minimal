@@ -38,4 +38,9 @@
     <string name="requireProxySummary">Route all traffic through a SOCKS5 proxy like Orbot</string>
     <string name="proxyHostLabel">Proxy Host</string>
     <string name="proxyPortLabel">Proxy Port</string>
+    
+    <string name="aboutHeader">This application streams video via P2P.
+        You can find PPSP links on the web and social networks.</string>
+    <string name="aboutBody">This software development is led by KTH, TUDelft, and INRIA within projects 
+        partially funded by EIT ICTLabs.\n\nThis is free software (GNU LGPL) developed in the community.</string>
 </resources>

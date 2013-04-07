@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="42dp"
-        android:text="This application streams video via P2P. You can find PPSP links on the web and social networks."
+        android:text="@string/aboutHeader"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout
@@ -38,8 +38,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
         android:layout_marginTop="21dp"
-        android:text="This software development is leaded by KTH, TUDelft, and INRIA within project partially funded by EIT ICTLabs.\n\n
-This is free software (GNU LGPL) developed in community."
+        android:text="@string/aboutBody"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
