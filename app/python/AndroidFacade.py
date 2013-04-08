@@ -55,7 +55,7 @@ def getFacade():
     PythonActivity = autoclass('org.kivy.android.PythonActivity')
     # WTF: init TGSConfig class or reflect fails
     Config()
-    BaseActivity = cast('org.theglobalsquare.framework.TGSBaseActivity', PythonActivity.mActivity)
+    BaseActivity = cast('org.theglobalsquare.framework.activity.TGSBaseActivity', PythonActivity.mActivity)
     return BaseActivity.getFacade()
 
 # convenience method to get config

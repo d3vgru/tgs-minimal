@@ -234,9 +234,11 @@ class TGS:
 
     	AndroidFacade.monitor('TGS: loading squares')
         # load squares
+        # TODO put in TGSCommunityList and send to java
         for master in SquareCommunity.get_master_members():
             yield 0.1
-            dispersy.get_community(master.mid)
+            c = dispersy.get_community(master.mid)
+            AndroidFacade.monitor('got community: {}'.format(c))
     	AndroidFacade.monitor('TGS: dispersy startup complete')
         # let android know we're done initializing
         # monitor will say "EVENT: TGSSystemEvent: start"
