@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.widget.EditText;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -148,15 +149,23 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 		}
 		
 		public void onPageScrolled(int position, float positionOffset,
-		    int positionOffsetPixels) {
+				int positionOffsetPixels) {
+			// NOOP
 		}
 		
 		public void onPageSelected(int position)
 		{
 			mActionBar.setSelectedNavigationItem(position);
+    		if(position == TAB_SEARCH) {
+    			android.util.Log.i(TAG, "tabs.onPageSelected: SEARCH");
+    			// hackish, but...
+    			// FIXME only do this if the user tapped the tab
+    			showSearchTerms(mActivity);
+    		}
 		}
 		
 		public void onPageScrollStateChanged(int state) {
+			// NOOP
 		}
 		
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -170,11 +179,27 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 		}
 		
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-			// NOOP
+			Object tag = tab.getTag();
+			for (int i = 0; i < mTabs.size(); i++) {
+				if (mTabs.get(i) == tag) {
+					if(i == TAB_SEARCH && mActivity != null) {
+						EditText et = (EditText)mActivity.findViewById(R.id.txt_search_terms);
+						if(et != null)
+							dismissKeyboardFor(mActivity, et);
+					}
+				}
+			}
 		}
 		
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-			// NOOP
+			Object tag = tab.getTag();
+			for (int i = 0; i < mTabs.size(); i++) {
+				if (mTabs.get(i) == tag) {
+					if(i == TAB_SEARCH && mActivity != null) {
+						showSearchTerms(mActivity);
+					}
+				}
+			}
 		}
 	}
 

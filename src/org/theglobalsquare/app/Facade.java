@@ -16,7 +16,7 @@ import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 
 public class Facade extends Application {
-	// main access point for python side to talk to Android application
+	// main access point for python side to talk to Android application (as opposed to activity)
 	public final static String TAG = "Facade";
 	
 	public final static String PREF_ALIAS = "pref_alias";

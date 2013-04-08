@@ -111,11 +111,13 @@ class TGSSignal:
         community.setName(cache.terms[0][1])
 
         # cast or else jnius freaks
-        # setting subject doesn't work either (because it's a callback?)
+        # setting subject doesn't work either? (because it's a callback?)
         # jnius currently freaks anyway if just TGSObject?
+        # must include target class as a field (eg _objectProtoClass)?
         # try casting it as whatever it thinks it is
         #concreteObject = cast(community.getClass().getName(), community)
-        # must cast as the type that formal param of setObject() expects
+        
+        # must cast as the exact type that formal param of setObject() expects
         superObject = cast('org.theglobalsquare.framework.ITGSObject', community)
         event.setObject(superObject)
         AndroidFacade.monitor('Signal: emitting event of type {} with cache {}'.format(self._eventProtoClass, cache))

@@ -55,7 +55,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 		mMenuShare.setVisible(visible);
 	    return true;
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// FIXME disable until startup complete?
@@ -75,10 +75,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 			case R.id.menu_create:
 				if(mSelectedTab == TAB_SEARCH) {
 					// show search terms
-					EditText et = (EditText)findViewById(R.id.txt_search_terms);
-					et.setText(null);
-					findViewById(R.id.group_search_terms).setVisibility(View.VISIBLE);
-					showKeyboardFor(et);
+					showSearchTerms(this);
 				} else {
 					// show New Community dialog
 					showDialog(new NewCommunityFragment());

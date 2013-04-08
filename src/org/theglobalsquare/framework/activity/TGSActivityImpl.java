@@ -2,7 +2,6 @@ package org.theglobalsquare.framework.activity;
 
 import org.theglobalsquare.app.Facade;
 import org.theglobalsquare.app.R;
-import org.theglobalsquare.app.TGSMainActivity;
 import org.theglobalsquare.framework.ITGSActivity;
 import org.theglobalsquare.framework.TGSListFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
@@ -19,6 +18,8 @@ import android.view.View;
 import android.widget.EditText;
 
 public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActivity {
+	public final static String TAG = "TGSActivity";
+	
 	// ITGSActivity impl
 	@Override
 	public Activity getActivity() {
@@ -46,7 +47,10 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 		if(e != null)
 			term = e.toString();
 		et.setText(null);
-		dismissKeyboardFor(et);
+		dismissKeyboardFor(this, et);
+		
+		if(term == null)
+			return;
 
 		// manage results in searchFragment
 		if(searchFragment != null) {
@@ -60,7 +64,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 				// unregister with results events
 				getFacade().removeListener(TGSSearchEvent.class, sSearchResults);
 				
-				android.util.Log.i(TGSMainActivity.TAG, "REMOVING listener: " + sSearchResults);
+				android.util.Log.i(TAG, "REMOVING listener: " + sSearchResults);
 
 				ft.remove(sSearchResults);
 			}
@@ -72,7 +76,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 				// register with results events
 				getFacade().addListener(TGSCommunitySearchEvent.class, sSearchResults);
 				
-				android.util.Log.i(TGSMainActivity.TAG, "registering listener: " + sSearchResults);
+				android.util.Log.i(TAG, "registering listener: " + sSearchResults);
 
 				ft.add(R.id.layout_search_main, sSearchResults);
 			}
@@ -89,7 +93,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 		s.setVerb(TGSSearchEvent.START);
 		Facade.sendEvent(s, true);
 		
-		android.util.Log.i(TGSMainActivity.TAG, "queued search for: " + term);
+		android.util.Log.i(TAG, "queued search for: " + term);
 	}
 
 	@Override

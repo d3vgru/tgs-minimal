@@ -2,9 +2,11 @@ package org.theglobalsquare.app;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -28,7 +30,9 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 		// get events from python (or else AndroidFacade in python won't be able to send us TGSSystemEvent)
 		getFacade().addListener(TGSSystemEvent.class, this);		
 
-		monitor(TGSMainActivity.TAG + ": INIT");
+		monitorHomeDir();
+		
+		monitor(TAG + ": INIT");
 	}
 
 	@Override
@@ -40,7 +44,7 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		android.util.Log.d(TGSMainActivity.TAG, "propertyChange: " + event + ", new value: " + event.getNewValue());
+		android.util.Log.d(TAG, "propertyChange: " + event + ", new value: " + event.getNewValue());
 		TGSMainActivity.handle(event.getNewValue());
 	}
 
@@ -48,7 +52,7 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 		if(sMsgHandler == null) {
 			// initialize UI event handler
 			if(PythonActivity.mActivity == null) {
-				android.util.Log.w(TGSMainActivity.TAG, "mActivity is null");
+				android.util.Log.w(TAG, "mActivity is null");
 			} else {
 				sMsgHandler = new MessageHandler((TGSMainActivity)PythonActivity.mActivity);
 			}
@@ -72,14 +76,14 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 			String out = "";
 			TGSMainActivity activity = mActivity.get();
 			if (activity == null) {
-				android.util.Log.w(TGSMainActivity.TAG + ".MsgHandler",
+				android.util.Log.w(TAG + ".MsgHandler",
 						"weak ref to activity was null");
 				return;
 			}
 
-			android.util.Log.v(TGSMainActivity.TAG + ".MsgHandler", "value: "
+			android.util.Log.v(TAG + ".MsgHandler", "value: "
 					+ value);
-			android.util.Log.v(TGSMainActivity.TAG + ".MsgHandler", "class: "
+			android.util.Log.v(TAG + ".MsgHandler", "class: "
 					+ value.getClass().getName());
 
 			// turn LED green on dispersy start
@@ -94,7 +98,7 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 					if (TGSMessage.LOG.equals(event.getVerb())) {
 						out = "LOG: "
 								+ ((TGSMessage) event.getSubject()).getBody();
-						android.util.Log.i(TGSMainActivity.TAG, out);
+						android.util.Log.i(TAG, out);
 					}
 				}
 			} else if (value instanceof TGSObject) {
@@ -114,27 +118,41 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 	public static void handle(Object obj) {
 		Handler msgHandler = getHandler();
 		if (msgHandler != null) {
-			android.util.Log.d(TGSMainActivity.TAG, "msgHandler not null");
+			android.util.Log.d(TAG, "msgHandler not null");
 			Message msg = new Message();
-			android.util.Log.v(TGSMainActivity.TAG,
+			android.util.Log.v(TAG,
 					"android.os.Message obtained: " + msg);
 			msg.obj = obj;
-			android.util.Log.v(TGSMainActivity.TAG, "obj field of Message set");
+			android.util.Log.v(TAG, "obj field of Message set");
 			msgHandler.sendMessage(msg);
-			android.util.Log.v(TGSMainActivity.TAG, "logged");
-		} else android.util.Log.d(TGSMainActivity.TAG, "msgHandler null");
+			android.util.Log.v(TAG, "logged");
+		} else android.util.Log.d(TAG, "msgHandler null");
 	}
 
 	// to be used by python
 	public static void log(String message) {
 		// log() lets you see the event in logcat
-		android.util.Log.i(TGSMainActivity.TAG, "got message from python: " + message);
+		android.util.Log.i(TAG, "got message from python: " + message);
 		handle(message);
 	}
 
 	public void monitor(String message) {
 		// monitor() shows the event in the monitor tab
 		super.monitor(message);
+	}
+	
+	public void monitorHomeDir() {
+		File path = Environment.getDataDirectory();
+		File[] files = path.listFiles();
+		if(files != null) {
+			for(int i=0; i<files.length; i++) {
+				File f = files[i];
+				monitor(
+						f.isDirectory() ? "(D) " : ""
+							+ f.getPath()
+				);
+			}
+		}
 	}
 
 }

@@ -7,6 +7,7 @@ import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 import org.theglobalsquare.ui.SearchFragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -81,11 +82,22 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 				if(mComposerShowing)
 					hideComposer();
 				
-				monitor(TGSBaseActivity.TAG + ": sent message: " + body);
+				monitor(TAG + ": sent message: " + body);
 			}
 		});
 	}
 	
+	public static void showSearchTerms(Activity a) {
+		View terms = a.findViewById(R.id.group_search_terms);
+		if(terms != null)
+			terms.setVisibility(View.VISIBLE);
+		EditText et = (EditText)a.findViewById(R.id.txt_search_terms);
+		if(et == null)
+			return;
+		et.setText(null);
+		showKeyboardFor(a, et);
+	}
+
 	public void freshenConfig() {
 		TGSConfig config = getFacade().getConfig();
 		TGSConfigEvent e = TGSConfigEvent.forParamUpdated(config);
@@ -100,7 +112,7 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 		if(mComposerShowing)
 			return;
 		getComposer().setVisibility(View.VISIBLE);
-		showKeyboardFor((EditText)findViewById(R.id.messageTxt));
+		showKeyboardFor(this, (EditText)findViewById(R.id.messageTxt));
 		mComposerShowing = true;
 	}
 	
@@ -108,32 +120,32 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 		if(!mComposerShowing)
 			return;
 		// http://stackoverflow.com/questions/3553779/android-dismiss-keyboard
-		dismissKeyboardFor((EditText)findViewById(R.id.messageTxt));
+		dismissKeyboardFor(this, (EditText)findViewById(R.id.messageTxt));
 		getComposer().setVisibility(View.GONE);
 		mComposerShowing = false;
 	}
 	
-	public void showKeyboardFor(EditText editText) {
+	public static void showKeyboardFor(Activity a, EditText editText) {
 		if(editText == null)
 			return;
 		editText.requestFocus();
 		// FIXME make sure we don't have a hardware keyboard open
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager)a.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);		
 	}
 
-	public void dismissKeyboardFor(EditText editText) {
+	public static void dismissKeyboardFor(Activity a, EditText editText) {
 		if(editText == null)
 			return;
-		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager)a.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 	}
 	
 	public void monitor(String message) {
-		TGSUIActivity.sMonitorTxt = message + "\n" + TGSUIActivity.sMonitorTxt;
+		sMonitorTxt = message + "\n" + sMonitorTxt;
 		final TextView monitor = (TextView) findViewById(R.id.monitor);
 		if(monitor != null)
-			monitor.setText(TGSUIActivity.sMonitorTxt);
+			monitor.setText(sMonitorTxt);
 		final TextView status = (TextView)findViewById(R.id.statusMessage);
 		if(status != null)
 			status.setText(message);
