@@ -89,6 +89,7 @@ class MainLoop():
 class TGSSignal:
     def __init__(self, eventProtoClass):
         self._eventProtoClass = eventProtoClass
+        self._objectProtoClass = autoclass('org.theglobalsquare.framework.ITGSObject')
         self._communityProtoClass = autoclass('org.theglobalsquare.framework.values.TGSCommunity')
     def emit(self, *argv, **kwargs):
 # argv is something like (<tgscore.discovery.community.SearchCache object at 0x454ad050>, 'finished')
@@ -111,8 +112,12 @@ class TGSSignal:
 
         # cast or else jnius freaks
         # setting subject doesn't work either (because it's a callback?)
-        tgsObject = cast('org.theglobalsquare.framework.TGSObject', community)
-        event.setObject(tgsObject)
+        # jnius currently freaks anyway if just TGSObject?
+        # try casting it as whatever it thinks it is
+        #concreteObject = cast(community.getClass().getName(), community)
+        # must cast as the type that formal param of setObject() expects
+        superObject = cast('org.theglobalsquare.framework.ITGSObject', community)
+        event.setObject(superObject)
         AndroidFacade.monitor('Signal: emitting event of type {} with cache {}'.format(self._eventProtoClass, cache))
         AndroidFacade.sendEvent(event)
 
