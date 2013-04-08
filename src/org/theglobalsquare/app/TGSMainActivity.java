@@ -2,11 +2,9 @@ package org.theglobalsquare.app;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.lang.ref.WeakReference;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -30,8 +28,6 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 		// get events from python (or else AndroidFacade in python won't be able to send us TGSSystemEvent)
 		getFacade().addListener(TGSSystemEvent.class, this);		
 
-		monitorHomeDir();
-		
 		monitor(TAG + ": INIT");
 	}
 
@@ -141,18 +137,4 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 		super.monitor(message);
 	}
 	
-	public void monitorHomeDir() {
-		File path = Environment.getDataDirectory();
-		File[] files = path.listFiles();
-		if(files != null) {
-			for(int i=0; i<files.length; i++) {
-				File f = files[i];
-				monitor(
-						f.isDirectory() ? "(D) " : ""
-							+ f.getPath()
-				);
-			}
-		}
-	}
-
 }

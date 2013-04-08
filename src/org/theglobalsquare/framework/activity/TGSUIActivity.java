@@ -1,5 +1,7 @@
 package org.theglobalsquare.framework.activity;
 
+import java.io.File;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -92,7 +94,11 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 				break;
 			case R.id.menu_help:
 				// TODO show help dialog
-				Toast.makeText(this, R.string.helpBtnLabel, Toast.LENGTH_SHORT).show();
+				//Toast.makeText(this, R.string.helpBtnLabel, Toast.LENGTH_SHORT).show();
+				
+				// for now, list the files in private storage
+				// how helpful is that?
+				monitorHomeDir();
 				break;
 			case R.id.menu_about:
 				// show about dialog
@@ -157,4 +163,21 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 		df.show(getSupportFragmentManager(), "dialog");
 	}
 	
+	public void monitorHomeDir() {
+		File path = new File(getFilesDir().getAbsolutePath() + "/tgs/sqlite");
+		if(!path.exists())
+			return;
+		monitor("listing files/(D)irectories in " + path.getAbsolutePath());
+		File[] files = path.listFiles();
+		if(files != null) {
+			for(int i=0; i<files.length; i++) {
+				File f = files[i];
+				monitor(
+						(f.isDirectory() ? "(D) " : "")
+							+ f.getPath()
+				);
+			}
+		}
+	}
+
 }
