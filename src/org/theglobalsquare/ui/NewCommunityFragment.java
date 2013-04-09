@@ -51,6 +51,9 @@ public class NewCommunityFragment extends TGSDialogFragment {
 				createCommunity(tgsActivity);
 			}
 		});
+		
+		getDialog().setTitle(R.string.createCommunityBtnLabel);
+		
 		return mView;
 	}
 	

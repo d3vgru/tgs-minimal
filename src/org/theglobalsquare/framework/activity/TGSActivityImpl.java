@@ -30,6 +30,12 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 	public void createCommunity(TGSCommunity c) {
 		android.util.Log.i(TAG, "creating: " + c);
 		
+		// return if the name is blank
+		// TODO error message when submit clicked
+		String name = c.getName();
+		if(name == null || "".equals(name))
+			return;
+		
 		// make create community event
 		TGSCommunityEvent e = TGSCommunityEvent.forCreateSquare(c);
 
@@ -49,7 +55,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 		et.setText(null);
 		dismissKeyboardFor(this, et);
 		
-		if(term == null)
+		if(term == null || "".equals(term))
 			return;
 
 		// manage results in searchFragment

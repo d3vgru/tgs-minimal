@@ -14,6 +14,9 @@ public class AboutFragment extends TGSDialogFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View about = inflater.inflate(R.layout.about, null);
+
+		getDialog().setTitle(R.string.aboutBtnLabel);
+		
 		return about;
 	}
 
