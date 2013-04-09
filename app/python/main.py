@@ -137,6 +137,11 @@ class TGS:
         self.callback = None
         self._discovery = None
         self._my_member = None
+        
+        # get this from main thread or else class not found?
+        self._communityListProto = AndroidFacade.CommunityList()
+        self._listEventProto = AndroidFacade.ListEvent()
+
         AndroidFacade.monitor("TGS: setting up search signals")
         TGSCommunitySearchEvent = AndroidFacade.CommunitySearchEvent()
         self.squareSearchUpdateEvent = TGSCommunitySearchEvent
@@ -179,14 +184,15 @@ class TGS:
     def setupThreads(self):
         # start threads
         callback = Callback()
-        AndroidFacade.monitor('TGS: starting dispersy callback')
-        callback.start(name="Dispersy")
-        AndroidFacade.monitor('TGS: registering self._dispersy')
-        callback.register(self._dispersy, (callback,))
-        if "--simulate" in sys.argv:
-            callback.register(self._DEBUG_SIMULATION)
-        if "--simulate-qt" in sys.argv:
-            callback.register(self._DEBUG_QT_SIMULATION)
+        if AndroidFacade.getConfig().isDispersyEnabled():
+            AndroidFacade.monitor('TGS: starting dispersy callback')
+            callback.start(name="Dispersy")
+            AndroidFacade.monitor('TGS: registering self._dispersy')
+            callback.register(self._dispersy, (callback,))
+            if "--simulate" in sys.argv:
+                callback.register(self._DEBUG_SIMULATION)
+            if "--simulate-qt" in sys.argv:
+                callback.register(self._DEBUG_QT_SIMULATION)
         self.callback = callback
 
     def stopThreads(self):
@@ -214,10 +220,12 @@ class TGS:
     ##################################
     def _dispersy(self, callback):
         # start Dispersy
-        AndroidFacade.monitor('TGS: starting dispersy endpoint')
+        
         dispersy = Dispersy.get_instance(callback, self._workdir)
-        dispersy.endpoint = StandaloneEndpoint(dispersy, 12345)
-        dispersy.endpoint.start()
+        if AndroidFacade.getConfig().isDispersyEnabled():
+            AndroidFacade.monitor('TGS: starting dispersy endpoint')
+            dispersy.endpoint = StandaloneEndpoint(dispersy, AndroidFacade.getConfig().getDispersyPort())
+            dispersy.endpoint.start()
 
         # load/join discovery community
 	# FIXME
@@ -242,10 +250,22 @@ class TGS:
     	AndroidFacade.monitor('TGS: loading squares')
         # load squares
         # TODO put in TGSCommunityList and send to java
+        TGSCommunity = AndroidFacade.Community()
+        TGSCommunityList = AndroidFacade.CommunityList()
+        TGSListEvent = AndroidFacade.ListEvent
+        communityList = TGSCommunityList()
         for master in SquareCommunity.get_master_members():
             yield 0.1
             c = dispersy.get_community(master.mid)
-            AndroidFacade.monitor('got community: {}'.format(c))
+            AndroidFacade.monitor('TGS: got community: {}'.format(c))
+            community = TGSCommunity()
+            community.setMid(master.mid)
+            communityList.addCommunity(community)
+        listEvent = TGSListEvent()
+        listEvent.setSubject(communityList)
+    	AndroidFacade.monitor('TGS: sending community list event')
+        AndroidFacade.sendEvent(listEvent)
+
     	AndroidFacade.monitor('TGS: dispersy startup complete')
         # let android know we're done initializing
         # monitor will say "EVENT: TGSSystemEvent: start"
@@ -598,7 +618,7 @@ class ChatCore:
         self._getConfig()
 
         #Setup TGS core
-        AndroidFacade.monitor('ChatCore.run: dispersy startup')
+        AndroidFacade.monitor('ChatCore.run: TGS startup')
         self._tgs = TGS(self._workdir)
         
         # FIXME hook up square search callback

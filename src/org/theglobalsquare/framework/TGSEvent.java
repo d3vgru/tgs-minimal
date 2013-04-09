@@ -6,8 +6,8 @@ public abstract class TGSEvent {
 	public String getType() { return type; }
 	
 	// what is doing it?
-	public abstract TGSObject getSubject();
-	public abstract void setSubject(TGSObject subject);
+	public abstract ITGSObject getSubject();
+	public abstract void setSubject(ITGSObject subject);
 	
 	// what is going on?
 	private String verb = "chilling";

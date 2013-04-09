@@ -1,20 +1,19 @@
 package org.theglobalsquare.framework.values;
 
-import org.theglobalsquare.framework.TGSEvent;
-import org.theglobalsquare.framework.TGSObject;
+import org.theglobalsquare.framework.*;
 
 public class TGSListEvent extends TGSEvent {
+	private TGSObjectList subject;
 
 	@Override
-	public TGSObject getSubject() {
-		// TODO Auto-generated method stub
-		return null;
+	public ITGSObject getSubject() {
+		return subject;
 	}
 
 	@Override
-	public void setSubject(TGSObject subject) {
-		// TODO Auto-generated method stub
-
+	public void setSubject(ITGSObject subject) {
+		assert subject instanceof TGSObjectList;
+		this.subject = (TGSObjectList)subject;
 	}
 
 }

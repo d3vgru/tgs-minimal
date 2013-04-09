@@ -8,6 +8,26 @@ public class TGSConfig extends TGSObject {
 	public final static String SET_PARAM = "set_param";
 	public final static String PARAM_UPDATED = "param_updated";
 	
+	private boolean dispersyEnabled = false;
+	
+	public boolean isDispersyEnabled() {
+		return dispersyEnabled;
+	}
+
+	public void setDispersyEnabled(boolean dispersyEnabled) {
+		this.dispersyEnabled = dispersyEnabled;
+	}
+
+	private Integer dispersyPort;
+
+	public Integer getDispersyPort() {
+		return dispersyPort;
+	}
+
+	public void setDispersyPort(Integer dispersyPort) {
+		this.dispersyPort = dispersyPort;
+	}
+	
 	private boolean proxyEnabled = false;
 	
 	public boolean isProxyEnabled() {
@@ -18,6 +38,16 @@ public class TGSConfig extends TGSObject {
 		this.proxyEnabled = proxyEnabled;
 	}
 
+	private boolean proxyRequired = true;
+	
+	public boolean isProxyRequired() {
+		return proxyRequired;
+	}
+
+	public void setProxyRequired(boolean proxyRequired) {
+		this.proxyRequired = proxyRequired;
+	}
+	
 	private String proxyHost;
 	
 	public String getProxyHost() {
@@ -37,18 +67,7 @@ public class TGSConfig extends TGSObject {
 	public void setProxyPort(Integer proxyPort) {
 		this.proxyPort = proxyPort;
 	}
-	
-	private boolean proxyRequired = true;
-	
-	public boolean isProxyRequired() {
-		return proxyRequired;
-	}
 
-	public void setProxyRequired(boolean proxyRequired) {
-		this.proxyRequired = proxyRequired;
-	}
-	
-	
 
 	public TGSConfig() {
 		

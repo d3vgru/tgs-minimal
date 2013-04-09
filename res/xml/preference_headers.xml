@@ -6,6 +6,10 @@
     unified:preferenceRes="@xml/settings" />
 <header
     unified:fragment="org.theglobalsquare.app.config.EditPreferences$Fragment"
+    unified:title="@string/dispersySettingsLabel"
+    unified:preferenceRes="@xml/dispersy_settings" />
+<header
+    unified:fragment="org.theglobalsquare.app.config.EditPreferences$Fragment"
     unified:title="@string/proxySettingsLabel"
     unified:preferenceRes="@xml/proxy_settings" />
 </preference-headers>

@@ -1,6 +1,6 @@
 package org.theglobalsquare.framework.values;
 
-import org.theglobalsquare.framework.TGSObject;
+import org.theglobalsquare.framework.ITGSObject;
 
 public class TGSMessageSearchEvent extends TGSSearchEvent {
 	// verbs
@@ -16,7 +16,7 @@ public class TGSMessageSearchEvent extends TGSSearchEvent {
 	}
 
 	@Override
-	public void setSubject(TGSObject subject) {
+	public void setSubject(ITGSObject subject) {
 		assert subject instanceof TGSMessage;
 		subject = (TGSMessage)subject;
 	}

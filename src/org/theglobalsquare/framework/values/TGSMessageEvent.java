@@ -16,7 +16,7 @@ public class TGSMessageEvent extends TGSEvent {
 	}
 
 	@Override
-	public void setSubject(TGSObject subject) {
+	public void setSubject(ITGSObject subject) {
 		assert subject instanceof TGSMessage;
 		this.subject = (TGSMessage)subject;
 	}

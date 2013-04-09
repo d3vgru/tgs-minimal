@@ -1,7 +1,7 @@
 package org.theglobalsquare.framework.values;
 
 import org.theglobalsquare.framework.TGSEvent;
-import org.theglobalsquare.framework.TGSObject;
+import org.theglobalsquare.framework.ITGSObject;
 
 public abstract class TGSSearchEvent extends TGSEvent {
 	// verbs:
@@ -22,7 +22,7 @@ public abstract class TGSSearchEvent extends TGSEvent {
 		}
 
 		@Override
-		public void setSubject(TGSObject subject) {
+		public void setSubject(ITGSObject subject) {
 			assert subject instanceof TGSCommunity;
 			subject = (TGSCommunity)subject;
 		}
@@ -41,7 +41,7 @@ public abstract class TGSSearchEvent extends TGSEvent {
 		}
 
 		@Override
-		public void setSubject(TGSObject subject) {
+		public void setSubject(ITGSObject subject) {
 			assert subject instanceof TGSMessage;
 			subject = (TGSMessage)subject;
 		}
@@ -60,7 +60,7 @@ public abstract class TGSSearchEvent extends TGSEvent {
 		}
 
 		@Override
-		public void setSubject(TGSObject subject) {
+		public void setSubject(ITGSObject subject) {
 			assert subject instanceof TGSUser;
 			subject = (TGSUser)subject;
 		}

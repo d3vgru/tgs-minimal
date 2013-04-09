@@ -20,6 +20,8 @@ public class Facade extends Application {
 	public final static String TAG = "Facade";
 	
 	public final static String PREF_ALIAS = "pref_alias";
+	public final static String PREF_ENABLE_DISPERSY = "pref_enable_dispersy";
+	public final static String PREF_DISPERSY_PORT = "pref_dispersy_port";
 	public final static String PREF_ENABLE_PROXY = "pref_enable_proxy";
 	public final static String PREF_REQUIRE_PROXY = "pref_require_proxy";
 	public final static String PREF_PROXY_HOST = "pref_proxy_host";
@@ -119,8 +121,10 @@ public class Facade extends Application {
 	
 	private void refreshConfig() {
 		config.setName(getAlias());
-		config.setProxyRequired(isProxyRequired());
+		config.setDispersyEnabled(isDispersyEnabled());
+		config.setDispersyPort(Integer.valueOf(getDispersyPort()));
 		config.setProxyEnabled(isProxyEnabled());
+		config.setProxyRequired(isProxyRequired());
 		config.setProxyHost(getProxyHost());
 		config.setProxyPort(Integer.valueOf(getProxyPort()));
 	}
@@ -129,6 +133,16 @@ public class Facade extends Application {
 		return getPrefs().getString(PREF_ALIAS, getResources().getString(R.string.anonLabel));
 	}
 	
+	public boolean isDispersyEnabled() {
+		boolean dispersyEnabled = getPrefs().getBoolean(PREF_ENABLE_DISPERSY, true);
+		android.util.Log.i(Facade.TAG, "dispersyEnabled: " + dispersyEnabled);
+		return dispersyEnabled;
+	}
+
+	public String getDispersyPort() {
+		return getPrefs().getString(PREF_DISPERSY_PORT, getResources().getString(R.string.dispersyPortDefault));
+	}
+
 	public boolean isProxyEnabled() {
 		boolean proxyEnabled = getPrefs().getBoolean(PREF_ENABLE_PROXY, false);
 		android.util.Log.i(Facade.TAG, "proxyEnabled: " + proxyEnabled);

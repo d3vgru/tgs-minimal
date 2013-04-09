@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	    <CheckBoxPreference
+	        android:key="pref_enable_dispersy"
+	        android:title="@string/enableDispersyLabel"
+	        android:summary="@string/enableDispersySummary"
+	        android:defaultValue="true"
+	        />
+	    <EditTextPreference
+	        android:key="pref_dispersy_port"
+	        android:title="@string/dispersyPortLabel"
+	        android:summary="@string/dispersyPortSummary"
+	        android:defaultValue="@string/dispersyPortDefault"
+	        android:dependency="pref_enable_dispersy"
+	        />
+</PreferenceScreen>

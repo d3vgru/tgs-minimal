@@ -42,6 +42,10 @@
     <string name="requireProxySummary">Route all traffic through a SOCKS5 proxy like Orbot</string>
     <string name="proxyHostLabel">Proxy Host</string>
     <string name="proxyPortLabel">Proxy Port</string>
+    <string name="dispersySettingsLabel">Dispersy</string>
+    <string name="enableDispersyLabel">Enable Dispersy</string>
+    <string name="enableDispersySummary">Enable the Dispersy P2P engine.</string>
+    <string name="dispersyPortLabel">Dispersy Port</string>
     
     <string name="aboutHeader">This application streams video via P2P.
         You can find PPSP links on the web and social networks.</string>

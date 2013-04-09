@@ -24,6 +24,16 @@ public class TGSCommunity extends TGSObject {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	private String mid;
+
+	public String getMid() {
+		return mid;
+	}
+
+	public void setMid(String mid) {
+		this.mid = mid;
+	}
 
 	private List<TGSMessage> messages;
 	
@@ -39,7 +49,9 @@ public class TGSCommunity extends TGSObject {
 		this.messages = new ArrayList<TGSMessage>();
 	}
 	
+	
+	
 	public String toString() {
-		return getName();
+		return getName() + " (" + getMid() + ")";
 	}
 }

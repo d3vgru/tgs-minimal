@@ -17,7 +17,7 @@ public class TGSCommunityEvent extends TGSEvent {
 	}
 
 	@Override
-	public void setSubject(TGSObject subject) {
+	public void setSubject(ITGSObject subject) {
 		assert subject instanceof TGSCommunity;
 		this.subject = (TGSCommunity)subject;
 	}

@@ -32,6 +32,9 @@ def CommunityEvent():
 def ConfigEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSConfigEvent')
 
+def ListEvent():
+    return autoclass('org.theglobalsquare.framework.values.TGSListEvent')
+    
 def MessageEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSMessageEvent')
 
