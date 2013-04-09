@@ -19,9 +19,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
 		android:inputType="textMultiLine"
-        android:lines="2"
-        android:minLines="2"
-        android:maxLines="2"
+        android:lines="3"
+        android:minLines="3"
+        android:maxLines="3"
        />
     <!-- TODO avatar
     <ImageView

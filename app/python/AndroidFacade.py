@@ -22,6 +22,9 @@ def Event():
 def Message():
     return autoclass('org.theglobalsquare.framework.values.TGSMessage')
     
+def ObjectInterface():
+    return autoclass('org.theglobalsquare.framework.ITGSObject')
+    
 def User():
     return autoclass('org.theglobalsquare.framework.values.TGSUser')
 
