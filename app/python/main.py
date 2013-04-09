@@ -252,7 +252,7 @@ class TGS:
         # TODO put in TGSCommunityList and send to java
         TGSCommunity = AndroidFacade.Community()
         TGSCommunityList = AndroidFacade.CommunityList()
-        TGSListEvent = AndroidFacade.ListEvent
+        TGSListEvent = AndroidFacade.ListEvent()
         communityList = TGSCommunityList()
         for master in SquareCommunity.get_master_members():
             yield 0.1
@@ -262,7 +262,10 @@ class TGS:
             community.setMid(master.mid)
             communityList.addCommunity(community)
         listEvent = TGSListEvent()
-        listEvent.setSubject(communityList)
+#        AndroidFacade.monitor('listEvent: {}'.format(listEvent))
+        superList = cast('org.theglobalsquare.framework.ITGSObject', communityList)
+#        AndroidFacade.monitor('superList: {}'.format(superList))
+        listEvent.setSubject(superList)
     	AndroidFacade.monitor('TGS: sending community list event')
         AndroidFacade.sendEvent(listEvent)
 
