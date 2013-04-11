@@ -2,6 +2,8 @@ import time
 import sys
 import os
 
+sys.path.append('/data/data/org.theglobalsquare.app/files/tgs-core')
+
 from jnius import autoclass
 from jnius import cast
 
@@ -55,6 +57,7 @@ class MainLoop():
         if errMsg is not None:
             AndroidFacade.monitor(errMsg)
         """
+        # process the next event in the queue from the Java side
         #f = AndroidFacade.getMainActivity()
         #AndroidFacade.monitor('MainLoop: TICK, {} events in queue'.format(f.queueSize()))
         nextEvent = AndroidFacade.nextEvent()

@@ -164,7 +164,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 	}
 	
 	public void monitorHomeDir() {
-		File path = new File(getFilesDir().getAbsolutePath() + "/tgs/sqlite");
+		File path = new File(getFilesDir().getAbsolutePath() + "/");
 		if(!path.exists())
 			return;
 		monitor("listing files/(D)irectories in " + path.getAbsolutePath());
