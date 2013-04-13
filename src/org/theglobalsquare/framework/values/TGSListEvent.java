@@ -16,4 +16,7 @@ public class TGSListEvent extends TGSEvent {
 		this.subject = (TGSObjectList)subject;
 	}
 
+	public TGSListEvent() {
+		type = "list";
+	}
 }

@@ -22,7 +22,7 @@ public class TGSMessageSearchEvent extends TGSSearchEvent {
 	}
 	
 	public TGSMessageSearchEvent() {
-		type += ".user";
+		type += ".message";
 	}
 	
 	public static TGSMessageSearchEvent forStart(TGSMessage m) {

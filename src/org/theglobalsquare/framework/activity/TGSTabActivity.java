@@ -3,9 +3,10 @@ package org.theglobalsquare.framework.activity;
 import java.util.ArrayList;
 
 import org.theglobalsquare.app.R;
-import org.theglobalsquare.ui.MonitorFragment;
-import org.theglobalsquare.ui.OverviewListFragment;
 import org.theglobalsquare.ui.SearchFragment;
+import org.theglobalsquare.ui.OverviewListFragment;
+import org.theglobalsquare.ui.FilesListFragment;
+import org.theglobalsquare.ui.MonitorFragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,10 +21,11 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.ActionBar.Tab;
 
 public abstract class TGSTabActivity extends TGSBaseActivity {
-	public final static int TAB_COUNT_BASE = 3; // number of default tabs
+	public final static int TAB_COUNT_BASE = 4; // number of default tabs
 	public final static int TAB_SEARCH = 0; // search tab
 	public final static int TAB_OVERVIEW = 1; // my squares overview
-	public final static int TAB_MONITOR = 2; // debug monitor
+	public final static int TAB_FILES = 2; // files tab
+	public final static int TAB_MONITOR = 3; // debug monitor
 	
 	protected int mSelectedTab = -1;
     protected TabsAdapter mTabsAdapter;
@@ -52,6 +54,10 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
                 bar.newTab().setText(R.string.searchBtnLabel),
                 SearchFragment.class, null);
         // TAB_OVERVIEW
+        mTabsAdapter.addTab(
+                bar.newTab().setText(R.string.filesLabel),
+                FilesListFragment.class, null);
+        // TAB_FILES
         mTabsAdapter.addTab(
                 bar.newTab().setText(R.string.overviewLabel),
                 OverviewListFragment.class, null);

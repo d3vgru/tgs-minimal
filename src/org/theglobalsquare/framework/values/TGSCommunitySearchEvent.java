@@ -22,6 +22,6 @@ public class TGSCommunitySearchEvent extends TGSSearchEvent {
 	}
 	
 	public TGSCommunitySearchEvent() {
-		type += ".user";
+		type += ".community";
 	}
 }

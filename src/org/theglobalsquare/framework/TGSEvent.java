@@ -1,6 +1,8 @@
 package org.theglobalsquare.framework;
 
-public abstract class TGSEvent {
+import org.json.*;
+
+public abstract class TGSEvent extends TGSObject {
 	// what kind of event is this?
 	protected String type = "abstract";
 	public String getType() { return type; }
@@ -27,14 +29,14 @@ public abstract class TGSEvent {
 		this.object = object;
 	}
 	
-	public String toString() {
-		String out = getVerb();
-		Object s = getSubject();
-		if(s != null)
-			out = s.toString() + " " + out;
-		ITGSObject o = getObject();
-		if(o != null)
-			out += " " + o;
-		return out;
+	@Override
+	public JSONObject toJsonObject() throws JSONException {
+		JSONObject o = super.toJsonObject();
+		o.put("type", getType());
+		o.put("subject", getSubject());
+		o.put("verb", getVerb());
+		o.put("object", getObject());
+		return o;
 	}
+	
 }

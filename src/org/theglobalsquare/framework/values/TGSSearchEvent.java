@@ -1,7 +1,6 @@
 package org.theglobalsquare.framework.values;
 
-import org.theglobalsquare.framework.TGSEvent;
-import org.theglobalsquare.framework.ITGSObject;
+import org.theglobalsquare.framework.*;
 
 public abstract class TGSSearchEvent extends TGSEvent {
 	// verbs:
@@ -11,7 +10,8 @@ public abstract class TGSSearchEvent extends TGSEvent {
 	public static final String START = "start";
 	public static final String CANCEL = "cancel";
 	public static final String UPDATE = "update";
-	
+
+	/* unused
 	// various types
 	class ForCommunity extends TGSSearchEvent {
 		private TGSCommunity subject;
@@ -69,6 +69,7 @@ public abstract class TGSSearchEvent extends TGSEvent {
 			type += ".user";
 		}
 	}
+	*/
 	
 	public TGSSearchEvent() {
 		type = "search";

@@ -36,6 +36,8 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 	
 	protected boolean mComposerShowing = false;
 	
+	protected static Facade sFacade = null;
+	
 	protected static String sMonitorTxt = "";
 	
 	public String getMonitorTxt() {
@@ -45,9 +47,15 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 	public Facade getFacade() {
 		return (Facade)getApplication();
 	}
+	
+	public static Facade getStaticFacade() {
+		return sFacade;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		sFacade = getFacade();
+		
 		super.onCreate(savedInstanceState);
 		
 		ActionBar bar = getSupportActionBar();        

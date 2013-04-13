@@ -120,7 +120,9 @@ public class Facade extends Application {
 	}
 	
 	private void refreshConfig() {
-		config.setName(getAlias());
+		String alias = getAlias();
+		config.setName(alias);
+		TGSUser.getMe().setName(alias);
 		config.setDispersyEnabled(isDispersyEnabled());
 		config.setDispersyPort(Integer.valueOf(getDispersyPort()));
 		config.setProxyEnabled(isProxyEnabled());

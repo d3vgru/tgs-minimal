@@ -1,8 +1,9 @@
 package org.theglobalsquare.framework.values;
 
-import java.util.*;
+import org.json.*;
 
 import org.theglobalsquare.framework.TGSObject;
+import org.theglobalsquare.framework.TGSObjectList;
 
 public class TGSCommunity extends TGSObject {
 	// verbs
@@ -35,23 +36,26 @@ public class TGSCommunity extends TGSObject {
 		this.mid = mid;
 	}
 
-	private List<TGSMessage> messages;
+	private TGSObjectList messages;
 	
-	public List<TGSMessage> getMessages() {
+	public TGSObjectList getMessages() {
 		return messages;
 	}
 
-	public void setMessages(List<TGSMessage> messages) {
+	public void setMessages(TGSObjectList messages) {
 		this.messages = messages;
 	}
 
 	public TGSCommunity() {
-		this.messages = new ArrayList<TGSMessage>();
+		this.messages = new TGSObjectList();
 	}
 	
-	
-	
-	public String toString() {
-		return getName() + " (" + getMid() + ")";
-	}
+	@Override
+	public JSONObject toJsonObject() throws JSONException {
+		JSONObject o = super.toJsonObject();
+		o.put("description", getDescription());
+		o.put("messages", getMessages());
+		o.put("mid", getMid());
+		return o;
+	}	
 }

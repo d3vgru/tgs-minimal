@@ -1,5 +1,7 @@
 package org.theglobalsquare.framework.values;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.theglobalsquare.framework.TGSObject;
 
 public class TGSConfig extends TGSObject {
@@ -72,4 +74,17 @@ public class TGSConfig extends TGSObject {
 	public TGSConfig() {
 		
 	}
+
+	@Override
+	public JSONObject toJsonObject() throws JSONException {
+		JSONObject o = super.toJsonObject();
+		o.put("dispersyEnabled", isDispersyEnabled());
+		o.put("dispersyPort", getDispersyPort());
+		o.put("proxyEnabled", isProxyEnabled());
+		o.put("proxyRequired", isProxyRequired());
+		o.put("proxyHost", getProxyHost());
+		o.put("proxyPort", getProxyPort());
+		return o;
+	}
+	
 }

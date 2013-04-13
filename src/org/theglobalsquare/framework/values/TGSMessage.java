@@ -1,5 +1,7 @@
 package org.theglobalsquare.framework.values;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.theglobalsquare.framework.ITGSObject;
 import org.theglobalsquare.framework.TGSObject;
 
@@ -22,6 +24,17 @@ public class TGSMessage extends TGSObject {
 
 	public void setFrom(TGSUser from) {
 		this.from = from;
+	}
+	
+	// what is it about?
+	private String subject;
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 	// what does it say?
@@ -61,6 +74,17 @@ public class TGSMessage extends TGSObject {
 
 	public TGSMessage() {
 		
+	}
+	
+	@Override
+	public JSONObject toJsonObject() throws JSONException {
+		JSONObject o = super.toJsonObject();
+		o.put("from", getFrom());
+		o.put("subject", getSubject());
+		o.put("body", getBody());
+		o.put("community", getCommunity());
+		o.put("destination", getDestination());
+		return o;
 	}
 	
 }
