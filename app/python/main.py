@@ -2,6 +2,7 @@ import time
 import sys
 import os
 
+# hardcoded path to tgscore module
 sys.path.append('/data/data/org.theglobalsquare.app/files/tgs-core')
 
 from jnius import autoclass
@@ -84,6 +85,7 @@ class MainLoop():
                 
                 # TODO create the community
                 
+        # process up to 10 events per second
         time.sleep(.1)
         return self.go
 
