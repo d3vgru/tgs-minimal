@@ -17,7 +17,7 @@ import android.preference.*;
 
 public class EditPreferences extends UnifiedSherlockPreferenceActivity
 		implements OnSharedPreferenceChangeListener {
-	public final static String TAG = "PreferenceActivity";
+	public final static String TAG = "EditPreferences";
 	public final static String SHARED_PREFS_KEY = "tgs_shared_prefs";
 
 	public Facade getFacade() {
@@ -46,7 +46,7 @@ public class EditPreferences extends UnifiedSherlockPreferenceActivity
 
 	// http://stackoverflow.com/questions/531427/how-do-i-display-the-current-value-of-an-android-preference-in-the-preference-su
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    	android.util.Log.i(TAG, "prefs changed: " + key);
+    	android.util.Log.d(TAG, "prefs changed: " + key);
 //		Facade f = getFacade();
 //    	TGSConfig c = f.getConfig();
 	    if (key.equals(Facade.PREF_ALIAS)) {
