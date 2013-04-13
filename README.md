@@ -9,6 +9,7 @@
 * Submodules in git
     * [Dispersy](https://github.com/d3vgru/dispersy/tree/tgs-android)
     * [pymdht](https://github.com/d3vgru/pymdht/tree/tgs-android)
+    * [TGS core](https://github.com/d3vgru/tgs-core/tree/tgs-android)
       
 
 #Building

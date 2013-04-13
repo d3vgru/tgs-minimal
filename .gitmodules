@@ -6,4 +6,4 @@
 	url = https://github.com/d3vgru/pymdht.git
 [submodule "app/python/tgs-core"]
 	path = app/python/tgs-core
-	url = git://github.com/whirm/tgs-core.git
+	url = git://github.com/d3vgru/tgs-core.git
