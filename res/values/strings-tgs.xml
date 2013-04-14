@@ -49,6 +49,8 @@
     <string name="enableDispersyLabel">Enable Dispersy</string>
     <string name="enableDispersySummary">Enable the Dispersy P2P engine</string>
     <string name="dispersyPortLabel">Dispersy Port</string>
+
+    <string name="p2pSettingsLabel">P2P</string>
     
     <string name="aboutHeader">This application streams video via P2P.
         You can find PPSP links on the web and social networks.</string>
