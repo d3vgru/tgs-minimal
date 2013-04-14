@@ -81,4 +81,15 @@ public class TGSCommunityEvent extends TGSEvent {
 		e.setVerb(TGSCommunity.DATA);
 		return e;
 	}
+
+	@Override
+	public ITGSList emptyList() {
+		return new TGSCommunityList();
+	}
+
+	@Override
+	public ITGSObject emptyObject() {
+		return new TGSCommunity();
+	}
+
 }

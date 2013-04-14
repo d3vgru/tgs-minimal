@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.json.*;
 
-public class TGSObjectList extends ArrayList<ITGSObject> implements ITGSObject {
+public class TGSObjectList extends ArrayList<ITGSObject> implements ITGSObject, ITGSList {
 	// serializable
 	private static final long serialVersionUID = 8005602994593599806L;
 
@@ -41,4 +41,5 @@ public class TGSObjectList extends ArrayList<ITGSObject> implements ITGSObject {
 			return "{error:" + ex.getLocalizedMessage() + "}";
 		}
 	}
+
 }

@@ -8,14 +8,16 @@
         android:defaultValue="@string/anonLabel"
         />
     
-    <!-- manage squares -->
-        
+    <!--  clear cache -->
+    
+    
     <!-- clear search history -->
     
-    <!--  clear cache -->
     
     <!--  clear private storage -->
     
+    
     <!-- TOANFO -->
+    
     
 </PreferenceScreen>

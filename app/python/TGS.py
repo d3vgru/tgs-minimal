@@ -3,7 +3,7 @@ from jnius import cast
 
 import AndroidFacade
 
-from TGSSignal import TGSSignal
+from TGSSearchSignal import TGSSearchSignal
 
 from tgscore.discovery.community import DiscoveryCommunity, SearchCache
 
@@ -28,6 +28,10 @@ class TGS:
         self._discovery = None
         self._dispersyInstance = None
         self._my_member = None
+        self._TGSCommunity = AndroidFacade.Community()
+        self._TGSCommunityList = AndroidFacade.CommunityList()
+        self._TGSListEvent = AndroidFacade.ListEvent()
+
         
         # get this from main thread or else class not found?
         self._communityListProto = AndroidFacade.CommunityList()
@@ -36,7 +40,7 @@ class TGS:
         AndroidFacade.monitor("TGS: setting up search signals")
         TGSCommunitySearchEvent = AndroidFacade.CommunitySearchEvent()
         self.squareSearchUpdateEvent = TGSCommunitySearchEvent
-        self.squareSearchUpdate = TGSSignal(self.squareSearchUpdateEvent)
+        self.squareSearchUpdate = TGSSearchSignal(self.squareSearchUpdateEvent)
 
     #TODO: Add an arg to add the result list widget/model to support multiple search windows.
     def startNewMemberSearch(self, search_terms):
@@ -130,11 +134,8 @@ class TGS:
     	AndroidFacade.monitor('TGS: configuring overlay')
     	
         # load squares (ie master square community)
-        TGSCommunity = AndroidFacade.Community()
-        TGSCommunityList = AndroidFacade.CommunityList()
-        TGSListEvent = AndroidFacade.ListEvent()
-        communityList = TGSCommunityList()
-        listEvent = TGSListEvent()
+        communityList = self._TGSCommunityList()
+        listEvent = self._TGSListEvent()
         for master in SquareCommunity.get_master_members():
             yield 0.1
             c = dispersy.get_community(master.mid)

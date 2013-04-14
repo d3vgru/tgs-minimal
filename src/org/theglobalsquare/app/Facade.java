@@ -137,7 +137,7 @@ public class Facade extends Application {
 	
 	public boolean isDispersyEnabled() {
 		boolean dispersyEnabled = getPrefs().getBoolean(PREF_ENABLE_DISPERSY, true);
-		android.util.Log.i(Facade.TAG, "dispersyEnabled: " + dispersyEnabled);
+		android.util.Log.v(Facade.TAG, "dispersyEnabled: " + dispersyEnabled);
 		return dispersyEnabled;
 	}
 
@@ -147,7 +147,7 @@ public class Facade extends Application {
 
 	public boolean isProxyEnabled() {
 		boolean proxyEnabled = getPrefs().getBoolean(PREF_ENABLE_PROXY, false);
-		android.util.Log.i(Facade.TAG, "proxyEnabled: " + proxyEnabled);
+		android.util.Log.v(Facade.TAG, "proxyEnabled: " + proxyEnabled);
 		return proxyEnabled;
 	}
 

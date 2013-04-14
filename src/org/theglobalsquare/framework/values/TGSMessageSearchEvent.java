@@ -1,5 +1,6 @@
 package org.theglobalsquare.framework.values;
 
+import org.theglobalsquare.framework.ITGSList;
 import org.theglobalsquare.framework.ITGSObject;
 
 public class TGSMessageSearchEvent extends TGSSearchEvent {
@@ -45,4 +46,15 @@ public class TGSMessageSearchEvent extends TGSSearchEvent {
 		e.setVerb(TGSSearchEvent.UPDATE);
 		return e;
 	}
+	
+	@Override
+	public ITGSList emptyList() {
+		return new TGSMessageList();
+	}
+
+	@Override
+	public ITGSObject emptyObject() {
+		return new TGSMessage();
+	}
+
 }

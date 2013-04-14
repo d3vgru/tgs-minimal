@@ -39,4 +39,11 @@ public abstract class TGSEvent extends TGSObject {
 		return o;
 	}
 	
+	public ITGSList emptyList() {
+		return new TGSObjectList();
+	}
+
+	public ITGSObject emptyObject() {
+		return new TGSObject();
+	}
 }

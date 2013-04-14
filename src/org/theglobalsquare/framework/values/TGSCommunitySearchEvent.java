@@ -1,5 +1,6 @@
 package org.theglobalsquare.framework.values;
 
+import org.theglobalsquare.framework.ITGSList;
 import org.theglobalsquare.framework.ITGSObject;
 
 public class TGSCommunitySearchEvent extends TGSSearchEvent {
@@ -24,4 +25,15 @@ public class TGSCommunitySearchEvent extends TGSSearchEvent {
 	public TGSCommunitySearchEvent() {
 		type += ".community";
 	}
+
+	@Override
+	public ITGSList emptyList() {
+		return new TGSCommunityList();
+	}
+
+	@Override
+	public ITGSObject emptyObject() {
+		return new TGSCommunity();
+	}
+
 }

@@ -24,4 +24,15 @@ public class TGSUserSearchEvent extends TGSSearchEvent {
 	public TGSUserSearchEvent() {
 		type += ".user";
 	}
+	
+	@Override
+	public ITGSList emptyList() {
+		return new TGSUserList();
+	}
+
+	@Override
+	public ITGSObject emptyObject() {
+		return new TGSUser();
+	}
+
 }

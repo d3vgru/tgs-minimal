@@ -45,4 +45,15 @@ public class TGSMessageEvent extends TGSEvent {
 		e.setVerb(TGSMessage.RECEIVED);
 		return e;
 	}
+	
+	@Override
+	public ITGSList emptyList() {
+		return new TGSMessageList();
+	}
+
+	@Override
+	public ITGSObject emptyObject() {
+		return new TGSMessage();
+	}
+
 }

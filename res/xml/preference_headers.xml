@@ -5,25 +5,32 @@
     unified:fragment="org.theglobalsquare.app.config.EditPreferences$Fragment"
     unified:title="@string/generalSettingsLabel"
     unified:preferenceRes="@xml/settings" />
+
 <!-- manage ID -->
+
 
 <!-- dispersy -->
 <header
     unified:fragment="org.theglobalsquare.app.config.EditPreferences$Fragment"
     unified:title="@string/dispersySettingsLabel"
     unified:preferenceRes="@xml/dispersy_settings" />
+
 <!-- proxy -->
 <header
     unified:fragment="org.theglobalsquare.app.config.EditPreferences$Fragment"
     unified:title="@string/proxySettingsLabel"
     unified:preferenceRes="@xml/proxy_settings" />
+
 <!-- p2p, TODO add swift -->
 <header
     unified:fragment="org.theglobalsquare.app.config.EditPreferences$Fragment"
     unified:title="@string/p2pSettingsLabel"
     unified:preferenceRes="@xml/p2p_settings" />
+
 <!-- default tab -->
 
+
 <!-- manage squares -->
+
 
 </preference-headers>

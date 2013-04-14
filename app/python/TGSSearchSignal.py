@@ -4,45 +4,47 @@ from jnius import cast
 import AndroidFacade
 
 # for simple notifications of a recurring event
-class TGSSignal:
+class TGSSearchSignal:
     def __init__(self, eventProtoClass):
         # dunno if we really have to do all this, but jnius loves dead chickens :)
         # if we do need this, will also need to add protos for users and messages and related events
         self._eventProtoClass = eventProtoClass
+        self._listProtoClass = autoclass('org.theglobalsquare.framework.ITGSList')
         self._objectProtoClass = autoclass('org.theglobalsquare.framework.ITGSObject')
-        self._communityListProtoClass = autoclass('org.theglobalsquare.framework.values.TGSCommunityList')
-        self._communityProtoClass = autoclass('org.theglobalsquare.framework.values.TGSCommunity')
+
     def emit(self, *argv, **kwargs):
 # argv is something like (<tgscore.discovery.community.SearchCache object at 0x454ad050>, 'finished')
         event = self._eventProtoClass()
         cache = argv[0]
-        community = self._communityProtoClass()
+        termsObject = event.emptyObject()
+        
+        # terms[0][0] is the length of the shortest term
+        # terms[0][1] is the name
+        # get the name of the first term
+        termsObject.setName(cache.terms[0][1])
 
         # must cast as the exact type that formal param of setSubject() expects
-        superSubject = cast('org.theglobalsquare.framework.ITGSObject', community)
+        superSubject = cast('org.theglobalsquare.framework.ITGSObject', termsObject)
         event.setSubject(superSubject)
 
         # TODO standardize verbs against activitystrea.ms
         event.setVerb(argv[1])
 
         # put hits in results
-        hits = self._communityListProtoClass()
+        hits = event.emptyList()
         for suggestion in cache.suggestions:
                 square = suggestion.hit
                 if suggestion.state == 'done':
-                    hit = self._communityProtoClass()
+                    hit = event.emptyObject()
                     # TODO migrate square data structure to TGSCommunity
-                    hits.addCommunity(hit)
+                    # TODO callback to do data copying
+                    
+                    superHit = cast('org.theglobalsquare.framework.ITGSObject', hit)
+                    hits.add(superHit)
         superHits = cast('org.theglobalsquare.framework.ITGSObject', hits)
         event.setObject(superHits)
         
         # terms[0] is the (first set of?) terms
         AndroidFacade.monitor('Signal: terms[0]: {}'.format(cache.terms[0]))
 
-        # terms[0][0] is the length of the shortest term
-        # terms[0][1] is the name
-        # get the name of the first term
-        community.setName(cache.terms[0][1])
-
         AndroidFacade.sendEvent(event)
-

@@ -37,4 +37,15 @@ public class TGSUserEvent extends TGSEvent {
 		e.setVerb(TGSUser.NAME_CHANGED);
 		return e;
 	}
+	
+	@Override
+	public ITGSList emptyList() {
+		return new TGSUserList();
+	}
+
+	@Override
+	public ITGSObject emptyObject() {
+		return new TGSUser();
+	}
+
 }
