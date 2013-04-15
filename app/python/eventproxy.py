@@ -33,3 +33,9 @@ class TGSGlobalEventBroker:
         # do we need this?
         #self._tgs.newHotCommunitiesAvailable.emit(squares, texts)
         pass
+    def memberInfoUpdated(self, member):
+        AndroidFacade.monitor('memberInfo updated: {}'.format(member))
+    def messageReceived(self, text):
+        AndroidFacade.monitor('message received: {}'.format(text))
+    def squareInfoUpdated(self):
+        pass

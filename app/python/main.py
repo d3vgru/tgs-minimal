@@ -11,7 +11,7 @@ import eventproxy
 from tgscore import events
 
 
-# this is for async events like new square created, message received, community suggestion received
+# this is for async events like new square created, community suggestion received
 events.setEventBrokerFactory(eventproxy.createEventBroker)
 global_events = eventproxy.createEventBroker(None)
 
