@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.json.*;
 
 public class TGSObjectList extends ArrayList<ITGSObject> implements ITGSObject, ITGSList {
+	public final static String UPDATE = "update";
+	
 	// serializable
 	private static final long serialVersionUID = 8005602994593599806L;
 

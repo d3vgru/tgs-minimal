@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 public interface ITGSActivity {
 	void createCommunity(TGSCommunity c);
+	void communityCreated(TGSCommunity c);
+	void populateCommunities(TGSCommunityList l);
 	void joinCommunity(TGSCommunity c);
 	void leaveCommunity(TGSCommunity c);
 	void postMessage(TGSCommunity c, TGSMessage m);

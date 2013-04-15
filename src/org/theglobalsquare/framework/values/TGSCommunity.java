@@ -26,6 +26,16 @@ public class TGSCommunity extends TGSObject {
 		this.description = description;
 	}
 	
+	private String cid;
+	
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+	
 	private String mid;
 
 	public String getMid() {
@@ -53,6 +63,7 @@ public class TGSCommunity extends TGSObject {
 	@Override
 	public JSONObject toJsonObject() throws JSONException {
 		JSONObject o = super.toJsonObject();
+		o.put("cid", getCid());
 		o.put("description", getDescription());
 		o.put("messages", getMessages());
 		o.put("mid", getMid());

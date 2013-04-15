@@ -6,6 +6,7 @@ import org.theglobalsquare.framework.ITGSActivity;
 import org.theglobalsquare.framework.TGSListFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
 import org.theglobalsquare.framework.values.TGSCommunityEvent;
+import org.theglobalsquare.framework.values.TGSCommunityList;
 import org.theglobalsquare.framework.values.TGSCommunitySearchEvent;
 import org.theglobalsquare.framework.values.TGSMessage;
 import org.theglobalsquare.framework.values.TGSSearchEvent;
@@ -26,6 +27,12 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 		return this;
 	}
 
+	// load communities on startup
+	public void populateCommunities(TGSCommunityList l) {
+		// TODO store the initial list of communities somewhere and build the UI
+		
+	}
+
 	@Override
 	public void createCommunity(TGSCommunity c) {
 		android.util.Log.i(TAG, "creating: " + c);
@@ -44,6 +51,12 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 
 		// put it in the event queue
 		Facade.sendEvent(e, true);
+	}
+	
+	@Override
+	public void communityCreated(TGSCommunity c) {
+		// TODO process creation of community
+		
 	}
 	
 	@Override

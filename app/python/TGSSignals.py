@@ -3,7 +3,7 @@ from jnius import cast
 
 import AndroidFacade
 
-# for simple notifications of a recurring event
+# for when search results need to be returned
 class TGSSearchSignal:
     def __init__(self, eventProtoClass):
         # dunno if we really have to do all this, but jnius loves dead chickens :)
@@ -46,5 +46,28 @@ class TGSSearchSignal:
         
         # terms[0] is the (first set of?) terms
         AndroidFacade.monitor('Signal: terms[0]: {}'.format(cache.terms[0]))
+
+        AndroidFacade.sendEvent(event)
+
+# for when dispersy completes creating a new square
+class TGSNewCommunitySignal:
+    def __init__(self, eventProtoClass):
+        self._eventProtoClass = eventProtoClass
+        self._objectProtoClass = autoclass('org.theglobalsquare.framework.ITGSObject')
+
+    def emit(self, *argv, **kwargs):
+        event = self._eventProtoClass()
+
+        square = argv[0]
+        AndroidFacade.monitor('NewCommunitySignal: square: {}'.format(square))
+        
+        # TODO copy square data to TGSCommunity
+        community = event.emptyObject()
+        
+        # must cast as the exact type that formal param of setSubject() expects
+        superSubject = cast('org.theglobalsquare.framework.ITGSObject', community)
+        event.setSubject(superSubject)
+        
+        event.setVerb(AndroidFacade.Community().CREATED)
 
         AndroidFacade.sendEvent(event)

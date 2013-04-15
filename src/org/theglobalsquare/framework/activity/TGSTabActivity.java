@@ -24,7 +24,7 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 	public final static int TAB_COUNT_BASE = 4; // number of default tabs
 	public final static int TAB_SEARCH = 0; // search tab
 	public final static int TAB_OVERVIEW = 1; // my squares overview
-	public final static int TAB_FILES = 2; // files tab
+	public final static int TAB_FILES = 2; // my files tab
 	public final static int TAB_MONITOR = 3; // debug monitor
 	
 	protected int mSelectedTab = -1;

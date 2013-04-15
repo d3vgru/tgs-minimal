@@ -10,6 +10,16 @@ public class TGSConfig extends TGSObject {
 	public final static String SET_PARAM = "set_param";
 	public final static String PARAM_UPDATED = "param_updated";
 	
+	private String defaultTab;
+	
+	public String getDefaultTab() {
+		return defaultTab;
+	}
+
+	public void setDefaultTab(String defaultTab) {
+		this.defaultTab = defaultTab;
+	}
+
 	private boolean dispersyEnabled = false;
 	
 	public boolean isDispersyEnabled() {
@@ -78,6 +88,7 @@ public class TGSConfig extends TGSObject {
 	@Override
 	public JSONObject toJsonObject() throws JSONException {
 		JSONObject o = super.toJsonObject();
+		o.put("defaultTab", getDefaultTab());
 		o.put("dispersyEnabled", isDispersyEnabled());
 		o.put("dispersyPort", getDispersyPort());
 		o.put("proxyEnabled", isProxyEnabled());

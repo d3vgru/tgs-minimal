@@ -15,13 +15,13 @@
     <string name="composeBtnLabel">Compose</string>
     <string name="aboutBtnLabel">About</string>
 
+    <string name="filesLabel">My Files</string>
+    <string name="noFilesMsg">Your private storage is empty.</string>
+    
     <string name="overviewLabel">My Squares</string>
     <string name="noSquaresMsg">You haven\'t joined any squares yet.
             Search for a square to join or create a new one to get started.</string>
             
-    <string name="filesLabel">Files</string>
-    <string name="noFilesMsg">Your private storage is empty.</string>
-    
     <string name="communityNameLabel">Community Name</string>
     <string name="communityDescriptionLabel">Community Description</string>
     <string name="createCommunityBtnLabel">Create Community</string>

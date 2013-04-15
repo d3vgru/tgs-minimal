@@ -108,23 +108,6 @@ class ChatCore:
             self._message_attachment = None
             self.mainwin.attach_btn.setToolTip('')
     """
-    # not really sure we need this
-    """
-    def onSquareSearchUpdate(self, cache, event):
-        #TODO: send event to Android - 4
-        AndroidFacade.monitor('Received Square search update')
-        #TODO: Deal with status changes and notify user when search is done.
-        if self._square_search_dialog:
-            self._square_search_dialog.clearResultsList()
-            for suggestion in cache.suggestions:
-                square = suggestion.hit
-                if suggestion.state == 'done':
-                    self._square_search_dialog.addResult(square)
-            if event == "finished":
-                self._square_search_dialog.onSearchFinished()
-        else:
-            print "But the search window doesn't exist, dropping it..."
-        """
 
     ##################################
     #Public Methods

@@ -83,7 +83,7 @@ class MainLoop():
                     lon = 0.0
                     radius = 0.0
                     
-                    square_info = (title, description, avatar, lat, lon, radius)
+                    square_info = (name, description, avatar, lat, lon, radius)
                     self._chatCore.createNewSquare(square_info)
                     AndroidFacade.monitor('create square: {}'.format(name))
                 else: AndroidFacade.monitor('did not recognize verb "{}"'.format(verbObj))

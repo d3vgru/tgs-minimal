@@ -3,7 +3,7 @@ from jnius import cast
 
 import AndroidFacade
 
-from TGSSearchSignal import TGSSearchSignal
+from TGSSignals import TGSSearchSignal, TGSNewCommunitySignal
 
 from tgscore.discovery.community import DiscoveryCommunity, SearchCache
 
@@ -16,7 +16,6 @@ from tgscore.dispersy.crypto import (ec_generate_key,
         ec_to_public_bin, ec_to_private_bin)
 
 from tgscore.square.community import PreviewCommunity, SquareCommunity
-from tgscore import events
 
 
 #TODO: Separate the TGS stuff (dispersy threads setup et al, internal callbacks...) from the pure UI code and put it in this class:

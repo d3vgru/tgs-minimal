@@ -20,6 +20,7 @@ public class Facade extends Application {
 	public final static String TAG = "Facade";
 	
 	public final static String PREF_ALIAS = "pref_alias";
+	public final static String PREF_DEFAULT_TAB = "pref_default_tab";
 	public final static String PREF_ENABLE_DISPERSY = "pref_enable_dispersy";
 	public final static String PREF_DISPERSY_PORT = "pref_dispersy_port";
 	public final static String PREF_ENABLE_PROXY = "pref_enable_proxy";
@@ -123,6 +124,7 @@ public class Facade extends Application {
 		String alias = getAlias();
 		config.setName(alias);
 		TGSUser.getMe().setName(alias);
+		config.setDefaultTab(getDefaultTab());
 		config.setDispersyEnabled(isDispersyEnabled());
 		config.setDispersyPort(Integer.valueOf(getDispersyPort()));
 		config.setProxyEnabled(isProxyEnabled());
@@ -133,6 +135,10 @@ public class Facade extends Application {
 	
 	public String getAlias() {
 		return getPrefs().getString(PREF_ALIAS, getResources().getString(R.string.anonLabel));
+	}
+	
+	public String getDefaultTab() {
+		return getPrefs().getString(PREF_DEFAULT_TAB, getResources().getString(R.string.defaultTab));
 	}
 	
 	public boolean isDispersyEnabled() {

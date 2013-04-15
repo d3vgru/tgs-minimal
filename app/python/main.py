@@ -6,12 +6,14 @@ sys.path.append(os.environ['ANDROID_PRIVATE'] + '/tgs-core')
 
 from ChatCore import ChatCore
 
+import eventproxy
 
-# FIXME use new event model
+from tgscore import events
+
+
 # this is for async events like new square created, message received, community suggestion received
-#Set up our QT event broker
-#events.setEventBrokerFactory(eventproxy.createEventBroker)
-#global_events = eventproxy.createEventBroker(None)
+events.setEventBrokerFactory(eventproxy.createEventBroker)
+global_events = eventproxy.createEventBroker(None)
 
 
 if __name__ == '__main__':
