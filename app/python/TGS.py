@@ -138,12 +138,12 @@ class TGS:
         for master in SquareCommunity.get_master_members():
             yield 0.1
             c = dispersy.get_community(master.mid)
-            AndroidFacade.monitor('TGS: got community: {}'.format(c))
-            community = TGSCommunity()
+            AndroidFacade.monitor('TGS: got community: {}'.format(repr(c)))
+            community = self._TGSCommunity()
             # TODO set other relevant fields from c
             community.setMid(master.mid)
             # put in TGSCommunityList
-            communityList.addCommunity(superCommunity)
+            communityList.addCommunity(community)
         # send to java
         superList = cast('org.theglobalsquare.framework.ITGSObject', communityList)
         listEvent.setSubject(superList)

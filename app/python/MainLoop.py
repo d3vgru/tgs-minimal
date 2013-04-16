@@ -84,9 +84,9 @@ class MainLoop():
                     avatar = ''
 
                     # TODO support choosing coordinates/GPS on the Android side
-                    lat = 0.0
-                    lon = 0.0
-                    radius = 1.0
+                    lat = 0
+                    lon = 0
+                    radius = 1
                     
                     square_info = (name, description, avatar, lat, lon, radius)
                     self._chatCore.createNewSquare(square_info)
