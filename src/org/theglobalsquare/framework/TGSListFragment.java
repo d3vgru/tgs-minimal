@@ -2,6 +2,8 @@ package org.theglobalsquare.framework;
 
 import java.beans.*;
 
+import org.theglobalsquare.app.Facade;
+
 import android.app.Activity;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -9,6 +11,10 @@ import com.actionbarsherlock.app.SherlockListFragment;
 public class TGSListFragment extends SherlockListFragment implements PropertyChangeListener {
 	public final static String TAG = "TGSList";
 	
+	public Facade getFacade() {
+		return (Facade)getActivity().getApplication();
+	}
+
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		// handle search (and message?) update events coming from python side

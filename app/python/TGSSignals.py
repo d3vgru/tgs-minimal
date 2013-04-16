@@ -45,7 +45,7 @@ class TGSSearchSignal:
         event.setObject(superHits)
         
         # terms[0] is the (first set of?) terms
-        AndroidFacade.monitor('Signal: terms[0]: {}'.format(cache.terms[0]))
+        AndroidFacade.monitor(u'Signal: terms[0]: {}'.format(cache.terms[0]))
 
         AndroidFacade.sendEvent(event)
 
@@ -59,7 +59,7 @@ class TGSNewCommunitySignal:
         event = self._eventProtoClass()
 
         square = argv[0]
-        AndroidFacade.monitor('NewCommunitySignal: square: {}'.format(square))
+        AndroidFacade.monitor(u'NewCommunitySignal: square: {}'.format(square))
         
         # TODO copy square data to TGSCommunity
         community = event.emptyObject()

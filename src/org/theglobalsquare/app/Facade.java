@@ -28,15 +28,44 @@ public class Facade extends Application {
 	public final static String PREF_PROXY_HOST = "pref_proxy_host";
 	public final static String PREF_PROXY_PORT = "pref_proxy_port";
 	
-	private static Map<Class<? extends TGSEvent>, Set<PropertyChangeListener>> listeners = null;
-	private static TGSEvent event = null;
-	static TGSEvent pyEvent = null; 
+	private static Map<Class<? extends TGSEvent>, Set<PropertyChangeListener>> sListeners = null;
+	
+	private TGSCommunityList mCommunities = new TGSCommunityList();
+	
+	public TGSCommunityList getCommunities() {
+		return mCommunities;
+	}
+
+	private boolean mNewCommunities = false;
+	
+	public boolean hasNewCommunities() {
+		return mNewCommunities;
+	}
+	
+	public void setCommunitiesChecked() {
+		mNewCommunities = false;
+	}
+	
+	public void setCommunities(TGSCommunityList l) {
+		this.mCommunities = l;
+		
+		// notify fragment there are new communities
+		mNewCommunities = true;
+	}
+	
+	public void addCommunity(TGSCommunity c) {
+		// add this community if it doesn't exist yet
+		mCommunities.addCommunity(c);
+		
+		// notify fragment there is a new community
+		mNewCommunities = true;
+	}
 
 	@Override
 	public void onCreate() {
-		if(listeners == null) {
+		if(sListeners == null) {
 			android.util.Log.d(Facade.TAG, "NEW LISTENERS");
-			listeners = new HashMap<Class<? extends TGSEvent>, Set<PropertyChangeListener>>();
+			sListeners = new HashMap<Class<? extends TGSEvent>, Set<PropertyChangeListener>>();
 		}
 
 		if(qToPy == null) {
@@ -62,7 +91,6 @@ public class Facade extends Application {
 	}
 	public static boolean sendEvent(TGSEvent e, boolean toPy) {
 		if(toPy) {
-			pyEvent = e;
 			if(qToPy == null) {
 				android.util.Log.d(TGSMainActivity.TAG, "NEW QUEUE ON SEND EVENT");
 				qToPy = new ConcurrentLinkedQueue<TGSEvent>();
@@ -70,33 +98,27 @@ public class Facade extends Application {
 			boolean success = qToPy.add(e);
 			return success;
 		}
-		for(Class<? extends TGSEvent> c : listeners.keySet()) {
+		for(Class<? extends TGSEvent> c : sListeners.keySet()) {
 			if(c == null // want to know all events
 					|| e.getClass().isAssignableFrom(c)) { // e instanceof c
-				Set<PropertyChangeListener> ls = listeners.get(c);
+				Set<PropertyChangeListener> ls = sListeners.get(c);
 				for(PropertyChangeListener l : ls)
 					l.propertyChange(new PropertyChangeEvent(Facade.class, "qFromPy", null, e));
 			}
 		}
-		Facade.event = e;
 		return true;
 	}
-	public static TGSEvent getEvent() {
-		return event;
-	}
-	public static void setEvent(TGSEvent e) {
-		pyEvent = e;
-	}
+
 	public void addListener(Class<? extends TGSEvent> c, PropertyChangeListener l) {
-		Set<PropertyChangeListener> ls = listeners.get(c);
+		Set<PropertyChangeListener> ls = sListeners.get(c);
 		if(ls == null) {
 			ls = new HashSet<PropertyChangeListener>();
-			listeners.put(c, ls);
+			sListeners.put(c, ls);
 		}
 		ls.add(l);
 	}
 	public void removeListener(Class<? extends TGSEvent> c, PropertyChangeListener l) {
-		Set<PropertyChangeListener> ls = listeners.get(c);
+		Set<PropertyChangeListener> ls = sListeners.get(c);
 		if(ls != null) {
 			ls.remove(l);
 		}

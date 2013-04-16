@@ -1,11 +1,16 @@
 package org.theglobalsquare.framework.values;
 
+import java.io.Serializable;
+
 import org.json.*;
 
 import org.theglobalsquare.framework.TGSObject;
 import org.theglobalsquare.framework.TGSObjectList;
 
-public class TGSCommunity extends TGSObject {
+public class TGSCommunity extends TGSObject implements Serializable {
+	// serializable
+	private static final long serialVersionUID = -6538565948263862504L;
+	
 	// verbs
 	public static final String JOIN = "join";
 	public static final String LEAVE = "leave";

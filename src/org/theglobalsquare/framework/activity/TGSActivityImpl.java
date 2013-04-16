@@ -29,8 +29,8 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 
 	// load communities on startup
 	public void populateCommunities(TGSCommunityList l) {
-		// TODO store the initial list of communities somewhere and build the UI
-		
+		// store the initial list of communities
+		getFacade().setCommunities(l);
 	}
 
 	@Override
@@ -46,17 +46,14 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 		// make create community event
 		TGSCommunityEvent e = TGSCommunityEvent.forCreateSquare(c);
 
-		// not sure subject will work with current pyjnius
-		e.setObject(c);
-
 		// put it in the event queue
 		Facade.sendEvent(e, true);
 	}
 	
 	@Override
 	public void communityCreated(TGSCommunity c) {
-		// TODO process creation of community
-		
+		// process creation of community
+		getFacade().addCommunity(c);
 	}
 	
 	@Override

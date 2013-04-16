@@ -87,6 +87,8 @@ def nextEvent():
 def monitor(msg):
     TGSMessage = Message()
     message = TGSMessage()
+    if not isinstance(msg, unicode):
+        msg = unicode(msg, 'utf-8')
     message.setBody(msg)
     TGSSystemEvent = SystemEvent()
     event = TGSSystemEvent.forLog(message)

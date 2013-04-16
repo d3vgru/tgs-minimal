@@ -22,6 +22,7 @@
     <string name="noSquaresMsg">You haven\'t joined any squares yet.
             Search for a square to join or create a new one to get started.</string>
             
+    <string name="communityAvatarLabel">Community Avatar</string>
     <string name="communityNameLabel">Community Name</string>
     <string name="communityDescriptionLabel">Community Description</string>
     <string name="createCommunityBtnLabel">Create Community</string>
@@ -56,4 +57,6 @@
         You can find PPSP links on the web and social networks.</string>
     <string name="aboutBody">This software development is led by KTH, TUDelft, and INRIA within projects 
         partially funded by EIT ICTLabs.\n\nThis is free software (GNU LGPL) developed in the community.</string>
+        
+    <string name="errUnrecognizedType">Unrecognized type.</string>
 </resources>

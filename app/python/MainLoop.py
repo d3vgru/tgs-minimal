@@ -8,6 +8,10 @@ from jnius import cast
 import AndroidFacade
 
 
+def unicode_value_of(str):
+    return unicode(str, 'utf-8')
+
+
 class MainLoop():
     def __init__(self):
         self.go = True
@@ -48,8 +52,9 @@ class MainLoop():
             elif eventClassName == 'org.theglobalsquare.framework.values.TGSCommunitySearchEvent':
                 communityObj = superEvent.getObject()
                 if communityObj is not None:
-                    terms = communityObj.getName()
-                    AndroidFacade.monitor('ChatCore: got community search terms: {}'.format(terms))
+                    terms = unicode_value_of(communityObj.getName())
+                    # FIXME figure out how to handle unicode
+                    AndroidFacade.monitor(u'ChatCore: got community search terms: {}'.format(terms))
                     # really start search
                     self._chatCore.startNewSquareSearch(terms)
             elif eventClassName == 'org.theglobalsquare.framework.values.TGSCommunityEvent':
@@ -71,8 +76,8 @@ class MainLoop():
                     AndroidFacade.monitor('join square: {}'.format(subjectObj.getName()))
                 elif TGSCommunity.CREATE == verbObj:
                     # get name and description and create
-                    name = subjectObj.getName()
-                    description = subjectObj.getDescription()
+                    name = unicode_value_of(subjectObj.getName())
+                    description = unicode_value_of(subjectObj.getDescription())
 
                     # TODO support choosing avatar on the Android Side
                     #TODO: Publish the avatar via swift and set the avatar's hash here
@@ -81,7 +86,7 @@ class MainLoop():
                     # TODO support choosing coordinates/GPS on the Android side
                     lat = 0.0
                     lon = 0.0
-                    radius = 0.0
+                    radius = 1.0
                     
                     square_info = (name, description, avatar, lat, lon, radius)
                     self._chatCore.createNewSquare(square_info)
