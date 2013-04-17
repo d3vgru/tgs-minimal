@@ -219,7 +219,10 @@ def make_package(args):
     args.icon_name = args.icon_name.replace('\'', '\\\'')
 
     # Figure out versions of the private and public data.
-    private_version = str(time.time())
+    if args.private_version:
+        private_version = args.private_version
+    else:
+        private_version = str(time.time())
 
     if args.dir:
         public_version = private_version
@@ -312,6 +315,7 @@ tools directory of the Android SDK.
     ap.add_argument('--numeric-version', dest='numeric_version', help='The numeric version number of the project. If not given, this is automatically computed from the version.')
     ap.add_argument('--dir', dest='dir', help='The directory containing public files for the project.')
     ap.add_argument('--private', dest='private', help='The directory containing additional private files for the project.')
+    ap.add_argument('--private-version', dest='private_version', help='The private version number.')
     ap.add_argument('--launcher', dest='launcher', action='store_true',
             help='Provide this argument to build a multi-app launcher, rather than a single app.')
     ap.add_argument('--icon-name', dest='icon_name', help='The name of the project\'s launcher icon.')

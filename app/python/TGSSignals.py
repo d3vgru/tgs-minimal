@@ -3,6 +3,8 @@ from jnius import cast
 
 import AndroidFacade
 
+import TGS
+
 # for when search results need to be returned
 class TGSSearchSignal:
     def __init__(self, eventProtoClass):
@@ -61,8 +63,8 @@ class TGSNewCommunitySignal:
         square = argv[0]
         AndroidFacade.monitor(u'NewCommunitySignal: square: {}'.format(square))
         
-        # TODO copy square data to TGSCommunity
-        community = event.emptyObject()
+        community = cast('org.theglobalsquare.framework.values.TGSCommunity', event.emptyObject())
+        TGS.copySquareToCommunity(square, community)
         
         # must cast as the exact type that formal param of setSubject() expects
         superSubject = cast('org.theglobalsquare.framework.ITGSObject', community)

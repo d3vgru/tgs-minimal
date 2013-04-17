@@ -18,6 +18,18 @@ from tgscore.dispersy.crypto import (ec_generate_key,
 from tgscore.square.community import PreviewCommunity, SquareCommunity
 
 
+def copySquareToCommunity(square, community):
+	# copy fields from Python SquareCommunity to Java TGSCommunity
+	# SquareBase properties
+	community.setName(square.title)
+	community.setDescription(square.description)
+	community.setLatitude(square.location[0])
+	community.setLongitude(square.location[1])
+	community.setRadius(square.radius)
+	community.setThumbnailHash(square.thumbnail_hash)
+	# Community properties
+	community.setCid(square.cid)
+        
 #TODO: Separate the TGS stuff (dispersy threads setup et al, internal callbacks...) from the pure UI code and put it in this class:
 class TGS:
     def __init__(self, workdir):
@@ -29,12 +41,8 @@ class TGS:
         self._my_member = None
         self._TGSCommunity = AndroidFacade.Community()
         self._TGSCommunityList = AndroidFacade.CommunityList()
-        self._TGSListEvent = AndroidFacade.ListEvent()
-
-        
-        # get this from main thread or else class not found?
-        self._communityListProto = AndroidFacade.CommunityList()
-        self._listEventProto = AndroidFacade.ListEvent()
+        #self._TGSListInterface = AndroidFacade.ListInterface()
+        #self._TGSListEvent = AndroidFacade.ListEvent()
 
         AndroidFacade.monitor("TGS: setting up search signals")
         TGSCommunitySearchEvent = AndroidFacade.CommunitySearchEvent()
@@ -93,11 +101,11 @@ class TGS:
     	AndroidFacade.monitor('TGS: setting member info')
         self.callback.register(community.set_my_member_info, (alias,thumbnail_hash))
         
-    def getSquareForMid(self, mid):
+    def getSquareForCid(self, cid):
         # FIXME probably not the right way to do this
         if self._dispersyInstance is None:
             return None
-        return self._dispersyInstance.get_community(mid)
+        return self._dispersyInstance.get_community(cid)
 
     ##################################
     #Private methods:
@@ -130,25 +138,26 @@ class TGS:
         dispersy.define_auto_load(PreviewCommunity, (self._discovery, False))
         dispersy.define_auto_load(SquareCommunity, (self._discovery,))
 
-    	AndroidFacade.monitor('TGS: configuring overlay')
+    	AndroidFacade.monitor('TGS: loading squares')
     	
         # load squares (ie master square community)
-        communityList = self._TGSCommunityList()
-        listEvent = self._TGSListEvent()
+        # commented out code to send list since dispersy seems to send its own event for each square
+        #communityList = self._TGSCommunityList()
+        #listEvent = self._TGSListEvent()
         for master in SquareCommunity.get_master_members():
             yield 0.1
             c = dispersy.get_community(master.mid)
-            AndroidFacade.monitor('TGS: got community: {}'.format(repr(c)))
-            community = self._TGSCommunity()
-            # TODO set other relevant fields from c
-            community.setMid(master.mid)
+            AndroidFacade.monitor('TGS: loaded community: {}'.format(c))
+            #community = self._TGSCommunity()
+            #copySquareToCommunity(c, community)
+
             # put in TGSCommunityList
-            communityList.addCommunity(community)
+            #communityList.addCommunity(community)
         # send to java
-        superList = cast('org.theglobalsquare.framework.ITGSObject', communityList)
-        listEvent.setSubject(superList)
-        AndroidFacade.monitor('TGS: sending community list event')
-        AndroidFacade.sendEvent(listEvent)
+        #superList = cast('org.theglobalsquare.framework.ITGSList', communityList)
+        #listEvent.setList(superList)
+        #AndroidFacade.monitor('TGS: sending community list event')
+        #AndroidFacade.sendEvent(listEvent)
 
     	AndroidFacade.monitor('TGS: dispersy startup complete')
         # let android know we're done initializing

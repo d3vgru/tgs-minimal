@@ -33,9 +33,14 @@ public abstract class TGSEvent extends TGSObject {
 	public JSONObject toJsonObject() throws JSONException {
 		JSONObject o = super.toJsonObject();
 		o.put("type", getType());
-		o.put("subject", getSubject());
+		ITGSObject s = getSubject();
+		if(s != null) {
+			o.put("subject", s.toJsonObject());
+		}
 		o.put("verb", getVerb());
-		o.put("object", getObject());
+		ITGSObject obj = getObject();
+		if(obj != null)
+			o.put("object", obj.toJsonObject());
 		return o;
 	}
 	
@@ -46,4 +51,5 @@ public abstract class TGSEvent extends TGSObject {
 	public ITGSObject emptyObject() {
 		return new TGSObject();
 	}
+	
 }

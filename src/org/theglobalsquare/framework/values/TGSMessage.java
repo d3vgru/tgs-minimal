@@ -79,11 +79,17 @@ public class TGSMessage extends TGSObject {
 	@Override
 	public JSONObject toJsonObject() throws JSONException {
 		JSONObject o = super.toJsonObject();
-		o.put("from", getFrom());
+		TGSUser f = getFrom();
+		if(f != null)
+			o.put("from", f.toJsonObject());
 		o.put("subject", getSubject());
 		o.put("body", getBody());
-		o.put("community", getCommunity());
-		o.put("destination", getDestination());
+		TGSCommunity c = getCommunity();
+		if(c != null)
+			o.put("community", c.toJsonObject());
+		ITGSObject d = getDestination();
+		if(d != null)
+			o.put("destination", d.toJsonObject());
 		return o;
 	}
 	

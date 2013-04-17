@@ -12,6 +12,8 @@ public class TGSObject implements ITGSObject {
 
 	public void setName(String name) {
 		this.name = name;
+		if(name != null)
+			this.name = name.trim();
 	}
 	
 	// override (calling super) to add additional keys in descendant classes

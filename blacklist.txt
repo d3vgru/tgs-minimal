@@ -1,6 +1,10 @@
 # eggs
 *.egg-info
 
+# submodule git folders
+app/python/pymdht/.git*
+app/python/tgs-core/.git*
+
 # unit test
 unittest/*
 
@@ -77,6 +81,7 @@ multiprocessing/dummy*
 
 # unused binaries python modules
 #lib-dynload/_sqlite3.so
+lib-dynload/_imaging*
 lib-dynload/termios.so
 lib-dynload/_lsprof.so
 lib-dynload/*audioop.so

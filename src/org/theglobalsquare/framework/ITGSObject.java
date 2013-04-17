@@ -6,4 +6,5 @@ public interface ITGSObject {
 	String getName();
 	void setName(String name);
 	String toJson() throws JSONException;
+	JSONObject toJsonObject() throws JSONException;
 }

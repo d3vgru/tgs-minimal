@@ -9,6 +9,8 @@ import AndroidFacade
 
 
 def unicode_value_of(str):
+    if isinstance(str, unicode):
+        return str
     return unicode(str, 'utf-8')
 
 
@@ -65,13 +67,13 @@ class MainLoop():
                 TGSCommunity = AndroidFacade.Community()
                 verbObj = concreteEvent.getVerb()
                 if TGSCommunity.LEAVE == verbObj:
-                    # get mid and look up square
-                    square = self._chatCore.getSquareForMid(subjectObj.getMid())
+                    # get cid and look up square
+                    square = self._chatCore.getSquareForCid(subjectObj.getCid())
                     self._chatCore.joinSquare(square)
                     AndroidFacade.monitor('leave square: {}'.format(subjectObj.getName()))
                 elif TGSCommunity.JOIN == verbObj:
-                    # get mid and look up square
-                    square = self._chatCore.getSquareForMid(subjectObj.getMid())
+                    # get cid and look up square
+                    square = self._chatCore.getSquareForCid(subjectObj.getCid())
                     self._chatCore.leaveSquare(square)
                     AndroidFacade.monitor('join square: {}'.format(subjectObj.getName()))
                 elif TGSCommunity.CREATE == verbObj:
@@ -83,7 +85,7 @@ class MainLoop():
                     #TODO: Publish the avatar via swift and set the avatar's hash here
                     avatar = ''
 
-                    # TODO support choosing coordinates/GPS on the Android side
+                    # TODO? support choosing coordinates/GPS on the Android side
                     lat = 0
                     lon = 0
                     radius = 1

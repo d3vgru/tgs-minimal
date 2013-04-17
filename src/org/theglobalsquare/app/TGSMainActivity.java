@@ -27,7 +27,6 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 		
 		// register for events from python (or else AndroidFacade in python won't be able to send us anything)
 		getFacade().addListener(TGSCommunityEvent.class, this);
-		getFacade().addListener(TGSListEvent.class, this);
 		getFacade().addListener(TGSSystemEvent.class, this);
 
 		monitor(TAG + ": INIT");
@@ -87,7 +86,7 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 			// turn LED green on dispersy start
 			if (value instanceof TGSEvent) {
 				TGSEvent event = (TGSEvent) value;
-				String verb = event.getVerb();
+				//String verb = event.getVerb();
 				out = "EVENT: " + value.getClass().getSimpleName() + ": "
 						+ event.toString();
 				if (value instanceof TGSSystemEvent) {
@@ -105,13 +104,6 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 					// see if this is a new community
 					if(TGSCommunity.CREATED.equals(event.getVerb()))
 						activity.communityCreated(c);
-				} else if(value instanceof TGSListEvent) {
-					TGSObjectList l = (TGSObjectList)event.getSubject();
-					out = "LOG: got List: " + l;
-					// TODO populate initial list of squares
-					if(TGSObjectList.UPDATE.equals(verb)
-							&& l instanceof TGSCommunityList)
-						activity.populateCommunities((TGSCommunityList)l);
 				}
 			} else if (value instanceof TGSObject) {
 				out = "OBJECT: " + ((TGSObject) value).getName() + ": " + value;

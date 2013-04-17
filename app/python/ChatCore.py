@@ -15,6 +15,9 @@ class ChatCore:
         self._message_attachment = None
         self._oldAlias = None
         
+    ##################################
+    #Public Methods
+    ##################################
     # "public" API
     def startNewSquareSearch(self, search_terms):
         self._tgs.startNewSquareSearch(search_terms)
@@ -28,8 +31,8 @@ class ChatCore:
     def createNewSquare(self, square_info):
         self._tgs.createNewSquare(square_info)
 
-    def getSquareForMid(self, mid):
-        return self._tgs.getSquareForMid(mid)
+    def getSquareForCid(self, cid):
+        return self._tgs.getSquareForCid(cid)
         
     def sendText(self, community, message, media_hash=''):
         self._tgs.sendText(community, message, media_hash)
@@ -109,9 +112,6 @@ class ChatCore:
             self.mainwin.attach_btn.setToolTip('')
     """
 
-    ##################################
-    #Public Methods
-    ##################################
     def run(self):
         #Read config file
         self._getConfig()
@@ -160,7 +160,7 @@ class ChatCore:
         #Destroy dispersy threads before exiting
         AndroidFacade.monitor('ChatCore.run: destroying threads')
         self._tgs.stopThreads()
-        
+    
     # +1---AP - check for event
     def onNickChanged(self, *argv, **kwargs):
         oldAlias = self._oldAlias
@@ -177,7 +177,7 @@ class ChatCore:
             self._config = config
             self.onNickChanged()
             self._oldAlias = self._config.getName()
-
+            
 
     ##################################
     #Private Methods

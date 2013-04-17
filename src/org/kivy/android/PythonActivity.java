@@ -175,7 +175,8 @@ public class PythonActivity extends SherlockFragmentActivity implements Runnable
         if (! data_version.equals(disk_version)) {
             Log.v("python", "Extracting " + resource + " assets.");
 
-            recursiveDelete(target);
+            // ERK - hmmm.... no
+            //recursiveDelete(target);
             target.mkdirs();
 
             AssetExtract ae = new AssetExtract(this);
@@ -203,13 +204,20 @@ public class PythonActivity extends SherlockFragmentActivity implements Runnable
         unpackData("private", getFilesDir());
         unpackData("public", externalStorage);
 
+        // python itself
 		System.loadLibrary("python2.7");
+		
+		// the minimal bootstrap (ie not kivy)
         System.loadLibrary("application");
         System.loadLibrary("minimal_main");
+        
+        // libswift + libevent
+        System.loadLibrary("event");
 
 		System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_io.so");
         System.load(getFilesDir() + "/lib/python2.7/lib-dynload/unicodedata.so");
 
+        // kivy/python-for-android excludes _sqlite3.so in blacklist.txt by default
         try {
             System.loadLibrary("sqlite3");
             System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_sqlite3.so");

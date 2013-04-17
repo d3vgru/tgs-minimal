@@ -8,11 +8,12 @@ import android.preference.PreferenceActivity;
 import android.widget.Toast;
 import org.theglobalsquare.app.R;
 
+// this entire activity has been superseded and is only included for posterity
 public class Preferences extends PreferenceActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.preferences);
+		addPreferencesFromResource(R.xml.p2p_settings);
 		Preference button = (Preference)findPreference("pref_clean_now");
 		button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

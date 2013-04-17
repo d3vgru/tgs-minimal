@@ -6,7 +6,6 @@ import org.theglobalsquare.framework.ITGSActivity;
 import org.theglobalsquare.framework.TGSListFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
 import org.theglobalsquare.framework.values.TGSCommunityEvent;
-import org.theglobalsquare.framework.values.TGSCommunityList;
 import org.theglobalsquare.framework.values.TGSCommunitySearchEvent;
 import org.theglobalsquare.framework.values.TGSMessage;
 import org.theglobalsquare.framework.values.TGSSearchEvent;
@@ -28,10 +27,12 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 	}
 
 	// load communities on startup
+	/* not needed since dispersy sends an event for each one
 	public void populateCommunities(TGSCommunityList l) {
 		// store the initial list of communities
 		getFacade().setCommunities(l);
 	}
+	*/
 
 	@Override
 	public void createCommunity(TGSCommunity c) {

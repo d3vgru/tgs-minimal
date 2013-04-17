@@ -2,24 +2,41 @@ package com.tudelft.triblerdroid.first;
 
 //import java.net.InetAddress;
 
+/* ERK - no spydroid support yet
 //ARNOAPI12
 import net.majorkernelpanic.streaming.misc.*;
 import net.majorkernelpanic.streaming.*;
-//import net.majorkernelpanic.streaming.rtp.*;
-//import com.tudelft.majorkernelpanic.streaming.audio.AACStream;
 import net.majorkernelpanic.streaming.video.H264Stream;
 import net.majorkernelpanic.streaming.video.VideoQuality;
+*/
+
 //import net.majorkernelpanic.spydroid.*;
-import com.tudelft.triblerdroid.swift.NativeLib;
+//import net.majorkernelpanic.streaming.rtp.*;
+//import com.tudelft.majorkernelpanic.streaming.audio.AACStream;
+
+
 
 import android.app.Activity;
+
+
+
+/*
+import com.tudelft.triblerdroid.swift.NativeLib;
+
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+*/
+
+
+
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+
+
+/*
 import android.hardware.Camera.CameraInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -35,6 +52,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+*/
+
+
+
 /*
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -42,19 +63,24 @@ import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 */
+
+
+
+/*
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 
 import org.theglobalsquare.app.R;
+*/
 
 
 
 public class SourceActivity extends Activity implements OnSharedPreferenceChangeListener {
         
         static final public String TAG = "SpydroidActivity"; 
-        
+/*
 //        private ImageView logo;
         private ImageView led;
         private PowerManager.WakeLock wl;
@@ -103,7 +129,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         
         String s = "QUALITY" + defaultVideoQuality.resX + " " + defaultVideoQuality.resY + " " + defaultVideoQuality.frameRate + " " + defaultVideoQuality.bitRate + " " + defaultVideoQuality.orientation;
         Log.w("Swift", s );
-        */
+        * /
         
         settings.registerOnSharedPreferenceChangeListener(this);
        	
@@ -118,7 +144,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
 			log("<b>Spydroid v"+this.getPackageManager().getPackageInfo(this.getPackageName(), 0 ).versionName+"</b>");
 		} catch (NameNotFoundException e) {
 			log("<b>Spydroid</b>");
-		}*/
+		}//*/
         
         // FIXME apply changes from com.tudelft versions of spydroid
         /*
@@ -127,15 +153,13 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         // Arno: No audio
         Session.setDefaultAudioEncoder(settings.getBoolean("stream_audio", false)?Integer.parseInt(settings.getString("audio_encoder", "1")):0);
         Session.setDefaultVideoEncoder(settings.getBoolean("stream_video", true)?Integer.parseInt(settings.getString("video_encoder", "1")):0);
-        */
+        * /
         
         //if (settings.getBoolean("enable_rtsp", true)) rtspServer = new RtspServer(8086, handler);
 
         
         
-        /*
-         * ARNO
-         */
+        // ARNO
 //        _oldNALULength = -1;
         
 		// Arno, 2012-11-26: Hardcoded swarm id of live swarm
@@ -143,7 +167,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         _swarmid = "e5a12c7ad2d8fab33c699d1e198d66f79fa610c3";
         		
         NativeLib nativelib = new NativeLib();
-		/* String ret = */ nativelib.LiveCreate( _swarmid );
+		nativelib.LiveCreate( _swarmid );
 		
         // Create new Session
         try
@@ -197,7 +221,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
 
         
         }
-
+*/
         
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         	// FIXME apply changes from com.tudelft versions of spydroid
@@ -233,7 +257,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         	}	
         	*/
         }
-        
+/*        
         public void onStart() {
         	super.onStart();
         	// Lock screen
@@ -252,7 +276,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         	        .setContentText(getText(R.string.notification_content)).build();
         	notification.flags |= Notification.FLAG_ONGOING_EVENT;
         	((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).notify(0,notification);
-        	*/
+        	* /
         }
         	
         public void onStop() {
@@ -322,7 +346,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         			log("RtspServer could not be started : "+(e.getMessage()!=null?e.getMessage():"Unknown error"));
         		}
         	}
-        }*/
+        }* /
         
         // BroadcastReceiver that detects wifi state changements
         private final BroadcastReceiver wifiStateReceiver = new BroadcastReceiver() {
@@ -368,7 +392,7 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         	}
         	
         };
-        */
+        * /
         
         private String getIPAddress()
         {
@@ -394,12 +418,17 @@ public class SourceActivity extends Activity implements OnSharedPreferenceChange
         	}
         }
         
+        
+        * /
+        
+        
+        
         public void log(String s) {
         	/*String t = console.getText().toString();
         	if (t.split("\n").length>8) {
         		console.setText(t.substring(t.indexOf("\n")+1, t.length()));
         	}
-        	console.append(Html.fromHtml(s+"<br />"));*/
+        	console.append(Html.fromHtml(s+"<br />"));* /
         	Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
         }
 /*
