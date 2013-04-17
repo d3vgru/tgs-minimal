@@ -37,12 +37,10 @@ class TGSSearchSignal:
         for suggestion in cache.suggestions:
                 square = suggestion.hit
                 if suggestion.state == 'done':
-                    hit = event.emptyObject()
-                    # TODO migrate square data structure to TGSCommunity
-                    # TODO callback to do data copying
-                    
-                    superHit = cast('org.theglobalsquare.framework.ITGSObject', hit)
-                    hits.add(superHit)
+                    hit = event.emptyObject()                    
+                    community = cast('org.theglobalsquare.framework.values.TGSCommunity', hit)
+                    TGS.copySquareToCommunity(square, community)
+                    hits.addCommunity(community)
         superHits = cast('org.theglobalsquare.framework.ITGSObject', hits)
         event.setObject(superHits)
         
