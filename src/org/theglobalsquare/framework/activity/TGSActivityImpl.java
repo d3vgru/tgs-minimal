@@ -6,6 +6,7 @@ import org.theglobalsquare.framework.ITGSActivity;
 import org.theglobalsquare.framework.TGSListFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
 import org.theglobalsquare.framework.values.TGSCommunityEvent;
+import org.theglobalsquare.framework.values.TGSCommunityList;
 import org.theglobalsquare.framework.values.TGSCommunitySearchEvent;
 import org.theglobalsquare.framework.values.TGSMessage;
 import org.theglobalsquare.framework.values.TGSSearchEvent;
@@ -17,8 +18,48 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 
-public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActivity {
+public abstract class TGSActivityImpl extends TGSUIActivity
+		implements ITGSActivity {
 	public final static String TAG = "TGSActivity";
+	
+	private TGSCommunityList mCommunities = new TGSCommunityList();
+	
+	@Override
+	public TGSCommunityList getCommunities() {
+		return mCommunities;
+	}
+
+	public TGSCommunity getCommunity(String cid) {
+		return mCommunities.get(cid);
+	}
+	
+	private void setCommunitiesDirty() {
+		// construct tabs as appropriate
+		buildCommunityTabs();
+	}
+
+	public void setCommunities(TGSCommunityList l) {
+		this.mCommunities = l;
+		
+		// notify there are new communities
+		setCommunitiesDirty();
+	}
+	
+	@Override
+	public void addCommunity(TGSCommunity c) {
+		// add this community if it doesn't exist yet
+		mCommunities.addCommunity(c);
+		
+		// notify there is a new community
+		setCommunitiesDirty();
+	}
+	
+	public boolean hasCommunity(TGSCommunity c) {
+		if(mCommunities == null)
+			return false;
+		return mCommunities.contains(c);
+	}
+
 	
 	// ITGSActivity impl
 	@Override
@@ -54,7 +95,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 	@Override
 	public void communityCreated(TGSCommunity c) {
 		// process creation of community
-		getFacade().addCommunity(c);
+		addCommunity(c);
 	}
 	
 	@Override
@@ -104,7 +145,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity implements ITGSActiv
 		TGSCommunity c = new TGSCommunity();
 		c.setName(term);
 		TGSSearchEvent s = new TGSCommunitySearchEvent();
-// jnius can't seem to access the subject field
+// FIXME jnius can't seem to access the subject field
 //		s.setSubject(c);
 		s.setObject(c);
 		s.setVerb(TGSSearchEvent.START);

@@ -26,8 +26,8 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 		super.onCreate(savedInstanceState);
 		
 		// register for events from python (or else AndroidFacade in python won't be able to send us anything)
-		getFacade().addListener(TGSCommunityEvent.class, this);
 		getFacade().addListener(TGSSystemEvent.class, this);
+		getFacade().addListener(TGSCommunityEvent.class, this);
 
 		monitor(TAG + ": INIT");
 	}

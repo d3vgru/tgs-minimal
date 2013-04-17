@@ -52,7 +52,7 @@ public class OverviewListFragment extends TGSListFragment {
 			}
 			
 			public TGSCommunityList getItems() {
-				return OverviewListFragment.this.getFacade().getCommunities();
+				return ((ITGSActivity)OverviewListFragment.this.getActivity()).getCommunities();
 			}
 
 			@Override

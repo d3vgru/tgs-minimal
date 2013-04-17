@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.widget.EditText;
 
 public interface ITGSActivity {
+	void addCommunity(TGSCommunity c);
+	TGSCommunityList getCommunities();
 	void createCommunity(TGSCommunity c);
 	void communityCreated(TGSCommunity c);
 	//void populateCommunities(TGSCommunityList l);

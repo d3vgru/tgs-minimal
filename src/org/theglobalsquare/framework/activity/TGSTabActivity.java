@@ -1,8 +1,12 @@
 package org.theglobalsquare.framework.activity;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import org.theglobalsquare.app.R;
+import org.theglobalsquare.framework.ITGSObject;
+import org.theglobalsquare.framework.values.TGSCommunity;
+import org.theglobalsquare.framework.values.TGSCommunityList;
+import org.theglobalsquare.ui.CommunityListFragment;
 import org.theglobalsquare.ui.SearchFragment;
 import org.theglobalsquare.ui.OverviewListFragment;
 import org.theglobalsquare.ui.FilesListFragment;
@@ -30,6 +34,7 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 	protected int mSelectedTab = -1;
     protected TabsAdapter mTabsAdapter;
 	protected ViewPager mViewPager;
+	protected HashSet<TGSCommunity> mTabCommunities;
 
     protected boolean showActionButtons(int tab) {
 		return tab >= TAB_COUNT_BASE;
@@ -43,6 +48,8 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 	protected void configureTabs() {
 		ActionBar bar = getSupportActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        
+        mTabCommunities = new HashSet<TGSCommunity>();
 
 		// make sure to setContentView() first (in super.onCreate)
 		mViewPager = (ViewPager)findViewById(R.id.mainActivityPager);
@@ -208,5 +215,31 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 			}
 		}
 	}
+	
+	public void buildCommunityTabs() {
+		// update UI when community list changes
+		TGSCommunityList l = getTGSActivity().getCommunities();
+		//Iterator<TGSCommunity> currentTabs = mTabCommunities.iterator();
+		if(l != null) {
+			Iterator<ITGSObject> communities = l.iterator();
+			while(communities.hasNext()) {
+				TGSCommunity c = (TGSCommunity)communities.next();
+				// add a new tab if not already present
+				if(!mTabCommunities.contains(c)) {
+					// make a tab for each new community
+					addCommunityTabFor(c);
+				}
+			}
+		}
+	}
 
+	public void addCommunityTabFor(TGSCommunity c) {
+		// add new community to set of tabs for squares
+		mTabCommunities.add(c);
+		ActionBar bar = getSupportActionBar();
+		mTabsAdapter.addTab(
+                bar.newTab().setText(c.getName()),
+                CommunityListFragment.class, null);
+	}
+	
 }

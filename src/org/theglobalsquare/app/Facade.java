@@ -30,46 +30,15 @@ public class Facade extends Application {
 	
 	private static Map<Class<? extends TGSEvent>, Set<PropertyChangeListener>> sListeners = null;
 	
-	private TGSCommunityList mCommunities = new TGSCommunityList();
-	
-	public TGSCommunityList getCommunities() {
-		return mCommunities;
-	}
-
-	private boolean mNewCommunities = false;
-	
-	public boolean hasNewCommunities() {
-		return mNewCommunities;
-	}
-	
-	public void setCommunitiesChecked() {
-		mNewCommunities = false;
-	}
-	
-	public void setCommunities(TGSCommunityList l) {
-		this.mCommunities = l;
-		
-		// notify fragment there are new communities
-		mNewCommunities = true;
-	}
-	
-	public void addCommunity(TGSCommunity c) {
-		// add this community if it doesn't exist yet
-		mCommunities.addCommunity(c);
-		
-		// notify fragment there is a new community
-		mNewCommunities = true;
-	}
-
 	@Override
 	public void onCreate() {
 		if(sListeners == null) {
-			android.util.Log.d(Facade.TAG, "NEW LISTENERS");
+			android.util.Log.d(TAG, "NEW LISTENERS");
 			sListeners = new HashMap<Class<? extends TGSEvent>, Set<PropertyChangeListener>>();
 		}
 
 		if(qToPy == null) {
-			android.util.Log.d(TGSMainActivity.TAG, "NEW QUEUE");
+			android.util.Log.d(TAG, "NEW QUEUE");
 			qToPy = new ConcurrentLinkedQueue<TGSEvent>();
 		}
 
@@ -92,7 +61,7 @@ public class Facade extends Application {
 	public static boolean sendEvent(TGSEvent e, boolean toPy) {
 		if(toPy) {
 			if(qToPy == null) {
-				android.util.Log.d(TGSMainActivity.TAG, "NEW QUEUE ON SEND EVENT");
+				android.util.Log.d(TAG, "NEW QUEUE ON SEND EVENT");
 				qToPy = new ConcurrentLinkedQueue<TGSEvent>();
 			}
 			boolean success = qToPy.add(e);
@@ -165,7 +134,7 @@ public class Facade extends Application {
 	
 	public boolean isDispersyEnabled() {
 		boolean dispersyEnabled = getPrefs().getBoolean(PREF_ENABLE_DISPERSY, true);
-		android.util.Log.v(Facade.TAG, "dispersyEnabled: " + dispersyEnabled);
+		android.util.Log.v(TAG, "dispersyEnabled: " + dispersyEnabled);
 		return dispersyEnabled;
 	}
 
@@ -175,7 +144,7 @@ public class Facade extends Application {
 
 	public boolean isProxyEnabled() {
 		boolean proxyEnabled = getPrefs().getBoolean(PREF_ENABLE_PROXY, false);
-		android.util.Log.v(Facade.TAG, "proxyEnabled: " + proxyEnabled);
+		android.util.Log.v(TAG, "proxyEnabled: " + proxyEnabled);
 		return proxyEnabled;
 	}
 

@@ -25,7 +25,7 @@ public class TGSCommunityList extends TGSObjectList {
 
 	@Override
 	public int indexOf(Object object) {
-		if(object instanceof TGSCommunity) {
+		if(object instanceof TGSCommunity && object != null) {
 			TGSCommunity oc = (TGSCommunity)object;
 			// FIXME is this a good enough comparison?
 			String cid = oc.getCid();
@@ -38,6 +38,15 @@ public class TGSCommunityList extends TGSObjectList {
 			}
 		}
 		return -1;
+	}
+	
+	public TGSCommunity get(String cid) {
+		TGSCommunity c = new TGSCommunity();
+		c.setCid(cid);
+		int index = indexOf(c);
+		if(index == -1)
+			return null;
+		return (TGSCommunity) get(index);
 	}
 	
 }

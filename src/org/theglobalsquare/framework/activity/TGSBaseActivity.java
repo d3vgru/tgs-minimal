@@ -51,6 +51,10 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 	public static Facade getStaticFacade() {
 		return sFacade;
 	}
+	
+	public ITGSActivity getTGSActivity() {
+		return (ITGSActivity)this;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
