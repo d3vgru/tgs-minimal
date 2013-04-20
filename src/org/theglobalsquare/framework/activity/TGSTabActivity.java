@@ -91,6 +91,8 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 				// hide action buttons if not viewing a square
 				mSelectedTab = tab;
 				boolean visible = showActionButtons(tab);
+				if(mMenuClose != null)
+					mMenuClose.setVisible(visible);
 				if(mMenuCompose != null)
 					mMenuCompose.setVisible(visible);
 				if(mMenuRefresh != null)
@@ -102,6 +104,7 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
         	
         });
         
+        // TODO select default tab from settings if possible
         // select Monitor tab
         setTab(TAB_MONITOR);
 	}

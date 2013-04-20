@@ -8,12 +8,15 @@
     <string name="createBtnLabel">New</string>
     <string name="saveBtnLabel">Save</string>
     <string name="cancelBtnLabel">Cancel</string>
+    <string name="closeBtnLabel">Close</string>
     <string name="settingsBtnLabel">Settings</string>
     <string name="helpBtnLabel">Help</string>
     <string name="refreshBtnLabel">Refresh</string>
     <string name="shareBtnLabel">Share</string>
     <string name="composeBtnLabel">Compose</string>
     <string name="aboutBtnLabel">About</string>
+    
+    <string name="emptyListLabel">No items.</string>
 
     <string name="filesLabel">My Files</string>
     <string name="noFilesMsg">Your private storage is empty.</string>

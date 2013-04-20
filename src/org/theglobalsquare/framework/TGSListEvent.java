@@ -1,6 +1,7 @@
-package org.theglobalsquare.framework.values;
+package org.theglobalsquare.framework;
 
-import org.theglobalsquare.framework.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class TGSListEvent extends TGSEvent {
 	public final static String UPDATE = "update";
@@ -37,6 +38,16 @@ public class TGSListEvent extends TGSEvent {
 		e.setList(l);
 		e.setVerb(TGSListEvent.UPDATE);
 		return e;
+	}
+	
+	@Override
+	public JSONObject toJsonObject() throws JSONException {
+		JSONObject o = super.toJsonObject();
+		ITGSList l = getList();
+		if(l != null) {
+			o.put("list", l.toJsonArray());
+		}
+		return o;
 	}
 	
 	public ITGSList emptyList() {

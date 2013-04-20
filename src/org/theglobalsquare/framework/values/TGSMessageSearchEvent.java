@@ -2,6 +2,7 @@ package org.theglobalsquare.framework.values;
 
 import org.theglobalsquare.framework.ITGSList;
 import org.theglobalsquare.framework.ITGSObject;
+import org.theglobalsquare.framework.TGSSearchEvent;
 
 public class TGSMessageSearchEvent extends TGSSearchEvent {
 	// verbs

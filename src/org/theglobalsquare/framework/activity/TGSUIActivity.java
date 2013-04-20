@@ -49,6 +49,8 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 		MenuInflater inflater = getSupportMenuInflater();
 	    inflater.inflate(R.menu.main_menu, menu);
 	    boolean visible = showActionButtons(mSelectedTab);
+		mMenuClose = menu.findItem(R.id.menu_close);
+		mMenuClose.setVisible(visible);
 		mMenuCompose = menu.findItem(R.id.menu_compose);
 		mMenuCompose.setVisible(visible);
 		mMenuRefresh = menu.findItem(R.id.menu_refresh);

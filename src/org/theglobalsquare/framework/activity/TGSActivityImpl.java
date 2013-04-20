@@ -9,7 +9,7 @@ import org.theglobalsquare.framework.values.TGSCommunityEvent;
 import org.theglobalsquare.framework.values.TGSCommunityList;
 import org.theglobalsquare.framework.values.TGSCommunitySearchEvent;
 import org.theglobalsquare.framework.values.TGSMessage;
-import org.theglobalsquare.framework.values.TGSSearchEvent;
+import org.theglobalsquare.framework.TGSSearchEvent;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;

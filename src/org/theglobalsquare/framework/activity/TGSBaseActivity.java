@@ -26,6 +26,7 @@ import com.actionbarsherlock.view.MenuItem;
 // depends on ActionBarSherlock
 public abstract class TGSBaseActivity extends PythonActivity implements ITGSActivity {
 	public final static String TAG = "TGSBase";
+	protected MenuItem mMenuClose = null;
 	protected MenuItem mMenuCompose = null;
 	protected MenuItem mMenuRefresh = null;
 	protected MenuItem mMenuShare = null;

@@ -1,8 +1,7 @@
-package org.theglobalsquare.framework.values;
+package org.theglobalsquare.framework;
 
-import org.theglobalsquare.framework.*;
 
-public abstract class TGSSearchEvent extends TGSEvent {
+public abstract class TGSSearchEvent extends TGSListEvent {
 	// verbs:
 	// start - request a search to start [java]
 	// cancel - cancel search [java]

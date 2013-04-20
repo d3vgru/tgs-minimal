@@ -39,10 +39,11 @@ class TGSSearchSignal:
                 if suggestion.state == 'done':
                     hit = event.emptyObject()                    
                     community = cast('org.theglobalsquare.framework.values.TGSCommunity', hit)
+                    AndroidFacade.monitor('HIT: community "{}"'.format(community.getName()))
                     TGS.copySquareToCommunity(square, community)
                     hits.addCommunity(community)
-        superHits = cast('org.theglobalsquare.framework.ITGSObject', hits)
-        event.setObject(superHits)
+        superHits = cast('org.theglobalsquare.framework.ITGSList', hits)
+        event.setList(superHits)
         
         # terms[0] is the (first set of?) terms
         AndroidFacade.monitor(u'Signal: terms[0]: {}'.format(cache.terms[0]))

@@ -3,8 +3,13 @@ package org.theglobalsquare.framework;
 import java.beans.*;
 
 import org.theglobalsquare.app.Facade;
+import org.theglobalsquare.app.R;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -13,6 +18,30 @@ public class TGSListFragment extends SherlockListFragment implements PropertyCha
 	
 	public Facade getFacade() {
 		return (Facade)getActivity().getApplication();
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View v = super.onCreateView(inflater, container, savedInstanceState);
+		updateEmptyText(getString(R.string.emptyListLabel));
+		return v;
+	}
+	
+	public void updateEmptyText(final String emptyText) {
+		Activity activity = getActivity();
+		if(activity != null) {
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					if(getView() == null)
+						return;
+					setEmptyText(emptyText);
+					setListShown(true);
+				}	
+			});
+		}
+		else android.util.Log.d(TAG, "activity null");
 	}
 
 	@Override
@@ -23,17 +52,7 @@ public class TGSListFragment extends SherlockListFragment implements PropertyCha
 		if(o instanceof TGSEvent) {
 			final TGSEvent e = (TGSEvent)o;
 			android.util.Log.i(TAG, "event: " + e.getClass().getName());
-			Activity activity = getActivity();
-			if(activity != null) {
-				getActivity().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						setEmptyText(e.toString());
-						setListShown(true);
-					}	
-				});
-			}
-			else android.util.Log.d(TAG, "activity null");
+			updateEmptyText(e.toString());
 			// TODO handle actual results
 		} else {
 			android.util.Log.i(TAG, "not event: " + o.getClass().getName());

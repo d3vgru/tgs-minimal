@@ -39,7 +39,7 @@ def ConfigEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSConfigEvent')
 
 def ListEvent():
-    return autoclass('org.theglobalsquare.framework.values.TGSListEvent')
+    return autoclass('org.theglobalsquare.framework.TGSListEvent')
     
 def MessageEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSMessageEvent')
