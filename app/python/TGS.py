@@ -170,7 +170,7 @@ class TGS:
         # this is the hardcoded key of the TGS app (aka "App ID")
         # do not change or you'll be a different app :)
         public_key = "3081a7301006072a8648ce3d020106052b81040027038192000406b34f060c416e452fd31fb1770c2f475e928effce751f2f82565bec35c46a97fb8b375cca4ac5dc7d93df1ba594db335350297f003a423e207b53709e6163b7688c0f60a9cf6599037829098d5fbbfe786e0cb95194292f241ff6ae4d27c6414f94de7ed1aa62f0eb6ef70d2f5af97c9aade8266eb85b14296ed2004646838c056d1d9ad8a509b69f81fbc726201b57".decode("HEX")
-        master = Member(self._dispersyInstance, public_key)
+        master = self._dispersyInstance.get_member(public_key)
         try:
             self._discovery = DiscoveryCommunity.load_community(master)
         except ValueError:
