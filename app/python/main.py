@@ -1,3 +1,6 @@
+import logging
+logging.basicConfig()
+
 import os
 import sys
 

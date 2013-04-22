@@ -73,10 +73,10 @@ class TGS:
     ##################################
     def setupThreads(self):
         # start threads
-        callback = Callback()
+        callback = Callback(name="Dispersy")
         if AndroidFacade.getConfig().isDispersyEnabled():
             AndroidFacade.monitor('TGS: starting dispersy callback')
-            callback.start(name="Dispersy")
+            callback.start()
             AndroidFacade.monitor('TGS: registering self._dispersy')
             callback.register(self._dispersy, (callback,))
         self.callback = callback
