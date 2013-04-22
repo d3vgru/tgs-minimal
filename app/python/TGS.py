@@ -1,3 +1,5 @@
+import sys
+
 from jnius import autoclass
 from jnius import cast
 
@@ -7,7 +9,7 @@ from TGSSignals import TGSSearchSignal, TGSNewCommunitySignal
 
 from tgscore.discovery.community import DiscoveryCommunity, SearchCache
 
-from tgscore.dispersy.endpoint import StandaloneEndpoint
+from tgscore.dispersy.endpoint import StandaloneEndpoint,TunnelEndpoint
 from tgscore.dispersy.callback import Callback
 from tgscore.dispersy.dispersy import Dispersy
 from tgscore.dispersy.member import Member
@@ -36,6 +38,7 @@ class TGS:
         AndroidFacade.monitor('TGS: init')
         self._workdir = workdir
         self.callback = None
+        self.swift_process = None
         self._discovery = None
         self._dispersyInstance = None
         self._my_member = None
@@ -73,7 +76,7 @@ class TGS:
     ##################################
     def setupThreads(self):
         # start threads
-        callback = Callback(name="Dispersy")
+        callback = Callback(name="Dispersy")  # WARNING NAME SIGNIFICANT
         if AndroidFacade.getConfig().isDispersyEnabled():
             AndroidFacade.monitor('TGS: starting dispersy callback')
             callback.start()
@@ -102,33 +105,77 @@ class TGS:
         self.callback.register(community.set_my_member_info, (alias,thumbnail_hash))
         
     def getSquareForCid(self, cid):
-        # FIXME probably not the right way to do this
+        # FIXME probably not the right way to get dispersy
         if self._dispersyInstance is None:
             return None
         return self._dispersyInstance.get_community(cid)
-
+    
     ##################################
     #Private methods:
     ##################################
     def _dispersy(self, callback):
+        config = AndroidFacade.getConfig()
+        """ old method using singletons no longer supported
         # start Dispersy
         dispersy = Dispersy.get_instance(callback, self._workdir)
-        
-        # FIXME probably not the right way to do this
-        self._dispersyInstance = dispersy
         if AndroidFacade.getConfig().isDispersyEnabled():
             AndroidFacade.monitor('TGS: starting dispersy endpoint')
             dispersy.endpoint = StandaloneEndpoint(dispersy, AndroidFacade.getConfig().getDispersyPort())
             dispersy.endpoint.start()
 
+        # updated (currently devel) dispersy startup sequence BEGINS HERE
+        if config['dispersy']:
+        """
+        if config.isDispersyEnabled():
+            """
+            self.rawserver = RawServer(self.sessdoneflag,
+                                       config['timeout_check_interval'],
+                                       config['timeout'],
+                                       ipv6_enable=config['ipv6_enabled'],
+                                       failfunc=self.rawserver_fatalerrorfunc,
+                                       errorfunc=self.rawserver_nonfatalerrorfunc)
+            """
+            
+            # TODO support all permutations of proxy and swift
+            # TODO find out if swift can be proxied
+            # set communication endpoint
+            if config.isTunnelDispersyOverSwift() and self.swift_process:
+                endpoint = TunnelEndpoint(self.swift_process)
+                self.swift_process.add_download(endpoint)
+            else:
+                #endpoint = StandaloneEndpoint(config.getDispersyPort())
+                endpoint = StandaloneEndpoint(config.getDispersyPort())
+
+            # handled in setupThreads
+            #callback = Callback("Dispersy")  # WARNING NAME SIGNIFICANT
+            # from os.environ['ANDROID_PRIVATE']
+            #working_directory = unicode(config['state_dir'])
+
+            self._dispersyInstance = Dispersy(callback, endpoint, self._workdir)
+
+            # TODO: see if we can postpone dispersy.start to improve GUI responsiveness.
+            # However, for now we must start self.dispersy.callback before running
+            # try_register(nocachedb, self.database_thread)!
+            self._dispersyInstance.start()
+            print >>sys.stderr, "lmc: Dispersy is listening on port", self._dispersyInstance.wan_address[1], "[%d]" % id(self._dispersyInstance)
+
+        """ handled by setupThreads
+        else:
+            # new database stuff will run on only one thread
+            callback = Callback("Dispersy")  # WARNING NAME SIGNIFICANT
+            callback.start()
+        """
+
         # load/join discovery community
         # this is the hardcoded key of the TGS app (aka "App ID")
         # do not change or you'll be a different app :)
         public_key = "3081a7301006072a8648ce3d020106052b81040027038192000406b34f060c416e452fd31fb1770c2f475e928effce751f2f82565bec35c46a97fb8b375cca4ac5dc7d93df1ba594db335350297f003a423e207b53709e6163b7688c0f60a9cf6599037829098d5fbbfe786e0cb95194292f241ff6ae4d27c6414f94de7ed1aa62f0eb6ef70d2f5af97c9aade8266eb85b14296ed2004646838c056d1d9ad8a509b69f81fbc726201b57".decode("HEX")
-        master = Member(public_key)
+        master = Member(self._dispersyInstance, public_key)
         try:
             self._discovery = DiscoveryCommunity.load_community(master)
         except ValueError:
+            # generate user ID
+            # FIXME allow generation of new ID from app settings screen (eg TOANFO)
             ec = ec_generate_key(u"low")
             self._my_member = Member(ec_to_public_bin(ec), ec_to_private_bin(ec))
             self._discovery = DiscoveryCommunity.join_community(master, self._my_member)

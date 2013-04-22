@@ -79,8 +79,28 @@ public class TGSConfig extends TGSObject {
 	public void setProxyPort(Integer proxyPort) {
 		this.proxyPort = proxyPort;
 	}
+	
+	boolean swiftEnabled;
 
+	public boolean isSwiftEnabled() {
+		return swiftEnabled;
+	}
 
+	public void setSwiftEnabled(boolean swiftEnabled) {
+		this.swiftEnabled = swiftEnabled;
+	}
+
+	boolean tunnelDispersyOverSwift;
+	
+	public boolean isTunnelDispersyOverSwift() {
+		return tunnelDispersyOverSwift;
+	}
+
+	public void setTunnelDispersyOverSwift(boolean tunnelDispersyOverSwift) {
+		this.tunnelDispersyOverSwift = tunnelDispersyOverSwift;
+	}
+
+	
 	public TGSConfig() {
 		
 	}
@@ -95,6 +115,8 @@ public class TGSConfig extends TGSObject {
 		o.put("proxyRequired", isProxyRequired());
 		o.put("proxyHost", getProxyHost());
 		o.put("proxyPort", getProxyPort());
+		o.put("swiftEnabled", isSwiftEnabled());
+		o.put("tunnelDispersyOverSwift", isTunnelDispersyOverSwift());
 		return o;
 	}
 	

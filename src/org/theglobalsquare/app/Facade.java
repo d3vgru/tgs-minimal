@@ -27,6 +27,8 @@ public class Facade extends Application {
 	public final static String PREF_REQUIRE_PROXY = "pref_require_proxy";
 	public final static String PREF_PROXY_HOST = "pref_proxy_host";
 	public final static String PREF_PROXY_PORT = "pref_proxy_port";
+	public final static String PREF_SWIFT_ENABLED = "pref_swift_enabled";
+	public final static String PREF_TUNNEL_DISPERSY_OVER_SWIFT = "pref_tunnel_dispersy_over_swift";
 	
 	private static Map<Class<? extends TGSEvent>, Set<PropertyChangeListener>> sListeners = null;
 	
@@ -122,6 +124,8 @@ public class Facade extends Application {
 		config.setProxyRequired(isProxyRequired());
 		config.setProxyHost(getProxyHost());
 		config.setProxyPort(Integer.valueOf(getProxyPort()));
+		config.setSwiftEnabled(isSwiftEnabled());
+		config.setTunnelDispersyOverSwift(isTunnelDispersyOverSwift());
 	}
 	
 	public String getAlias() {
@@ -159,5 +163,12 @@ public class Facade extends Application {
 	public String getProxyPort() {
 		return getPrefs().getString(PREF_PROXY_PORT, getResources().getString(R.string.proxyPortDefault));
 	}
+	
+	public boolean isSwiftEnabled() {
+		return getPrefs().getBoolean(PREF_SWIFT_ENABLED, false);
+	}
 
+	public boolean isTunnelDispersyOverSwift() {
+		return getPrefs().getBoolean(PREF_TUNNEL_DISPERSY_OVER_SWIFT, false);
+	}
 }
