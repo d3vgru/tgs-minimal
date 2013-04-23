@@ -16,8 +16,6 @@ from tgscore.dispersy.endpoint import StandaloneEndpoint,TunnelEndpoint
 from tgscore.dispersy.callback import Callback
 from tgscore.dispersy.dispersy import Dispersy
 from tgscore.dispersy.member import Member
-from tgscore.dispersy.crypto import (ec_generate_key,
-        ec_to_public_bin, ec_to_private_bin)
 
 from tgscore.square.community import PreviewCommunity, SquareCommunity
 
@@ -91,7 +89,7 @@ class TGS:
 
     def stopThreads(self):
     	AndroidFacade.monitor('TGS: tearing down threads')
-        self.callback.stop()
+        self.dispersy.stop()
 
         if self.callback.exception:
             global exit_exception
@@ -124,17 +122,6 @@ class TGS:
         AndroidFacade.monitor('enter _dispersy()')
         config = AndroidFacade.getConfig()
         AndroidFacade.monitor('config: {}'.format(config.toString()))
-        """ old method using singletons no longer supported
-        # start Dispersy
-        dispersy = Dispersy.get_instance(callback, self._workdir)
-        if AndroidFacade.getConfig().isDispersyEnabled():
-            AndroidFacade.monitor('TGS: starting dispersy endpoint')
-            dispersy.endpoint = StandaloneEndpoint(dispersy, AndroidFacade.getConfig().getDispersyPort())
-            dispersy.endpoint.start()
-
-        # updated (currently devel) dispersy startup sequence BEGINS HERE
-        if config['dispersy']:
-        """        
         if config.isDispersyEnabled():
             
             # TODO support all permutations of proxy and swift
@@ -149,9 +136,12 @@ class TGS:
                 endpoint = StandaloneEndpoint(config.getDispersyPort())
 
             # new database stuff will run on only one thread
-            self.callback = Callback("Dispersy")
-            self.callback.start()  # WARNING NAME SIGNIFICANT
-            
+            self.callback = Callback("Dispersy") # WARNING NAME SIGNIFICANT
+
+            # 23/04/13 Boudewijn: callback.start is now called from dispersy.start(), the same thing
+            # goes for stop.
+            # self.callback.start()
+
             # from os.environ['ANDROID_PRIVATE']
             #working_directory = unicode(config['state_dir'])
 
@@ -173,22 +163,24 @@ class TGS:
             self.callback = Callback("Dispersy")  # WARNING NAME SIGNIFICANT
             self.callback.start()
 
+        # start communities
+        self.callback.call(self._load_communities)
+
+    def _load_communities(self):
+        assert self.callback.is_current_thread
         # load/join discovery community
         # this is the hardcoded key of the TGS app (aka "App ID")
         # do not change or you'll be a different app :)
         public_key = "3081a7301006072a8648ce3d020106052b81040027038192000406b34f060c416e452fd31fb1770c2f475e928effce751f2f82565bec35c46a97fb8b375cca4ac5dc7d93df1ba594db335350297f003a423e207b53709e6163b7688c0f60a9cf6599037829098d5fbbfe786e0cb95194292f241ff6ae4d27c6414f94de7ed1aa62f0eb6ef70d2f5af97c9aade8266eb85b14296ed2004646838c056d1d9ad8a509b69f81fbc726201b57".decode("HEX")
         master = self.dispersy.get_member(public_key)
         try:
-            self._discovery = DiscoveryCommunity.load_community(master)
+            self._discovery = DiscoveryCommunity.load_community(self.dispersy, master)
         except ValueError:
             # generate user ID
             # FIXME allow generation of new ID from app settings screen (eg TOANFO)
-            ec = ec_generate_key(u"low")
-            self._my_member = Member(ec_to_public_bin(ec), ec_to_private_bin(ec))
-            self._discovery = DiscoveryCommunity.join_community(master, self._my_member)
-        else:
-            self._my_member = self._discovery.my_member
+            self._discovery = DiscoveryCommunity.join_community(master, self.dispersy.get_new_member(u"low"))
 
+        self._my_member = self._discovery.my_member
         self.dispersy.define_auto_load(PreviewCommunity, (self._discovery, False))
         self.dispersy.define_auto_load(SquareCommunity, (self._discovery,))
 
