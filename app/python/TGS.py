@@ -174,10 +174,15 @@ class TGS:
         public_key = "3081a7301006072a8648ce3d020106052b81040027038192000406b34f060c416e452fd31fb1770c2f475e928effce751f2f82565bec35c46a97fb8b375cca4ac5dc7d93df1ba594db335350297f003a423e207b53709e6163b7688c0f60a9cf6599037829098d5fbbfe786e0cb95194292f241ff6ae4d27c6414f94de7ed1aa62f0eb6ef70d2f5af97c9aade8266eb85b14296ed2004646838c056d1d9ad8a509b69f81fbc726201b57".decode("HEX")
         master = self.dispersy.get_member(public_key)
         try:
+            logger.warning("loading DiscoveryCommunity")
+            # FIXME this seems to be a different way to load the square db
+            # it bypasses tgscore.square.community.SquareBase which opens it....
+            # try moving the call to open the db to DiscoveryCommunity? hmm
             self._discovery = DiscoveryCommunity.load_community(self.dispersy, master)
         except ValueError:
             # generate user ID
             # FIXME allow generation of new ID from app settings screen (eg TOANFO)
+            logger.warning("generating user ID and constructing new DiscoveryCommunity")
             self._discovery = DiscoveryCommunity.join_community(master, self.dispersy.get_new_member(u"low"))
 
         self._my_member = self._discovery.my_member
