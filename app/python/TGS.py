@@ -158,9 +158,9 @@ class TGS:
             self.dispersy = Dispersy(self.callback, endpoint, self._workdir)
 
             # from PC version: TODO: see if we can postpone dispersy.start to improve GUI responsiveness.
-            # not a problem for Android since the main UI thread is not blocked by the python threads
             # However, for now we must start self.dispersy.callback before running
             # try_register(nocachedb, self.database_thread)!
+            # ERK - not a problem for Android since the main UI thread is not blocked by the python threads
             AndroidFacade.monitor('starting dispersy')
             # FIXME I guess this implicitly starts the thread? ie callback.start()
             # FIXME doesn't seem to like the standalone endpoint
