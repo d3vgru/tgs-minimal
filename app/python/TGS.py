@@ -2,6 +2,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 import sys
+from threading import Event
 
 from jnius import autoclass
 from jnius import cast
@@ -12,7 +13,7 @@ from TGSSignals import TGSSearchSignal, TGSNewCommunitySignal
 
 from tgscore.discovery.community import DiscoveryCommunity, SearchCache
 
-from tgscore.dispersy.endpoint import StandaloneEndpoint,TunnelEndpoint
+from tgscore.dispersy.endpoint import RawserverEndpoint, TunnelEndpoint
 from tgscore.dispersy.callback import Callback
 from tgscore.dispersy.dispersy import Dispersy
 from tgscore.dispersy.member import Member
@@ -21,6 +22,8 @@ from tgscore.dispersy.crypto import (ec_generate_key,
 
 from tgscore.square.community import PreviewCommunity, SquareCommunity
 
+# FIXME monkeypatch this so we don't have to deal with the whole submodule, but...
+from Tribler.Core.RawServer.RawServer import RawServer
 
 def copySquareToCommunity(square, community):
 	# copy fields from Python SquareCommunity to Java TGSCommunity
@@ -40,9 +43,9 @@ class TGS:
         AndroidFacade.monitor('TGS: init')
         self._workdir = workdir
         self.callback = None
+        self.dispersy = None
         self.swift_process = None
         self._discovery = None
-        self.dispersy = None
         self._my_member = None
         self._TGSCommunity = AndroidFacade.Community()
         self._TGSCommunityList = AndroidFacade.CommunityList()
@@ -76,55 +79,27 @@ class TGS:
     ##################################
     #Public methods:
     ##################################
-    def setupThreads(self):
-        # start threads
-        #callback = Callback(name="Dispersy")  # WARNING NAME SIGNIFICANT
-        # should start no matter what (so at least the db is available)?
-		#callback.start()
-		# FIXME invoke _dispersy from same thread?
-		#AndroidFacade.monitor('TGS: registering self._dispersy')
-		#callback.register(self._dispersy, (callback,))
-		AndroidFacade.monitor('TGS: running self._dispersy')
-		self._dispersy()
-		AndroidFacade.monitor('TGS: self._dispersy exited')
-        #self.callback = callback
+    def rawserver_fatalerrorfunc(self, e):
+        """ Called by network thread """
+        logger.exception("tlm: RawServer fatal error func called", e)
+        #print_exc()
 
-    def stopThreads(self):
-    	AndroidFacade.monitor('TGS: tearing down threads')
-        self.callback.stop()
+    def rawserver_nonfatalerrorfunc(self, e):
+        """ Called by network thread """
+        logger.exception("tlm: RawServer non fatal error func called", e)
+        #print_exc()
 
-        if self.callback.exception:
-            global exit_exception
-            exit_exception = self.callback.exception
+    def rawserver_keepalive(self):
+        """ Hack to prevent rawserver sleeping in select() for a long time, not
+        processing any tasks on its queue at startup time
 
-    def createNewSquare(self, square_info):
-    	AndroidFacade.monitor('TGS: creating new square')
-        self.callback.register(self._dispersyCreateCommunity, square_info)
-
-    def sendText(self, community, message, media_hash=''):
-    	AndroidFacade.monitor('TGS: sending text')
-        self.callback.register(community.post_text, (message, media_hash))
-
-    def setMemberInfo(self, community, alias, thumbnail_hash=''):
-    	AndroidFacade.monitor('TGS: setting member info')
-        self.callback.register(community.set_my_member_info, (alias,thumbnail_hash))
+        Called by network thread """
+        self.rawserver.add_task(self.rawserver_keepalive, 1)
         
-    def getSquareForCid(self, cid):
-        # FIXME probably not the right way to get dispersy
-        if self.dispersy is None:
-            return None
-        return self.dispersy.get_community(cid)
-    
-    ##################################
-    #Private methods:
-    ##################################
-    
-    # if this is the right way to do things, call that startDispersy()
-    def _dispersy(self):
-        AndroidFacade.monitor('enter _dispersy()')
+    def setupThreads(self):
         config = AndroidFacade.getConfig()
         AndroidFacade.monitor('config: {}'.format(config.toString()))
-        """ old method using singletons no longer supported
+        """ (old method using singletons which is no longer supported)
         # start Dispersy
         dispersy = Dispersy.get_instance(callback, self._workdir)
         if AndroidFacade.getConfig().isDispersyEnabled():
@@ -136,6 +111,19 @@ class TGS:
         if config['dispersy']:
         """        
         if config.isDispersyEnabled():
+            self.sessdoneflag = Event()
+            # get the tribler rawserver, I guess..
+            # FIXME hardcodes defaults from https://github.com/Tribler/tribler/blob/devel/Tribler/Core/defaults.py
+            self.rawserver = RawServer(self.sessdoneflag,
+                                       #config['timeout_check_interval'],
+                                       60.0,
+                                       #config['timeout'],
+                                       300.0,
+                                       #ipv6_enable=config['ipv6_enabled'],
+                                       0,
+                                       failfunc=self.rawserver_fatalerrorfunc,
+                                       errorfunc=self.rawserver_nonfatalerrorfunc)
+            self.rawserver.add_task(self.rawserver_keepalive, 1)
             
             # TODO support all permutations of proxy and swift
             # TODO find out if swift can be proxied
@@ -145,12 +133,12 @@ class TGS:
                 endpoint = TunnelEndpoint(self.swift_process)
                 self.swift_process.add_download(endpoint)
             else:
-                AndroidFacade.monitor('starting StandaloneEndpoint on port {}'.format(config.getDispersyPort()))
-                endpoint = StandaloneEndpoint(config.getDispersyPort())
+                AndroidFacade.monitor('starting RawserverEndpoint on port {}'.format(config.getDispersyPort()))
+                endpoint = RawserverEndpoint(self.rawserver, config.getDispersyPort())
 
             # new database stuff will run on only one thread
-            self.callback = Callback("Dispersy")
-            self.callback.start()  # WARNING NAME SIGNIFICANT
+            self.callback = Callback("Dispersy")  # WARNING NAME SIGNIFICANT
+            #self.callback.start()
             
             # from os.environ['ANDROID_PRIVATE']
             #working_directory = unicode(config['state_dir'])
@@ -222,6 +210,35 @@ class TGS:
         AndroidFacade.sendEvent(TGSSystemEvent.forStart())
         """
 
+    def stopThreads(self):
+    	AndroidFacade.monitor('TGS: tearing down threads')
+        self.callback.stop()
+
+        if self.callback.exception:
+            global exit_exception
+            exit_exception = self.callback.exception
+
+    def createNewSquare(self, square_info):
+    	AndroidFacade.monitor('TGS: creating new square')
+        self.callback.register(self._dispersyCreateCommunity, square_info)
+
+    def sendText(self, community, message, media_hash=''):
+    	AndroidFacade.monitor('TGS: sending text')
+        self.callback.register(community.post_text, (message, media_hash))
+
+    def setMemberInfo(self, community, alias, thumbnail_hash=''):
+    	AndroidFacade.monitor('TGS: setting member info')
+        self.callback.register(community.set_my_member_info, (alias,thumbnail_hash))
+        
+    def getSquareForCid(self, cid):
+        # FIXME probably not the right way to get dispersy
+        if self.dispersy is None:
+            return None
+        return self.dispersy.get_community(cid)
+    
+    ##################################
+    #Private methods:
+    ##################################    
     def _dispersy_onSearchResult(self, result):
         logger.info("OnSearchResult", result)
 
