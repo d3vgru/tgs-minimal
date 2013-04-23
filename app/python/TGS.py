@@ -9,21 +9,18 @@ from jnius import cast
 
 import AndroidFacade
 
-from TGSSignals import TGSSearchSignal, TGSNewCommunitySignal
-
 from tgscore.discovery.community import DiscoveryCommunity, SearchCache
 
-from tgscore.dispersy.endpoint import RawserverEndpoint, TunnelEndpoint
+from tgscore.dispersy.endpoint import StandaloneEndpoint, TunnelEndpoint
 from tgscore.dispersy.callback import Callback
 from tgscore.dispersy.dispersy import Dispersy
 from tgscore.dispersy.member import Member
 from tgscore.dispersy.crypto import (ec_generate_key,
         ec_to_public_bin, ec_to_private_bin)
-
 from tgscore.square.community import PreviewCommunity, SquareCommunity
 
-# FIXME monkeypatch this so we don't have to deal with the whole submodule, but...
-from Tribler.Core.RawServer.RawServer import RawServer
+from TGSSignals import TGSSearchSignal, TGSNewCommunitySignal
+
 
 def copySquareToCommunity(square, community):
 	# copy fields from Python SquareCommunity to Java TGSCommunity
@@ -111,6 +108,7 @@ class TGS:
         if config['dispersy']:
         """        
         if config.isDispersyEnabled():
+            """
             self.sessdoneflag = Event()
             # get the tribler rawserver, I guess..
             # FIXME hardcodes defaults from https://github.com/Tribler/tribler/blob/devel/Tribler/Core/defaults.py
@@ -124,6 +122,9 @@ class TGS:
                                        failfunc=self.rawserver_fatalerrorfunc,
                                        errorfunc=self.rawserver_nonfatalerrorfunc)
             self.rawserver.add_task(self.rawserver_keepalive, 1)
+            """
+            # new database stuff will run on only one thread
+            self.callback = Callback("Dispersy")  # WARNING NAME SIGNIFICANT
             
             # TODO support all permutations of proxy and swift
             # TODO find out if swift can be proxied
@@ -133,13 +134,10 @@ class TGS:
                 endpoint = TunnelEndpoint(self.swift_process)
                 self.swift_process.add_download(endpoint)
             else:
-                AndroidFacade.monitor('starting RawserverEndpoint on port {}'.format(config.getDispersyPort()))
-                endpoint = RawserverEndpoint(self.rawserver, config.getDispersyPort())
+                AndroidFacade.monitor('starting StandaloneEndpoint on port {}'.format(config.getDispersyPort()))
+                #endpoint = RawserverEndpoint(self.rawserver, config.getDispersyPort())
+                endpoint = StandaloneEndpoint(config.getDispersyPort())
 
-            # new database stuff will run on only one thread
-            self.callback = Callback("Dispersy")  # WARNING NAME SIGNIFICANT
-            #self.callback.start()
-            
             # from os.environ['ANDROID_PRIVATE']
             #working_directory = unicode(config['state_dir'])
 
@@ -151,43 +149,44 @@ class TGS:
             # ERK - not a problem for Android since the main UI thread is not blocked by the python threads
             AndroidFacade.monitor('starting dispersy')
             # FIXME I guess this implicitly starts the thread? ie callback.start()
-            # FIXME doesn't seem to like the standalone endpoint
+            # FIXME doesn't seem to like the StandaloneEndpoint or RawserverEndpoint -- try endpoint.start()?
             self.dispersy.start()
             logger.info("lmc: Dispersy is listening on port", self.dispersy.wan_address[1], "[%d]" % id(self.dispersy))
-
+            AndroidFacade.monitor('initializing dispersy')
+            self.callback.register(self._dispersy)
         else:
             # new database stuff will run on only one thread
             AndroidFacade.monitor('dispersy disabled, not making an endpoint')
             self.callback = Callback("Dispersy")  # WARNING NAME SIGNIFICANT
             self.callback.start()
-
+            
+    def _dispersy(self):
         # load/join discovery community
         # this is the hardcoded key of the TGS app (aka "App ID")
         # do not change or you'll be a different app :)
         public_key = "3081a7301006072a8648ce3d020106052b81040027038192000406b34f060c416e452fd31fb1770c2f475e928effce751f2f82565bec35c46a97fb8b375cca4ac5dc7d93df1ba594db335350297f003a423e207b53709e6163b7688c0f60a9cf6599037829098d5fbbfe786e0cb95194292f241ff6ae4d27c6414f94de7ed1aa62f0eb6ef70d2f5af97c9aade8266eb85b14296ed2004646838c056d1d9ad8a509b69f81fbc726201b57".decode("HEX")
         master = self.dispersy.get_member(public_key)
         try:
-            self._discovery = DiscoveryCommunity.load_community(master)
+            self._discovery = DiscoveryCommunity.load_community(self.dispersy, master)
         except ValueError:
             # generate user ID
             # FIXME allow generation of new ID from app settings screen (eg TOANFO)
             ec = ec_generate_key(u"low")
             self._my_member = Member(ec_to_public_bin(ec), ec_to_private_bin(ec))
-            self._discovery = DiscoveryCommunity.join_community(master, self._my_member)
+            self._discovery = DiscoveryCommunity.join_community(self.dispersy, master, self._my_member)
         else:
             self._my_member = self._discovery.my_member
 
         self.dispersy.define_auto_load(PreviewCommunity, (self._discovery, False))
         self.dispersy.define_auto_load(SquareCommunity, (self._discovery,))
 
-        """
     	AndroidFacade.monitor('TGS: loading squares')
     	
         # load squares (ie master square community)
         # commented out code to send list since dispersy seems to send its own event for each square
         #communityList = self._TGSCommunityList()
         #listEvent = self._TGSListEvent()
-        for master in SquareCommunity.get_master_members():
+        for master in SquareCommunity.get_master_members(self.dispersy):
             yield 0.1
             c = self.dispersy.get_community(master.mid)
             AndroidFacade.monitor('TGS: loaded community: {}'.format(c))
@@ -208,7 +207,6 @@ class TGS:
         # light turns green
         TGSSystemEvent = AndroidFacade.SystemEvent()
         AndroidFacade.sendEvent(TGSSystemEvent.forStart())
-        """
 
     def stopThreads(self):
     	AndroidFacade.monitor('TGS: tearing down threads')
