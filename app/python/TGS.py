@@ -163,6 +163,11 @@ class TGS:
             self.callback = Callback("Dispersy")  # WARNING NAME SIGNIFICANT
             self.callback.start()
 
+        # start communities
+        self.callback.call(self._load_communities)
+
+    def _load_communities(self):
+        assert self.callback.is_current_thread
         # load/join discovery community
         # this is the hardcoded key of the TGS app (aka "App ID")
         # do not change or you'll be a different app :)
