@@ -161,8 +161,6 @@ class TGS:
             # try_register(nocachedb, self.database_thread)!
             # ERK - not a problem for Android since the main UI thread is not blocked by the python threads
             AndroidFacade.monitor('starting dispersy')
-            # FIXME I guess this implicitly starts the thread? ie callback.start()
-            # FIXME doesn't seem to like the standalone endpoint
             self.dispersy.start()
             logger.info("lmc: Dispersy is listening on port", self.dispersy.wan_address[1], "[%d]" % id(self.dispersy))
 
@@ -230,5 +228,5 @@ class TGS:
         logger.info("OnSearchResult", result)
 
     def _dispersyCreateCommunity(self, title, description, avatar, lat, lon, radius):
-        community = SquareCommunity.create_community(self._my_member, self._discovery)
+        community = SquareCommunity.create_community(self.dispersy, self._my_member, self._discovery)
         community.set_square_info(title, description, avatar, (int(lat*10**6), int(lon*10**6)), radius)
