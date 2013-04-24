@@ -33,7 +33,8 @@ class TGSSearchSignal:
         event.setVerb(argv[1])
 
         # put hits in results
-        hits = event.emptyList()
+        # FIXME having to cast kind of defeats the purpose of having an emptyList() method
+        hits = cast('org.theglobalsquare.framework.values.TGSCommunityList', event.emptyList())
         for suggestion in cache.suggestions:
                 square = suggestion.hit
                 if suggestion.state == 'done':
