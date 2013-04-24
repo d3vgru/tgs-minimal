@@ -189,14 +189,13 @@ class TGS:
         self.dispersy.define_auto_load(PreviewCommunity, (self._discovery, False))
         self.dispersy.define_auto_load(SquareCommunity, (self._discovery,))
 
-        """
     	AndroidFacade.monitor('TGS: loading squares')
     	
         # load squares (ie master square community)
         # commented out code to send list since dispersy seems to send its own event for each square
         #communityList = self._TGSCommunityList()
         #listEvent = self._TGSListEvent()
-        for master in SquareCommunity.get_master_members():
+        for master in SquareCommunity.get_master_members(self.dispersy):
             yield 0.1
             c = self.dispersy.get_community(master.mid)
             AndroidFacade.monitor('TGS: loaded community: {}'.format(c))
@@ -217,7 +216,6 @@ class TGS:
         # light turns green
         TGSSystemEvent = AndroidFacade.SystemEvent()
         AndroidFacade.sendEvent(TGSSystemEvent.forStart())
-        """
 
     def _dispersy_onSearchResult(self, result):
         logger.info("OnSearchResult", result)
