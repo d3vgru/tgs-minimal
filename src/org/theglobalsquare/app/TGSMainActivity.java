@@ -86,7 +86,7 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 			// turn LED green on dispersy start
 			if (value instanceof TGSEvent) {
 				TGSEvent event = (TGSEvent) value;
-				//String verb = event.getVerb();
+				String verb = event.getVerb();
 				out = "EVENT: " + value.getClass().getSimpleName() + ": "
 						+ event.toString();
 				if (value instanceof TGSSystemEvent) {
@@ -102,8 +102,10 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 					TGSCommunity c = ((TGSCommunityEvent)value).getSubject();
 					out = "LOG: got Community: " + c;
 					// see if this is a new community
-					if(TGSCommunity.CREATED.equals(event.getVerb()))
+					if(TGSCommunity.CREATED.equals(verb))
 						activity.communityCreated(c);
+					else if(TGSCommunity.DATA.equals(verb))
+						activity.communityUpdated(c);
 				}
 			} else if (value instanceof TGSObject) {
 				out = "OBJECT: " + ((TGSObject) value).getName() + ": " + value;

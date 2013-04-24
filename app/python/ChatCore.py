@@ -132,7 +132,7 @@ class ChatCore:
         7A-->self.mainwin.avatar_btn.clicked.connect(self.onThumbnailButtonPressed)
         8A-->self.mainwin.attach_btn.toggled.connect(self.onAttachButtonToggled)
 
-        #TODO: Refactor this to put it in TGS class
+        #TODO: Refactor this to put it in TGS class (actually TGSSignals)
         #Connect global events
         global_events.qt.newHotCommunitiesAvailable.connect(self.onNewHotCommunitiesAvailable)
         #global_events.qt.newPreviewCommunityCreated.connect(self.onNewPreviewCommunityCreated)

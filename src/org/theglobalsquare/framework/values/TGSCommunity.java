@@ -107,6 +107,18 @@ public class TGSCommunity extends TGSObject implements Serializable {
 		this.messages = new TGSMessageList();
 	}
 	
+	public void updateFrom(TGSCommunity c) {
+		setName(c.getName());
+		setDescription(c.getDescription());
+		// skip the cid (unless current cid is null?)
+		setThumbnailHash(c.getThumbnailHash());
+		setLatitude(c.getLatitude());
+		setLongitude(c.getLongitude());
+		setRadius(c.getRadius());
+		// FIXME merge messages instead of assignment
+		setMessages(c.getMessages());
+	}
+	
 	@Override
 	public JSONObject toJsonObject() throws JSONException {
 		JSONObject o = super.toJsonObject();

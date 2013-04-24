@@ -106,6 +106,15 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 				// show about dialog
 				showDialog(new AboutFragment());
 				break;
+			case R.id.menu_close:
+				if(mSelectedTab == TAB_SEARCH) {
+					// TODO close/clear current search
+					
+				} else {
+					// TODO "confirm leave square" dialog
+					//showDialog(new NewCommunityFragment());
+				}
+				break;
 			default:
 				// unknown option, maybe a superclass can handle it
 				return super.onOptionsItemSelected(item);

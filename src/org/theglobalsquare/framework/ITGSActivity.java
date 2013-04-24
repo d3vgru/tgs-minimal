@@ -11,6 +11,7 @@ public interface ITGSActivity {
 	TGSCommunityList getCommunities();
 	void createCommunity(TGSCommunity c);
 	void communityCreated(TGSCommunity c);
+	void communityUpdated(TGSCommunity c);
 	//void populateCommunities(TGSCommunityList l);
 	void joinCommunity(TGSCommunity c);
 	void leaveCommunity(TGSCommunity c);

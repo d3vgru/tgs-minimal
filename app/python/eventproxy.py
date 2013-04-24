@@ -3,7 +3,7 @@
 
 import AndroidFacade
 
-from TGSSignals import TGSNewCommunitySignal
+from TGSSignals import TGSNewCommunitySignal, TGSCommunityInfoUpdatedSignal
 
 from tgscore.square.community import SquareCommunity, PreviewCommunity
 
@@ -18,8 +18,9 @@ def createEventBroker(obj):
 class TGSGlobalEventBroker:
     def __init__(self):
         TGSCommunityEvent = AndroidFacade.CommunityEvent()
-        self._newSquareUpdateEvent = TGSCommunityEvent
-        self._newSquareUpdate = TGSNewCommunitySignal(self._newSquareUpdateEvent)
+        self._squareUpdateEvent = TGSCommunityEvent
+        self._newSquareUpdate = TGSNewCommunitySignal(self._squareUpdateEvent)
+        self._squareInfoUpdated = TGSCommunityInfoUpdatedSignal(self._squareUpdateEvent)
 
     #TODO: use __gettattr__ for this.
     def newCommunityCreated(self, square):
@@ -30,12 +31,13 @@ class TGSGlobalEventBroker:
         #self._tgs.newPreviewCommunityCreated.emit(square)
         pass
     def newHotCommunitiesAvailable(self, squares, texts):
-        # do we need this?
+        # do we need this? (probably)
         #self._tgs.newHotCommunitiesAvailable.emit(squares, texts)
         pass
     def memberInfoUpdated(self, member):
         AndroidFacade.monitor('memberInfo updated: {}'.format(member))
     def messageReceived(self, text):
         AndroidFacade.monitor('message received: {}'.format(text))
-    def squareInfoUpdated(self):
-        pass
+    def squareInfoUpdated(self, square):
+        AndroidFacade.monitor('square info updated: {}'.format(square))
+        self._squareInfoUpdated.emit(square)

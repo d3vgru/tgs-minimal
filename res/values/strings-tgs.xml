@@ -38,6 +38,7 @@
     <string name="searchTextBtnLabel">Search For Text</string>
     <string name="searchUserBtnLabel">Search For User</string>
     <string name="searchCommunityBtnLabel">Search For Community</string>
+    <string name="searchNoResultsLabel">Your search did not return any results.</string>
     
     <string name="generalSettingsLabel">General</string>
     <string name="aliasLabel">Alias</string>

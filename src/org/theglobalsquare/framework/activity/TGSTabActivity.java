@@ -237,11 +237,15 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 	}
 
 	public void addCommunityTabFor(TGSCommunity c) {
+		// if tab name is blank, let's wait for the update event because screw trying to update later
+		if(c == null || c.getName() == null || c.getName().equals(""))
+			return;
+		
 		// add new community to set of tabs for squares
 		mTabCommunities.add(c);
 		ActionBar bar = getSupportActionBar();
 		mTabsAdapter.addTab(
-                bar.newTab().setText(c.getName()),
+                bar.newTab().setTag(c).setText(c.getName()),
                 CommunityListFragment.class, null);
 	}
 	

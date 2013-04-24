@@ -3,13 +3,13 @@ package org.theglobalsquare.framework.activity;
 import org.theglobalsquare.app.Facade;
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.ITGSActivity;
-import org.theglobalsquare.framework.TGSListFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
 import org.theglobalsquare.framework.values.TGSCommunityEvent;
 import org.theglobalsquare.framework.values.TGSCommunityList;
 import org.theglobalsquare.framework.values.TGSCommunitySearchEvent;
 import org.theglobalsquare.framework.values.TGSMessage;
 import org.theglobalsquare.framework.TGSSearchEvent;
+import org.theglobalsquare.ui.SearchResultsFragment;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -99,6 +99,20 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 	}
 	
 	@Override
+	public void communityUpdated(TGSCommunity c) {
+		if(hasCommunity(c)) {
+			// update existing community
+			TGSCommunity existing = mCommunities.get(c.getCid());
+			existing.updateFrom(c);
+			
+			// notify there is an updated community
+			setCommunitiesDirty();
+		} else {
+			addCommunity(c);
+		}
+	}
+	
+	@Override
 	public void submitCommunitySearch(EditText et, Fragment searchFragment) {
 		String term = "";
 		Editable e = et.getText();
@@ -128,7 +142,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 			}
 			
 			// add new results
-			sSearchResults = new TGSListFragment();
+			sSearchResults = new SearchResultsFragment();
 			
 			if(sSearchResults != null) {
 				// register with results events

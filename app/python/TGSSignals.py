@@ -51,9 +51,9 @@ class TGSSearchSignal:
 
         AndroidFacade.sendEvent(event)
 
-# for when dispersy completes creating a new square
-class TGSNewCommunitySignal:
+class TGSCommunitySignal:
     def __init__(self, eventProtoClass):
+        self._verb = None
         self._eventProtoClass = eventProtoClass
         self._objectProtoClass = autoclass('org.theglobalsquare.framework.ITGSObject')
 
@@ -61,7 +61,7 @@ class TGSNewCommunitySignal:
         event = self._eventProtoClass()
 
         square = argv[0]
-        AndroidFacade.monitor(u'NewCommunitySignal: square: {}'.format(square))
+        AndroidFacade.monitor(u'{}: square: {}'.format(self.__class__.__name__, square))
         
         community = cast('org.theglobalsquare.framework.values.TGSCommunity', event.emptyObject())
         TGS.copySquareToCommunity(square, community)
@@ -70,6 +70,18 @@ class TGSNewCommunitySignal:
         superSubject = cast('org.theglobalsquare.framework.ITGSObject', community)
         event.setSubject(superSubject)
         
-        event.setVerb(AndroidFacade.Community().CREATED)
+        event.setVerb(self._verb)
 
         AndroidFacade.sendEvent(event)
+
+# for when dispersy completes creating a new square
+class TGSNewCommunitySignal(TGSCommunitySignal):
+    def __init__(self, eventProtoClass):
+        TGSCommunitySignal.__init__(self, eventProtoClass)
+        self._verb = AndroidFacade.Community().CREATED
+
+# for when a square's info changes (eg the "name message" is received)
+class TGSCommunityInfoUpdatedSignal(TGSCommunitySignal):
+    def __init__(self, eventProtoClass):
+        TGSCommunitySignal.__init__(self, eventProtoClass)
+        self.verb = AndroidFacade.Community().DATA

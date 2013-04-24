@@ -63,15 +63,15 @@ class TGS:
 
     #TODO: Add an arg to add the result list widget/model to support multiple search windows.
     def startNewMemberSearch(self, search_terms):
-        logger.info("Searching members for:", search_terms)
+        logger.info("Searching members for:".format(search_terms))
         self._discovery.simple_member_search(search_terms, self.memberSearchUpdate.emit)
 
     def startNewSquareSearch(self, search_terms):
-        logger.info("Searching squares for:", search_terms)
+        logger.info("Searching squares for: {}".format(search_terms))
         self._discovery.simple_square_search(search_terms, self.squareSearchUpdate.emit)
 
     def startNewTextSearch(self, search_terms):
-        logger.info("Searching text messages for:", search_terms)
+        logger.info("Searching text messages for: {}".format(search_terms))
         self._discovery.simple_text_search(search_terms, self.textSearchUpdate.emit)
 
     def joinSquare(self, square):
@@ -162,7 +162,8 @@ class TGS:
             # ERK - not a problem for Android since the main UI thread is not blocked by the python threads
             AndroidFacade.monitor('starting dispersy')
             self.dispersy.start()
-            logger.info("lmc: Dispersy is listening on port", self.dispersy.wan_address[1], "[%d]" % id(self.dispersy))
+            # throws an error for some reason
+            #logger.info("lmc: Dispersy is listening on port", self.dispersy.wan_address[1], "[%d]" % id(self.dispersy))
 
         else:
             # new database stuff will run on only one thread
