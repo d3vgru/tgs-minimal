@@ -20,6 +20,15 @@ from tgscore.dispersy.member import Member
 from tgscore.square.community import PreviewCommunity, SquareCommunity
 
 
+# see if we are in __debug__ mode
+"""
+if __debug__:
+    AndroidFacade.monitor('__debug__ set')
+else:
+    AndroidFacade.monitor('__debug__ NOT set')
+"""
+
+
 def copySquareToCommunity(square, community):
 	# copy fields from Python SquareCommunity to Java TGSCommunity
 	# SquareBase properties
@@ -183,7 +192,7 @@ class TGS:
             # generate user ID
             # FIXME allow generation of new ID from app settings screen (eg TOANFO)
             logger.warning("generating user ID and constructing new DiscoveryCommunity")
-            self._discovery = DiscoveryCommunity.join_community(master, self.dispersy.get_new_member(u"low"))
+            self._discovery = DiscoveryCommunity.join_community(self.dispersy, master, self.dispersy.get_new_member(u"low"))
 
         self._my_member = self._discovery.my_member
         self.dispersy.define_auto_load(PreviewCommunity, (self._discovery, False))

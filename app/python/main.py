@@ -1,5 +1,7 @@
 import logging
-logging.basicConfig()
+# set additional logging options here
+logging.basicConfig(level='INFO')
+
 
 import os
 import sys

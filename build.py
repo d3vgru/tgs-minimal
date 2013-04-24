@@ -41,7 +41,7 @@ BLACKLIST_PATTERNS = [
 
     # pyc/py
     '*.pyc',
-# disable for __debug__ to work with modules
+# disable for __debug__ to work with modules(?) (doesn't set __debug__ but does allow python to run from script source if PYTHONDEBUG is set)
     '*.py',
 
     # temp files

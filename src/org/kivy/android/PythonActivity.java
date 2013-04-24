@@ -202,7 +202,7 @@ public class PythonActivity extends SherlockFragmentActivity implements Runnable
     public void run() {
 
         unpackData("private", getFilesDir());
-        unpackData("public", externalStorage);
+//        unpackData("public", externalStorage);
 
         // python itself
 		System.loadLibrary("python2.7");
@@ -243,14 +243,14 @@ public class PythonActivity extends SherlockFragmentActivity implements Runnable
 //        nativeSetEnv("PYTHONPATH", mFilesDirectory + "/tgs-core");
         
         // comment out to enable __debug__? (no, what else?)
-        
         android.util.Log.v(TAG, "PYTHONOPTIMIZE: 2");
         nativeSetEnv("PYTHONOPTIMIZE", "2");
         
         /*
-        android.util.Log.i(TAG, "PYTHONDEBUG: 1");
-        nativeSetEnv("PYTHONDEBUG", "1");
+        android.util.Log.i(TAG, "PYTHONDEBUG: YES");
+        nativeSetEnv("PYTHONDEBUG", "YES");
         */
+        
         android.util.Log.v(TAG, "PYTHONHOME: " + mFilesDirectory);
         nativeSetEnv("PYTHONHOME", mFilesDirectory);
         android.util.Log.v(TAG, "PYTHONPATH: " + mFilesDirectory + "/lib");
