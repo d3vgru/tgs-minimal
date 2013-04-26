@@ -17,6 +17,7 @@ public abstract class TGSListAdapter extends ArrayAdapter<ITGSObject> {
 	}
 
 	@Override
+	// FIXME this is coupled to communities
 	public View getView(int position, View convertView,
 			ViewGroup parent) {
 		View row = super.getView(position, convertView, parent);

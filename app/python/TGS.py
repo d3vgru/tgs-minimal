@@ -212,6 +212,7 @@ class TGS:
 
             # put in TGSCommunityList
             #communityList.addCommunity(community)
+        # FIXME send the event so the UI knows if there really are no squares
         # send to java
         #superList = cast('org.theglobalsquare.framework.ITGSList', communityList)
         #listEvent.setList(superList)

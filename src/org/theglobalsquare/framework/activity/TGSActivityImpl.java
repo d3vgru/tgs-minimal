@@ -126,6 +126,10 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 
 		// manage results in searchFragment
 		if(searchFragment != null) {
+			// FIXME re-use the same fragment if we already have one
+			// FIXME manage results cache via the Facade
+			
+			
 			// hide search box
 			findViewById(R.id.group_search_terms).setVisibility(View.GONE);
 			
@@ -143,15 +147,15 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 			
 			// add new results
 			sSearchResults = new SearchResultsFragment();
+			sSearchResults.setSearchTerms(term);
+			sSearchResults.setListShown(false);
 			
-			if(sSearchResults != null) {
-				// register with results events
-				getFacade().addListener(TGSCommunitySearchEvent.class, sSearchResults);
+			// register with results events
+			getFacade().addListener(TGSCommunitySearchEvent.class, sSearchResults);
 				
-				android.util.Log.i(TAG, "registering listener: " + sSearchResults);
+			android.util.Log.i(TAG, "registering listener: " + sSearchResults);
 
-				ft.add(R.id.layout_search_main, sSearchResults);
-			}
+			ft.add(R.id.layout_search_main, sSearchResults);
 			ft.commit();
 		}
 		

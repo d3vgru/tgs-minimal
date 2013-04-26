@@ -17,9 +17,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListAdapter;
 
 public class CommunityListFragment extends TGSListFragment {
+	public final static String TAG = "CommunityList";
 
 	public final static String VIEW_COMMUNITY = "view community";
 
@@ -51,7 +51,7 @@ public class CommunityListFragment extends TGSListFragment {
 		});
 	}
 	
-	public ListAdapter createListAdapter() {
+	public TGSListAdapter createListAdapter() {
 		return new TGSListAdapter(getActivity(), R.layout.community_item, R.id.communityName) {
 			@Override
 			public TGSCommunityList getItems() {
@@ -71,8 +71,21 @@ public class CommunityListFragment extends TGSListFragment {
 			return;
 		Iterator<ITGSObject> i = l.iterator();
 		ArrayAdapter<ITGSObject> a = (ArrayAdapter<ITGSObject>)getListAdapter();
+		int added = 0;
 		while(i.hasNext()) {
-			a.add(i.next());
+			added++;
+			ITGSObject o = i.next();
+			android.util.Log.i(TAG, "adding community: " + o);
+			a.add(o);
+		}
+		if(added > 0) {
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					getTGSListAdapter().notifyDataSetChanged();
+					setListShown(true);
+				}
+			});
 		}
 	}
 

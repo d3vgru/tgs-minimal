@@ -6,6 +6,7 @@ import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 import org.theglobalsquare.ui.SearchFragment;
+import org.theglobalsquare.ui.SearchResultsFragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -33,7 +34,7 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 	protected MenuItem mMenuCreate = null;
 	
 	protected static SearchFragment sSearchFragment = null;
-	protected static TGSListFragment sSearchResults = null;
+	protected static SearchResultsFragment sSearchResults = null;
 	
 	protected boolean mComposerShowing = false;
 	

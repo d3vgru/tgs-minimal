@@ -13,7 +13,9 @@ public class OverviewListFragment extends CommunityListFragment {
 		
 		// show "you haven't joined any squares" message when empty
 		setEmptyText(getActivity().getString(R.string.noSquaresMsg));
-		setListShown(true);
+		// FIXME we don't really know if there are no communities or not
+		// make the python side send an event when it finishes loading communities (even if there are none)
+		//setListShown(true);
 	}
 	
 }
