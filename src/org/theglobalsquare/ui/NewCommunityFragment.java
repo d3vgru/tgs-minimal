@@ -13,7 +13,7 @@ import android.widget.EditText;
 
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.ITGSActivity;
-import org.theglobalsquare.framework.TGSDialogFragment;
+import org.theglobalsquare.framework.ui.TGSDialogFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
 
 public class NewCommunityFragment extends TGSDialogFragment {

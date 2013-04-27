@@ -6,7 +6,7 @@ import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.ITGSList;
 import org.theglobalsquare.framework.ITGSObject;
 import org.theglobalsquare.framework.TGSEvent;
-import org.theglobalsquare.framework.TGSListAdapter;
+import org.theglobalsquare.framework.ui.TGSListAdapter;
 import org.theglobalsquare.framework.TGSObjectList;
 import org.theglobalsquare.framework.TGSSearchEvent;
 import org.theglobalsquare.framework.values.TGSCommunityList;

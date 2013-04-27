@@ -1,8 +1,9 @@
-package org.theglobalsquare.framework;
+package org.theglobalsquare.framework.ui;
 
 import java.util.Collection;
 
 import org.theglobalsquare.app.R;
+import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.TGSCommunity;
 
 import android.content.Context;

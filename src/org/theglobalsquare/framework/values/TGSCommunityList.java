@@ -3,6 +3,8 @@ package org.theglobalsquare.framework.values;
 import org.theglobalsquare.framework.TGSObjectList;
 
 public class TGSCommunityList extends TGSObjectList {
+	public final static String TAG = "CommunityList";
+	
 	// serializable
 	private static final long serialVersionUID = 3915592665695928923L;
 	
@@ -10,11 +12,12 @@ public class TGSCommunityList extends TGSObjectList {
 		int pos = indexOf(c);
 		if(pos == -1) {
 			// add
+			android.util.Log.i(TAG, "adding new community: " + c);
 			add(c);
 		} else {
 			// ..or replace
-			remove(pos);
-			add(pos, c);
+			android.util.Log.i(TAG, "updating existing community: " + c);
+			set(pos, c);
 		}
 	}
 

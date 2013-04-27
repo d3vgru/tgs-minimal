@@ -1,7 +1,7 @@
 package org.theglobalsquare.ui;
 
 import org.theglobalsquare.app.*;
-import org.theglobalsquare.framework.TGSFragment;
+import org.theglobalsquare.framework.ui.TGSFragment;
 import org.theglobalsquare.framework.activity.*;
 
 import android.os.Bundle;

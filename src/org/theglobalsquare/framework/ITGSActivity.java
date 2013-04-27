@@ -1,5 +1,6 @@
 package org.theglobalsquare.framework;
 
+import org.theglobalsquare.app.Facade;
 import org.theglobalsquare.framework.values.*;
 
 import android.app.Activity;
@@ -19,4 +20,5 @@ public interface ITGSActivity {
 	void submitCommunitySearch(EditText et, Fragment searchFragment);
 	// search updates go directly to list fragments
 	Activity getActivity();
+	Facade getFacade();
 }

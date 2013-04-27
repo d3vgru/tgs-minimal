@@ -6,8 +6,8 @@ import java.util.Iterator;
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.ITGSActivity;
 import org.theglobalsquare.framework.ITGSObject;
-import org.theglobalsquare.framework.TGSListAdapter;
-import org.theglobalsquare.framework.TGSListFragment;
+import org.theglobalsquare.framework.ui.TGSListAdapter;
+import org.theglobalsquare.framework.ui.TGSListFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
 import org.theglobalsquare.framework.values.TGSCommunityList;
 
@@ -79,14 +79,20 @@ public abstract class CommunityListFragment extends TGSListFragment implements P
 		if(l == null)
 			return;
 		Iterator<ITGSObject> i = l.iterator();
-		TGSListAdapter a = getTGSListAdapter();
 		//int added = 0;
 		while(i.hasNext()) {
 			//added++;
 			ITGSObject o = i.next();
-			android.util.Log.i(TAG, "adding community: " + o);
-			android.util.Log.i(TAG, "IAMA " + this.getClass().getName());
-			a.add(o);
+			if(o instanceof TGSCommunity) {
+				TGSCommunity c = (TGSCommunity)o;
+				android.util.Log.i(TAG, "adding community: " + c);
+				android.util.Log.i(TAG, "IAMA " + this.getClass().getName());
+				// add communities to the activity's community list
+				getTGSActivity().addCommunity(c);
+			} else {
+				android.util.Log.e(TAG, "object is not a TGSCommunity: " + o);
+				return;
+			}
 		}
 		getActivity().runOnUiThread(new Runnable() {
 			@Override

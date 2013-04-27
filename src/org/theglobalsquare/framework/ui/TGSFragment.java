@@ -1,4 +1,4 @@
-package org.theglobalsquare.framework;
+package org.theglobalsquare.framework.ui;
 
 import org.theglobalsquare.app.Facade;
 

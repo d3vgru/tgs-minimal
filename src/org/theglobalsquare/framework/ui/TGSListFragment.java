@@ -1,5 +1,6 @@
-package org.theglobalsquare.framework;
+package org.theglobalsquare.framework.ui;
 
+import org.theglobalsquare.framework.*;
 import org.theglobalsquare.app.Facade;
 import org.theglobalsquare.app.R;
 
@@ -14,8 +15,12 @@ import com.actionbarsherlock.app.SherlockListFragment;
 public class TGSListFragment extends SherlockListFragment {
 	public final static String TAG = "TGSList";
 	
+	public ITGSActivity getTGSActivity() {
+		return (ITGSActivity)getActivity();
+	}
+	
 	public Facade getFacade() {
-		return (Facade)getActivity().getApplication();
+		return getTGSActivity().getFacade();
 	}
 	
 	@Override

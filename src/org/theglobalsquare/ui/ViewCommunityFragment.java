@@ -1,6 +1,6 @@
 package org.theglobalsquare.ui;
 
-import org.theglobalsquare.framework.TGSListFragment;
+import org.theglobalsquare.framework.ui.TGSListFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
 
 import android.os.Bundle;

@@ -2,7 +2,7 @@ package org.theglobalsquare.ui;
 
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.app.TGSMainActivity;
-import org.theglobalsquare.framework.*;
+import org.theglobalsquare.framework.ui.*;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

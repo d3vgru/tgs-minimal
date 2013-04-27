@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 
 import org.theglobalsquare.app.*;
-import org.theglobalsquare.framework.*;
+import org.theglobalsquare.framework.ui.*;
 
 public class FilesListFragment extends TGSListFragment {
 
