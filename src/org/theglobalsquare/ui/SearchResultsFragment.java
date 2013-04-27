@@ -1,7 +1,6 @@
 package org.theglobalsquare.ui;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.ITGSList;
@@ -15,7 +14,7 @@ import org.theglobalsquare.framework.values.TGSCommunitySearchEvent;
 
 import android.os.Bundle;
 
-public class SearchResultsFragment extends CommunityListFragment implements PropertyChangeListener {
+public class SearchResultsFragment extends CommunityListFragment {
 	public final static String TAG = "SearchResults";
 
 	private String mSearchTerms;

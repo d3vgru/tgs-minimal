@@ -1,5 +1,6 @@
 package org.theglobalsquare.ui;
 
+import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 
 import org.theglobalsquare.app.R;
@@ -15,10 +16,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class CommunityListFragment extends TGSListFragment {
+// common super class for community search results and "My Squares" (overview) frags
+public abstract class CommunityListFragment extends TGSListFragment implements PropertyChangeListener {
 	public final static String TAG = "CommunityList";
 
 	public final static String VIEW_COMMUNITY = "view community";
@@ -49,8 +50,17 @@ public class CommunityListFragment extends TGSListFragment {
 			}
 			
 		});
+		
+		// TODO notify activity that we're ready to display squares
+		
 	}
-	
+		
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		setListShown(false);
+	}
+
 	public TGSListAdapter createListAdapter() {
 		return new TGSListAdapter(getActivity(), R.layout.community_item, R.id.communityName) {
 			@Override
@@ -65,28 +75,27 @@ public class CommunityListFragment extends TGSListFragment {
 		};
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void addCommunities(TGSCommunityList l) {
 		if(l == null)
 			return;
 		Iterator<ITGSObject> i = l.iterator();
-		ArrayAdapter<ITGSObject> a = (ArrayAdapter<ITGSObject>)getListAdapter();
-		int added = 0;
+		TGSListAdapter a = getTGSListAdapter();
+		//int added = 0;
 		while(i.hasNext()) {
-			added++;
+			//added++;
 			ITGSObject o = i.next();
 			android.util.Log.i(TAG, "adding community: " + o);
+			android.util.Log.i(TAG, "IAMA " + this.getClass().getName());
 			a.add(o);
 		}
-		if(added > 0) {
-			getActivity().runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					getTGSListAdapter().notifyDataSetChanged();
-					setListShown(true);
-				}
-			});
-		}
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				android.util.Log.i(TAG, "notifyDataSetChanged()");
+				getTGSListAdapter().notifyDataSetChanged();
+				setListShown(true);
+			}
+		});
 	}
 
 }

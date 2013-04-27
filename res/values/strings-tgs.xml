@@ -21,14 +21,15 @@
     <string name="filesLabel">My Files</string>
     <string name="noFilesMsg">Your private storage is empty.</string>
     
-    <string name="overviewLabel">My Squares</string>
-    <string name="noSquaresMsg">You haven\'t joined any squares yet.
-            Search for a square to join or create a new one to get started.</string>
+    <string name="overviewLabel">My Communities</string>
+    <string name="noSquaresMsg">You haven\'t joined any communities yet. To get started,
+            search for a community to join, or create a new one.</string>
             
     <string name="communityAvatarLabel">Community Avatar</string>
     <string name="communityNameLabel">Community Name</string>
     <string name="communityDescriptionLabel">Community Description</string>
     <string name="createCommunityBtnLabel">Create Community</string>
+    <string name="noMessagesMsg">This community does not have any messages yet.</string>
     
     <string name="coreLabel">Core</string>
     <string name="monitorLabel">Monitor</string>

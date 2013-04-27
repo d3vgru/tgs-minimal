@@ -148,7 +148,8 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 			// add new results
 			sSearchResults = new SearchResultsFragment();
 			sSearchResults.setSearchTerms(term);
-			sSearchResults.setListShown(false);
+			// let the fragment do this
+//			sSearchResults.setListShown(false);
 			
 			// register with results events
 			getFacade().addListener(TGSCommunitySearchEvent.class, sSearchResults);

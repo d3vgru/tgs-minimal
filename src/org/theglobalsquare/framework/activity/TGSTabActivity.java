@@ -6,7 +6,7 @@ import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.ITGSObject;
 import org.theglobalsquare.framework.values.TGSCommunity;
 import org.theglobalsquare.framework.values.TGSCommunityList;
-import org.theglobalsquare.ui.CommunityListFragment;
+import org.theglobalsquare.ui.CommunityMessagesFragment;
 import org.theglobalsquare.ui.SearchFragment;
 import org.theglobalsquare.ui.OverviewListFragment;
 import org.theglobalsquare.ui.FilesListFragment;
@@ -246,7 +246,7 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 		ActionBar bar = getSupportActionBar();
 		mTabsAdapter.addTab(
                 bar.newTab().setTag(c).setText(c.getName()),
-                CommunityListFragment.class, null);
+                CommunityMessagesFragment.class, null);
 	}
 	
 }
