@@ -35,7 +35,13 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 	
 	private void setCommunitiesDirty() {
 		// construct tabs as appropriate
-		buildCommunityTabs();
+		// could be called from outside the UI thread..
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				buildCommunityTabs();
+			}
+		});
 	}
 
 	public void setCommunities(TGSCommunityList l) {
