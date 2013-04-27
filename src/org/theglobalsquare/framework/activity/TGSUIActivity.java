@@ -19,12 +19,16 @@ import org.theglobalsquare.app.config.*;
 import org.theglobalsquare.ui.*;
 
 // this class sets up and manages the main UI
-public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListener {
+public abstract class TGSUIActivity extends TGSDrawerActivity implements OnKeyListener {
 	public final static String TAG = "TGSUI";
 	
 	public final static int PREFERENCES = 1001;
-	
-	@Override
+
+    protected boolean showActionButtons(int index) {
+		return index >= DRAWER_COUNT_BASE;
+	}
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
@@ -40,15 +44,15 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
         // attach click handlers
         configureButtons();
 
-        // setup the default tabs
-        configureTabs();
-}
+        // setup the default drawer
+        configureDrawer();
+	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 	    inflater.inflate(R.menu.main_menu, menu);
-	    boolean visible = showActionButtons(mSelectedTab);
+	    boolean visible = showActionButtons(mSelectedDrawer);
 		mMenuClose = menu.findItem(R.id.menu_close);
 		mMenuClose.setVisible(visible);
 		mMenuCompose = menu.findItem(R.id.menu_compose);
@@ -70,14 +74,15 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 				else showComposer();
 				break;
 			case R.id.menu_refresh:
-				mTabsAdapter.notifyDataSetChanged();
+				// TODO update fragment? do we even need this button?
+				//mTabsAdapter.notifyDataSetChanged();
 				break;
 			case R.id.menu_share:
 				// TODO share action
 				Toast.makeText(this, R.string.shareBtnLabel, Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.menu_create:
-				if(mSelectedTab == TAB_SEARCH) {
+				if(mSelectedDrawer == DRAWER_SEARCH) {
 					// show search terms
 					showSearchTerms(this);
 				} else {
@@ -87,7 +92,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 				break;
 			case R.id.menu_search:
 				// select Search tab
-		        setTab(TAB_SEARCH);
+		        setDrawer(DRAWER_SEARCH);
 				break;
 			case R.id.menu_settings:
 				Intent prefsIntent = new Intent();
@@ -107,7 +112,7 @@ public abstract class TGSUIActivity extends TGSTabActivity implements OnKeyListe
 				showDialog(new AboutFragment());
 				break;
 			case R.id.menu_close:
-				if(mSelectedTab == TAB_SEARCH) {
+				if(mSelectedDrawer == DRAWER_SEARCH) {
 					// TODO close/clear current search
 					
 				} else {

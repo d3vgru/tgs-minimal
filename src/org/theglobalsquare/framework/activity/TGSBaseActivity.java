@@ -38,29 +38,30 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 	
 	protected boolean mComposerShowing = false;
 	
-	protected static Facade sFacade = null;
-	
+	// FIXME is this _really_ necessary?
+	protected static ITGSFacade sFacade = null;
+	public static ITGSFacade getStaticFacade() {
+		return sFacade;
+	}
+
 	protected static String sMonitorTxt = "";
 	
 	public String getMonitorTxt() {
 		return sMonitorTxt;
 	}
-	    
-	public Facade getFacade() {
-		return (Facade)getApplication();
-	}
 	
-	public static Facade getStaticFacade() {
-		return sFacade;
+	@Override
+	public ITGSFacade getTGSFacade() {
+		return (ITGSFacade)getApplication();
 	}
-	
+		
 	public ITGSActivity getTGSActivity() {
 		return (ITGSActivity)this;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		sFacade = getFacade();
+		sFacade = getTGSFacade();
 		
 		super.onCreate(savedInstanceState);
 		
@@ -113,7 +114,7 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 	}
 
 	public void freshenConfig() {
-		TGSConfig config = getFacade().getConfig();
+		TGSConfig config = getTGSFacade().getConfig();
 		TGSConfigEvent e = TGSConfigEvent.forParamUpdated(config);
 		Facade.sendEvent(e, true);
 	}

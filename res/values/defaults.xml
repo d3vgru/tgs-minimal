@@ -2,8 +2,8 @@
 <resources>
     <string name="anonLabel">Anonymous</string>
     <string name="aliasSummary">%s</string>
-    <string name="defaultTab">My Squares</string>
-    <string name="defaultTabSummary">%s</string>
+    <string name="defaultDrawer">2</string>
+    <string name="defaultDrawerSummary">%s</string>
     <string name="dispersyPortSummary">%s</string>
 	<string name="dispersyPortDefault">12345</string>
     <string name="localhostLabel">localhost</string>

@@ -52,11 +52,8 @@ public class PythonActivity extends SherlockFragmentActivity implements Runnable
 		
         super.onCreate(savedInstanceState);
 
-        Hardware.context = this;
         Action.context = this;
 		PythonActivity.mActivity = this;
-
-        getWindowManager().getDefaultDisplay().getMetrics(Hardware.metrics);
 
         resourceManager = new ResourceManager(this);
         mFilesDirectory = getFilesDir().getAbsolutePath();
@@ -103,8 +100,8 @@ public class PythonActivity extends SherlockFragmentActivity implements Runnable
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
         */
 
-        // can't do this since mView doesn't exist
-        Hardware.view = null; //mView;
+        // can't do this since Hardware and mView don't exist
+        //Hardware.view = null; //mView;
         setContentView(resourceManager.getIdentifier("main", "layout"));
     }
 

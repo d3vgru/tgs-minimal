@@ -1,7 +1,6 @@
 package org.theglobalsquare.framework.ui;
 
 import org.theglobalsquare.framework.*;
-import org.theglobalsquare.app.Facade;
 import org.theglobalsquare.app.R;
 
 //import android.app.Activity;
@@ -19,8 +18,8 @@ public class TGSListFragment extends SherlockListFragment {
 		return (ITGSActivity)getActivity();
 	}
 	
-	public Facade getFacade() {
-		return getTGSActivity().getFacade();
+	public ITGSFacade getFacade() {
+		return getTGSActivity().getTGSFacade();
 	}
 	
 	@Override
@@ -31,7 +30,7 @@ public class TGSListFragment extends SherlockListFragment {
 	}
 	
 	@Override
-	public void onViewCreated (View view, Bundle savedInstanceState) {
+	public void onViewCreated(View view, Bundle savedInstanceState) {
 		setEmptyText(getString(R.string.emptyListLabel));
 	}
 	
@@ -53,13 +52,17 @@ public class TGSListFragment extends SherlockListFragment {
 	}
 	*/
 
-	public TGSListAdapter getTGSListAdapter() {
+	protected TGSListAdapter getTGSListAdapter() {
 		return (TGSListAdapter)getListAdapter();
 	}
 
 	@Override
 	public void setListShown(boolean shown) {
 		super.setListShown(shown);
+		/* FIXME remove debugging code
+		if(shown && !this.getClass().getName().equals("org.theglobalsquare.ui.FilesListFragment"))
+			throw new RuntimeException("showing list");
+		*/
 		android.util.Log.w(TAG, "setListShown: " + shown);
 	}
 	

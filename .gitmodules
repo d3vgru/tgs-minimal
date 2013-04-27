@@ -7,3 +7,12 @@
 [submodule "app/python/tgs-core"]
 	path = app/python/tgs-core
 	url = git://github.com/d3vgru/tgs-core.git
+[submodule "lib-projects/android-menudrawer"]
+	path = lib-projects/android-menudrawer
+	url = https://github.com/SimonVT/android-menudrawer.git
+[submodule "lib-projects/ActionBarSherlock"]
+	path = lib-projects/ActionBarSherlock
+	url = https://github.com/d3vgru/ActionBarSherlock.git
+[submodule "lib-projects/UnifiedPreference"]
+	path = lib-projects/UnifiedPreference
+	url = https://github.com/saik0/UnifiedPreference.git

@@ -3,6 +3,27 @@ from jnius import cast
 
 
 # pyjnius bindings to java framework
+
+# interfaces
+def ActivityInterface():
+    return autoclass('org.theglobalsquare.framework.ITGSActivity')
+
+def FacadeInterface():
+    return autoclass('org.theglobalsquare.framework.ITGSFacade')
+
+def ListInterface():
+    return autoclass('org.theglobalsquare.framework.ITGSList')
+
+def ObjectInterface():
+    return autoclass('org.theglobalsquare.framework.ITGSObject')
+    
+# main entry point
+def getMainActivity():
+    PythonActivity = autoclass('org.kivy.android.PythonActivity')
+    MainActivity = autoclass('org.theglobalsquare.app.TGSMainActivity')
+    return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
+
+# concrete Facade, for calling static methods
 def Facade():
     return autoclass('org.theglobalsquare.app.Facade')
 
@@ -21,12 +42,6 @@ def Event():
     
 def Message():
     return autoclass('org.theglobalsquare.framework.values.TGSMessage')
-    
-def ListInterface():
-    return autoclass('org.theglobalsquare.framework.ITGSList')
-
-def ObjectInterface():
-    return autoclass('org.theglobalsquare.framework.ITGSObject')
     
 def User():
     return autoclass('org.theglobalsquare.framework.values.TGSUser')
@@ -60,22 +75,16 @@ def UserSearchEvent():
     return autoclass('org.theglobalsquare.framework.values.TGSUserSearchEvent')
 
 # convenience method to get underlying Facade (android.app.Application subclass)
-def getFacade():
+def getTGSFacade():
     PythonActivity = autoclass('org.kivy.android.PythonActivity')
     # WTF: init TGSConfig class or reflect fails
     Config()
     BaseActivity = cast('org.theglobalsquare.framework.activity.TGSBaseActivity', PythonActivity.mActivity)
-    return BaseActivity.getFacade()
+    return BaseActivity.getTGSFacade()
 
 # convenience method to get config
 def getConfig():
-    return getFacade().getConfig()
-
-# main entry point
-def getMainActivity():
-    PythonActivity = autoclass('org.kivy.android.PythonActivity')
-    MainActivity = autoclass('org.theglobalsquare.app.TGSMainActivity')
-    return cast('org.theglobalsquare.app.TGSMainActivity', PythonActivity.mActivity)
+    return getTGSFacade().getConfig()
 
 # convenience function to send event
 def sendEvent(event):
@@ -84,7 +93,7 @@ def sendEvent(event):
 	
 # convenience function to get next event
 def nextEvent():
-    return getFacade().nextEvent()
+    return Facade().nextEvent()
 
 # convenience logging function
 def monitor(msg):
@@ -99,16 +108,16 @@ def monitor(msg):
 
 # config
 def getAlias():
-    return getFacade().getAlias()
+    return getTGSFacade().getAlias()
     
 def isProxyEnabled():
-    return getFacade().isProxyEnabled()
+    return getTGSFacade().isProxyEnabled()
 
 def isProxyRequired():
-    return getFacade().isProxyRequired()
+    return getTGSFacade().isProxyRequired()
 
 def getProxyHost():
-    return getFacade().getProxyHost()
+    return getTGSFacade().getProxyHost()
 
 def getProxyPort():
-    return getFacade().getProxyPort()
+    return getTGSFacade().getProxyPort()

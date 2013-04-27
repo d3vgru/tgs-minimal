@@ -8,6 +8,8 @@
         android:defaultValue="@string/anonLabel"
         />
     
+    <!-- default tab -->
+    
     <!--  clear cache -->
     
     

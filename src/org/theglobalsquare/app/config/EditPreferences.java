@@ -5,7 +5,7 @@ import net.saik0.android.unifiedpreference.UnifiedSherlockPreferenceActivity;
 
 import org.theglobalsquare.app.*;
 
-//import org.theglobalsquare.framework.values.TGSConfig;
+import org.theglobalsquare.framework.ITGSFacade;
 
 import android.annotation.SuppressLint;
 import android.content.*;
@@ -15,17 +15,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
 
+// while this activity has focus, we don't have access to the rest of the app
+// (Android makes a new context)
+// fairly certain events from python won't be handled properly while this activity has focus
 public class EditPreferences extends UnifiedSherlockPreferenceActivity
 		implements OnSharedPreferenceChangeListener {
 	public final static String TAG = "EditPreferences";
 	public final static String SHARED_PREFS_KEY = "tgs_shared_prefs";
 
-	public Facade getFacade() {
-		return (Facade)getApplication();
+	public ITGSFacade getTGSFacade() {
+		return (ITGSFacade)getApplication();
 	}
 
 	private void updatePref(String prefKey, String summary) {
 		// for 2.3 support (3.0+ uses %s in summary string)
+		@SuppressWarnings("deprecation")
 		Preference pref = findPreference(prefKey);
 		if(pref == null)
 			return;
@@ -33,36 +37,25 @@ public class EditPreferences extends UnifiedSherlockPreferenceActivity
 	}
 
 	private void updateAlias() {
-		updatePref(Facade.PREF_ALIAS, getFacade().getAlias());
+		updatePref(Facade.PREF_ALIAS, getTGSFacade().getAlias());
 	}
 
 	private void updateProxyHost() {
-		updatePref(Facade.PREF_PROXY_HOST, getFacade().getProxyHost());
+		updatePref(Facade.PREF_PROXY_HOST, getTGSFacade().getProxyHost());
 	}
 
 	private void updateProxyPort() {
-		updatePref(Facade.PREF_PROXY_PORT, getFacade().getProxyPort());
+		updatePref(Facade.PREF_PROXY_PORT, getTGSFacade().getProxyPort());
 	}
 
 	// http://stackoverflow.com/questions/531427/how-do-i-display-the-current-value-of-an-android-preference-in-the-preference-su
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     	android.util.Log.d(TAG, "prefs changed: " + key);
-//		Facade f = getFacade();
-//    	TGSConfig c = f.getConfig();
 	    if (key.equals(Facade.PREF_ALIAS)) {
-//	    	c.setName(f.getAlias());
 			updateAlias();
-			/*
-	    } else if(key.equals(Facade.PREF_ENABLE_PROXY)) {
-	    	c.setProxyEnabled(f.isProxyEnabled());
-	    } else if(key.equals(Facade.PREF_REQUIRE_PROXY)) {
-	    	c.setProxyRequired(f.isProxyRequired());
-	    	*/
 	    } else if(key.equals(Facade.PREF_PROXY_HOST)) {
-//	    	c.setProxyHost(f.getProxyHost());
 	    	updateProxyHost();
 	    } else if(key.equals(Facade.PREF_PROXY_PORT)) {
-//	    	c.setProxyPort(Integer.valueOf(f.getProxyPort()));
 	    	updateProxyPort();
 	    }
 	}
@@ -90,13 +83,13 @@ public class EditPreferences extends UnifiedSherlockPreferenceActivity
 		updateAlias();
 		updateProxyHost();
 		updateProxyPort();
-		getFacade().getPrefs().registerOnSharedPreferenceChangeListener(this);
+		getTGSFacade().getPrefs().registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		getFacade().getPrefs().unregisterOnSharedPreferenceChangeListener(this);
+		getTGSFacade().getPrefs().unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	public static class Fragment extends UnifiedPreferenceFragment {}

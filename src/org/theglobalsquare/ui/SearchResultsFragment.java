@@ -52,7 +52,7 @@ public class SearchResultsFragment extends CommunityListFragment {
 		
 		// handle search (and message?) update events coming from python side
 		android.util.Log.i(TAG, "propertyChange: " + event + ", new value: " + event.getNewValue());
-		android.util.Log.i(TAG, "search terms: " + mSearchTerms);
+		android.util.Log.i(TAG, "my search terms: " + mSearchTerms);
 		Object o = event.getNewValue();
 		if(o instanceof TGSEvent) {
 			final TGSEvent e = (TGSEvent)o;

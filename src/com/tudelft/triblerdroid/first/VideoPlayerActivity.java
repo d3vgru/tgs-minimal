@@ -33,6 +33,7 @@ import java.util.List;
 
 import org.theglobalsquare.app.R;
 //import se.kth.pymdht.Pymdht;
+import org.theglobalsquare.app.config.EditPreferences;
 
 public class VideoPlayerActivity extends Activity {
 	NativeLib nativelib = null;
@@ -90,7 +91,8 @@ public class VideoPlayerActivity extends Activity {
 			ShowStatistics();
 		}
 		// start the progress bar
-		showDialog(PROGRESS_DIALOG);
+		// ERK - TODO updated method
+		//showDialog(PROGRESS_DIALOG);
 		_statsTask = new StatsTask();
 		_statsTask.execute( hash, tracker, destination );
 		Log.w("video player", "setup DONE");
@@ -143,7 +145,7 @@ public class VideoPlayerActivity extends Activity {
 			ShowStatistics();
 			return true;
 		case R.id.menu_settings:
-			Intent intent = new Intent(getBaseContext(), Preferences.class);
+			Intent intent = new Intent(getBaseContext(), EditPreferences.class);
 			startActivity(intent);
 			return true;
 		case R.id.menu_about:
@@ -260,7 +262,9 @@ public class VideoPlayerActivity extends Activity {
 					mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 						@Override
 						public void onPrepared (MediaPlayer mp) {
-							dismissDialog(PROGRESS_DIALOG);
+							// ERK - TODO updated method
+							//dismissDialog(PROGRESS_DIALOG);
+							
 							//Cancel _statsTask if you don't want to get downloading report on catlog 
 							//_statsTask.cancel(true);
 						}

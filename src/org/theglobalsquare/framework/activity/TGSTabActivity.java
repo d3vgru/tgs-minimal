@@ -6,11 +6,11 @@ import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.ITGSObject;
 import org.theglobalsquare.framework.values.TGSCommunity;
 import org.theglobalsquare.framework.values.TGSCommunityList;
-import org.theglobalsquare.ui.CommunityMessagesFragment;
 import org.theglobalsquare.ui.SearchFragment;
 import org.theglobalsquare.ui.OverviewListFragment;
 import org.theglobalsquare.ui.FilesListFragment;
 import org.theglobalsquare.ui.MonitorFragment;
+import org.theglobalsquare.ui.ViewCommunityFragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -24,6 +24,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.ActionBar.Tab;
 
+// TODO get rid of this class and use a drawer instead
 public abstract class TGSTabActivity extends TGSBaseActivity {
 	public final static int TAB_COUNT_BASE = 4; // number of default tabs
 	public final static int TAB_SEARCH = 0; // search tab
@@ -52,7 +53,7 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
         mTabCommunities = new HashSet<TGSCommunity>();
 
 		// make sure to setContentView() first (in super.onCreate)
-		mViewPager = (ViewPager)findViewById(R.id.mainActivityPager);
+		//mViewPager = (ViewPager)findViewById(R.id.mainActivityPager);
 
 		mTabsAdapter = new TabsAdapter(this, mViewPager);
 
@@ -247,7 +248,7 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
 		ActionBar bar = getSupportActionBar();
 		mTabsAdapter.addTab(
                 bar.newTab().setTag(c).setText(c.getName()),
-                CommunityMessagesFragment.class, null);
+                ViewCommunityFragment.class, null);
 	}
 	
 }

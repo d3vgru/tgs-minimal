@@ -13,7 +13,6 @@ import org.theglobalsquare.framework.values.TGSCommunityList;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,12 +21,20 @@ import android.widget.AdapterView.OnItemClickListener;
 public abstract class CommunityListFragment extends TGSListFragment implements PropertyChangeListener {
 	public final static String TAG = "CommunityList";
 
-	public final static String VIEW_COMMUNITY = "view community";
-
+	/* FIXME remove
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
+		
+	}
+	*/
+		
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		setListShown(false);
+
 		// create list adapter
 		setListAdapter(createListAdapter());
 				
@@ -36,32 +43,15 @@ public abstract class CommunityListFragment extends TGSListFragment implements P
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// open a ViewCommunityFragment for the selected community
-				ViewCommunityFragment viewCommunity = new ViewCommunityFragment();
-				Bundle args = new Bundle();
-				args.putSerializable(ViewCommunityFragment.COMMUNITY,
-						(TGSCommunity)CommunityListFragment.this.getListAdapter().getItem(position));
-				viewCommunity.setArguments(args);
-				
-				// FIXME see if a new tab needs to be added for this community, then switch to it
-				FragmentTransaction ft = CommunityListFragment.this.getFragmentManager().beginTransaction();
-				ft.add(viewCommunity, VIEW_COMMUNITY);
-				ft.commit();
+				ViewCommunityFragment.showFromList(CommunityListFragment.this, position);
 			}
 			
 		});
 		
-		// TODO notify activity that we're ready to display squares
-		
-	}
-		
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
 		setListShown(false);
 	}
 
-	public TGSListAdapter createListAdapter() {
+	protected TGSListAdapter createListAdapter() {
 		return new TGSListAdapter(getActivity(), R.layout.community_item, R.id.communityName) {
 			@Override
 			public TGSCommunityList getItems() {

@@ -11,7 +11,6 @@ import org.theglobalsquare.framework.values.TGSMessage;
 import org.theglobalsquare.framework.TGSSearchEvent;
 import org.theglobalsquare.ui.SearchResultsFragment;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -39,7 +38,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				buildCommunityTabs();
+				buildCommunityDrawers();
 			}
 		});
 	}
@@ -68,10 +67,6 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 
 	
 	// ITGSActivity impl
-	@Override
-	public Activity getActivity() {
-		return this;
-	}
 
 	// load communities on startup
 	/* not needed since dispersy sends an event for each one
@@ -144,7 +139,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 			// remove existing results
 			if(sSearchResults != null) {
 				// unregister with results events
-				getFacade().removeListener(TGSSearchEvent.class, sSearchResults);
+				getTGSFacade().removeListener(TGSSearchEvent.class, sSearchResults);
 				
 				android.util.Log.i(TAG, "REMOVING listener: " + sSearchResults);
 
@@ -158,7 +153,7 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 //			sSearchResults.setListShown(false);
 			
 			// register with results events
-			getFacade().addListener(TGSCommunitySearchEvent.class, sSearchResults);
+			getTGSFacade().addListener(TGSCommunitySearchEvent.class, sSearchResults);
 				
 			android.util.Log.i(TAG, "registering listener: " + sSearchResults);
 

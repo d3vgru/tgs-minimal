@@ -15,20 +15,9 @@ import org.theglobalsquare.app.config.EditPreferences;
 import org.theglobalsquare.framework.*;
 import org.theglobalsquare.framework.values.*;
 
-public class Facade extends Application {
+public class Facade extends Application implements ITGSFacade {
 	// main access point for python side to talk to Android application (as opposed to activity)
 	public final static String TAG = "Facade";
-	
-	public final static String PREF_ALIAS = "pref_alias";
-	public final static String PREF_DEFAULT_TAB = "pref_default_tab";
-	public final static String PREF_ENABLE_DISPERSY = "pref_enable_dispersy";
-	public final static String PREF_DISPERSY_PORT = "pref_dispersy_port";
-	public final static String PREF_ENABLE_PROXY = "pref_enable_proxy";
-	public final static String PREF_REQUIRE_PROXY = "pref_require_proxy";
-	public final static String PREF_PROXY_HOST = "pref_proxy_host";
-	public final static String PREF_PROXY_PORT = "pref_proxy_port";
-	public final static String PREF_SWIFT_ENABLED = "pref_swift_enabled";
-	public final static String PREF_TUNNEL_DISPERSY_OVER_SWIFT = "pref_tunnel_dispersy_over_swift";
 	
 	private static Map<Class<? extends TGSEvent>, Set<PropertyChangeListener>> sListeners = null;
 	
@@ -117,7 +106,7 @@ public class Facade extends Application {
 		String alias = getAlias();
 		config.setName(alias);
 		TGSUser.getMe().setName(alias);
-		config.setDefaultTab(getDefaultTab());
+		config.setDefaultDrawer(getDefaultDrawer());
 		config.setDispersyEnabled(isDispersyEnabled());
 		config.setDispersyPort(Integer.valueOf(getDispersyPort()));
 		config.setProxyEnabled(isProxyEnabled());
@@ -132,8 +121,8 @@ public class Facade extends Application {
 		return getPrefs().getString(PREF_ALIAS, getResources().getString(R.string.anonLabel));
 	}
 	
-	public String getDefaultTab() {
-		return getPrefs().getString(PREF_DEFAULT_TAB, getResources().getString(R.string.defaultTab));
+	public int getDefaultDrawer() {
+		return getPrefs().getInt(PREF_DEFAULT_DRAWER, ITGSActivity.DRAWER_OVERVIEW);
 	}
 	
 	public boolean isDispersyEnabled() {

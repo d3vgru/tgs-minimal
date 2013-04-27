@@ -27,7 +27,8 @@ class TGSSearchSignal:
 
         # must cast as the exact type that formal param of setSubject() expects
         superSubject = cast('org.theglobalsquare.framework.ITGSObject', termsObject)
-        event.setSubject(superSubject)
+        # FIXME when pyjnius is fixed, use the subject
+        event.setObject(superSubject)
 
         # TODO standardize verbs against activitystrea.ms
         event.setVerb(argv[1])

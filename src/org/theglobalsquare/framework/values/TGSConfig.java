@@ -10,14 +10,14 @@ public class TGSConfig extends TGSObject {
 	public final static String SET_PARAM = "set_param";
 	public final static String PARAM_UPDATED = "param_updated";
 	
-	private String defaultTab;
+	private int defaultDrawer;
 	
-	public String getDefaultTab() {
-		return defaultTab;
+	public int getDefaultDrawer() {
+		return defaultDrawer;
 	}
 
-	public void setDefaultTab(String defaultTab) {
-		this.defaultTab = defaultTab;
+	public void setDefaultDrawer(int defaultDrawer) {
+		this.defaultDrawer = defaultDrawer;
 	}
 
 	private boolean dispersyEnabled = false;
@@ -108,7 +108,7 @@ public class TGSConfig extends TGSObject {
 	@Override
 	public JSONObject toJsonObject() throws JSONException {
 		JSONObject o = super.toJsonObject();
-		o.put("defaultTab", getDefaultTab());
+		o.put("defaultDrawer", getDefaultDrawer());
 		o.put("dispersyEnabled", isDispersyEnabled());
 		o.put("dispersyPort", getDispersyPort());
 		o.put("proxyEnabled", isProxyEnabled());

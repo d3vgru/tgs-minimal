@@ -141,7 +141,8 @@ import se.kth.pymdht.Id.IdError;
 			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			if (prefs.getBoolean("pref_mobile_warning", true)){
 				showWarning = true;
-				showDialog(MOBILE_WARNING_DIALOG);
+				// ERK - TODO updated method
+//				/showDialog(MOBILE_WARNING_DIALOG);
 //
 //				setContentView(R.layout.warning);
 //				final CheckBox cb_mobile_warning = (CheckBox) findViewById(R.id.cb_mobile_warning);
@@ -469,7 +470,7 @@ import se.kth.pymdht.Id.IdError;
     public static void ConfigureNFCBeam(Activity act)
     {
 		// Arno: Only configure when full Beam support. NFC is already in API 9.
-		if (Integer.valueOf(android.os.Build.VERSION.SDK) >= 16)
+		if (Integer.valueOf(android.os.Build.VERSION.SDK_INT) >= 16)
 		{
 	        // Check for available NFC Adapter
 			NfcAdapter nfcadapter = NfcAdapter.getDefaultAdapter(act);
@@ -521,10 +522,10 @@ import se.kth.pymdht.Id.IdError;
 	        	Log.w("Swift","Error when trying to invoke Beam API: setBeamPushUris",e);
 	        }
 	        
-	        Log.w("Swift","Beam API: registered " + urlstr );
+	        Log.w("Swift","Beam API: registered " + urlstr);
 		}
 		else
-			Log.w("Swift","Beam API: Android version too old " + android.os.Build.VERSION.SDK );
+			Log.w("Swift","Beam API: Android version too old " + android.os.Build.VERSION.SDK_INT);
 
 	}
     

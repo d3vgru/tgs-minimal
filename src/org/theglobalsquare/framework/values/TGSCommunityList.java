@@ -1,5 +1,6 @@
 package org.theglobalsquare.framework.values;
 
+import org.theglobalsquare.framework.ITGSObject;
 import org.theglobalsquare.framework.TGSObjectList;
 
 public class TGSCommunityList extends TGSObjectList {
@@ -15,10 +16,20 @@ public class TGSCommunityList extends TGSObjectList {
 			android.util.Log.i(TAG, "adding new community: " + c);
 			add(c);
 		} else {
-			// ..or replace
+			// ..or update
 			android.util.Log.i(TAG, "updating existing community: " + c);
-			set(pos, c);
+			TGSCommunity existing = getCommunity(pos);
+			if(existing != null) {
+				existing.updateFrom(c);
+			}
 		}
+	}
+	
+	public TGSCommunity getCommunity(int pos) {
+		ITGSObject o = get(pos);
+		if(o instanceof TGSCommunity)
+			return (TGSCommunity)o;
+		return null;
 	}
 
 	@Override
