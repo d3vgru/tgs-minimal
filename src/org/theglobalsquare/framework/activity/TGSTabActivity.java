@@ -27,8 +27,8 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 public abstract class TGSTabActivity extends TGSBaseActivity {
 	public final static int TAB_COUNT_BASE = 4; // number of default tabs
 	public final static int TAB_SEARCH = 0; // search tab
-	public final static int TAB_OVERVIEW = 1; // my squares overview
-	public final static int TAB_FILES = 2; // my files tab
+	public final static int TAB_FILES = 1; // my files tab
+	public final static int TAB_OVERVIEW = 2; // my squares overview
 	public final static int TAB_MONITOR = 3; // debug monitor
 	
 	protected int mSelectedTab = -1;
@@ -60,11 +60,11 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
         mTabsAdapter.addTab(
                 bar.newTab().setText(R.string.searchBtnLabel),
                 SearchFragment.class, null);
-        // TAB_OVERVIEW
+        // TAB_FILES
         mTabsAdapter.addTab(
                 bar.newTab().setText(R.string.filesLabel),
                 FilesListFragment.class, null);
-        // TAB_FILES
+        // TAB_OVERVIEW
         mTabsAdapter.addTab(
                 bar.newTab().setText(R.string.overviewLabel),
                 OverviewListFragment.class, null);
@@ -106,7 +106,8 @@ public abstract class TGSTabActivity extends TGSBaseActivity {
         
         // TODO select default tab from settings if possible
         // select Monitor tab
-        setTab(TAB_MONITOR);
+//        setTab(TAB_MONITOR);
+        setTab(TAB_OVERVIEW);
 	}
 	
 	public void setTab(int tab) {

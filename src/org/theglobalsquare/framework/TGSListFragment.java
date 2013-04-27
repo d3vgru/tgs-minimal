@@ -51,4 +51,11 @@ public class TGSListFragment extends SherlockListFragment {
 	public TGSListAdapter getTGSListAdapter() {
 		return (TGSListAdapter)getListAdapter();
 	}
+
+	@Override
+	public void setListShown(boolean shown) {
+		super.setListShown(shown);
+		android.util.Log.w(TAG, "setListShown: " + shown);
+	}
+	
 }
