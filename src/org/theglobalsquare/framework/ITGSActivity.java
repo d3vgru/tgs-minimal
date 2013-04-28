@@ -22,6 +22,8 @@ public interface ITGSActivity {
 	public final static int DRAWER_MONITOR = 6; // debug monitor
 	public final static int DRAWER_ABOUT = 7; // about
 	
+	public final static int PREFERENCES = 1001;
+
 	// FIXME make all domain classes be interfaces
 	// [TGSCommunity, TGSMessage)
 	void addCommunity(TGSCommunity c);

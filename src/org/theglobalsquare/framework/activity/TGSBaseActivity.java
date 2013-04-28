@@ -31,8 +31,6 @@ import com.actionbarsherlock.view.MenuItem;
 public abstract class TGSBaseActivity extends PythonActivity implements ITGSActivity {
 	public final static String TAG = "TGSBase";
 	
-	public final static int PREFERENCES = 1001;
-
 	protected MenuItem mMenuClose = null;
 	protected MenuItem mMenuCompose = null;
 	protected MenuItem mMenuRefresh = null;

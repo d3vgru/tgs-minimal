@@ -1,12 +1,9 @@
 package org.theglobalsquare.framework.activity;
 
-import java.io.File;
-
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
 import org.theglobalsquare.app.R;
-import org.theglobalsquare.app.config.EditPreferences;
 import org.theglobalsquare.framework.values.TGSCommunity;
 import org.theglobalsquare.framework.values.TGSCommunityList;
 import org.theglobalsquare.ui.AboutFragment;
@@ -17,15 +14,14 @@ import org.theglobalsquare.ui.MonitorFragment;
 import org.theglobalsquare.ui.SearchFragment;
 import org.theglobalsquare.ui.ViewCommunityFragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
 
 
 public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnClickListener {
@@ -77,6 +73,38 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
         addClickListener(R.id.aboutDrawer);
         addClickListener(R.id.helpDrawer);
         addClickListener(R.id.monitorDrawer);
+        
+    	// manage selected tab using backstack listener, tagging each transaction with the view id
+        final FragmentManager fm = getSupportFragmentManager();
+        fm.addOnBackStackChangedListener(new OnBackStackChangedListener() {
+			@Override
+			public void onBackStackChanged() {
+				// FIXME does not properly work with back button
+				// if the tag of the transaction matches an id for a menu drawer button..
+				int count = fm.getBackStackEntryCount();
+				if(count == 0) {
+					mActiveViewId = R.id.overviewDrawer;
+					updateActiveDrawer();
+					return;
+				}
+				FragmentManager.BackStackEntry topEntry = fm.getBackStackEntryAt(count - 1);
+				String tag = topEntry.getName();
+				if(tag != null) {
+					int idFromTag = getResources().getIdentifier(tag + "Drawer", "id", this.getClass().getName());
+					if(idFromTag == 0)
+						return;
+					View viewFromId = findViewById(idFromTag);
+					if(viewFromId != null) {
+						mActiveViewId = idFromTag;
+						updateActiveDrawer();
+					}
+				}
+			}
+        });
+	}
+	
+	void setActiveViewId(int activeViewId) {
+		mActiveViewId = activeViewId;
 	}
 
 	// safely add click listeners to menu drawer
@@ -91,14 +119,13 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 	@Override
 	public void onClick(View v) {
 		android.util.Log.i(TAG, "click: " + v.getId());
-		int drawer = getDrawerForViewId(v.getId());
+		int drawer = DrawerViewMap.getDrawerForViewId(v.getId());
 		if(drawer < 0)
 			return;
 		setSelectedDrawer(drawer);
-			
 	}
-
-	private void updateActiveDrawer() {
+	
+	void updateActiveDrawer() {
 		if(mActiveViewId == -1) {
 			return;
 		}
@@ -106,103 +133,7 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
         if (activeView != null) {
             mMenuDrawer.setActiveView(activeView);
         }
-	}
-	
-	public int getDrawerForViewId(int vid) {
-		int drawer = -1;
-		switch(vid) {
-			case R.id.searchDrawer:
-				drawer = DRAWER_SEARCH;
-				break;
-			case R.id.fileDrawer:
-				drawer = DRAWER_FILES;
-				break;
-			case R.id.overviewDrawer:
-				drawer = DRAWER_OVERVIEW;
-				break;
-			case DRAWER_COMMUNITY:
-				// TODO figure out what to actually do here
-				drawer = -2;
-				break;
-			case R.id.settingsDrawer:
-				drawer = DRAWER_SETTINGS;
-				break;
-			case R.id.helpDrawer:
-				drawer = DRAWER_HELP;
-				break;
-			case R.id.aboutDrawer:
-				drawer = DRAWER_ABOUT;
-				break;
-			case R.id.monitorDrawer:
-				drawer = DRAWER_MONITOR;
-				break;
-			default:
-				break;
-		}
-		return drawer;
-	}
-	
-	public int updateViewIdForDrawer(int drawer, boolean showFragment) {
-		int adjustedDrawer = drawer;
-		int newActiveView = -1;
-		if(DRAWER_SEARCH != drawer) {
-			dismissKeyboardFor(this, (EditText)findViewById(R.id.txt_search_terms));
-		}
-		switch(drawer) {
-			case DRAWER_SEARCH:
-				newActiveView = R.id.searchDrawer;
-				if(showFragment)
-					showSearch();
-				break;
-			case DRAWER_FILES:
-				newActiveView = R.id.fileDrawer;
-				if(showFragment)
-					showFiles();
-				break;
-			case DRAWER_OVERVIEW:
-				// TODO eventually point to the actual community button
-				if(showFragment)
-					showOverview();
-			case DRAWER_COMMUNITY:
-				adjustedDrawer = DRAWER_OVERVIEW;
-				newActiveView = R.id.overviewDrawer;
-				break;
-			case DRAWER_SETTINGS:
-				// TODO maybe attach drawer to prefs activity
-				// don't track this since it starts a new activity entirely
-				adjustedDrawer = getSelectedDrawer();
-				//newActiveView = R.id.settingsDrawer;
-				// show settings
-				if(showFragment) {
-					Intent prefsIntent = new Intent();
-					prefsIntent.setClass(this, EditPreferences.class);
-					startActivityForResult(prefsIntent, PREFERENCES);
-				}
-				break;
-			case DRAWER_HELP:
-				newActiveView = R.id.helpDrawer;
-				if(showFragment)
-					showHelp();
-				break;
-			case DRAWER_ABOUT:
-				newActiveView = R.id.aboutDrawer;
-				if(showFragment)
-					showAbout();
-				break;
-			case DRAWER_MONITOR:
-				newActiveView = R.id.monitorDrawer;
-				if(showFragment)
-					showMonitor();
-				break;
-			default:
-				break;
-		}
-		mActiveViewId = newActiveView;
-		if(newActiveView > -1)
-			updateActiveDrawer();
-		closeDrawer();
-		return adjustedDrawer;
-	}
+	}	
 	
 	public int getSelectedDrawer() {
 		return mSelectedDrawer;
@@ -215,18 +146,16 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		setSelectedDrawer(drawer, true, null);
 	}
 	public void setSelectedDrawer(int drawer, boolean showFragment, String communityId) {
-		mSelectedDrawer = drawer;
-		
 		// update menu drawer to show selected item
-		int adjustedDrawer = updateViewIdForDrawer(drawer, showFragment);
-		getTGSFacade().setDefaultDrawer(adjustedDrawer);
+		mSelectedDrawer = DrawerViewMap.updateViewIdForDrawer(this, drawer, showFragment);
+		getTGSFacade().setDefaultDrawer(mSelectedDrawer);
 		if(drawer == DRAWER_COMMUNITY) {
 			// TODO show the community
 			
 		}
 	}
 	
-	private void showOverview() {
+	void showOverview() {
 		// clear back stack
 		clearBackStack(getSupportFragmentManager());
 		/*
@@ -237,23 +166,23 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		*/
 	}
 	
-	private void showSearch() {
+	void showSearch() {
 		// clear back stack
 		FragmentTransaction ft = beginBackStackTransaction(true);
 		SearchFragment s = new SearchFragment();
-		ft.add(R.id.mainContentFragment, s);
+		ft.add(R.id.mainContentFragment, s, "search");
 		ft.commit();
 	}
 	
-	private void showFiles() {
+	void showFiles() {
 		// clear back stack
 		FragmentTransaction ft = beginBackStackTransaction(true);
 		FilesListFragment fl = new FilesListFragment();
-		ft.add(R.id.mainContentFragment, fl);
+		ft.add(R.id.mainContentFragment, fl, "files");
 		ft.commit();
 	}
 	
-	private void showHelp() {
+	void showHelp() {
 		/* TODO eventually..
 		// dialog -- preserve back stack
 		FragmentTransaction ft = beginBackStackTransaction();
@@ -265,23 +194,23 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		
 		// for now, list the files in private storage
 		// how helpful is that?
-		monitorHomeDir();
+		DrawerViewMap.monitorHomeDir(this);
 		//setSelectedDrawer(DRAWER_HELP);
 	}
 	
-	private void showAbout() {
+	void showAbout() {
 		// dialog -- preserve back stack
 		FragmentTransaction ft = beginBackStackTransaction();
 		AboutFragment a = new AboutFragment();
-		ft.add(R.id.mainContentFragment, a);
+		ft.add(R.id.mainContentFragment, a, "about");
 		ft.commit();
 	}
 	
-	private void showMonitor() {
+	void showMonitor() {
 		// clear back stack
 		FragmentTransaction ft = beginBackStackTransaction(true);
 		MonitorFragment m = new MonitorFragment();
-		ft.add(R.id.mainContentFragment, m);
+		ft.add(R.id.mainContentFragment, m, "monitor");
 		ft.commit();
 	}
 	
@@ -323,7 +252,7 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
         super.onBackPressed();
     }
     
-    protected void closeDrawer() {
+    void closeDrawer() {
         final int drawerState = mMenuDrawer.getDrawerState();
         if(!m480Plus && (drawerState == MenuDrawer.STATE_OPEN
                 || drawerState == MenuDrawer.STATE_OPENING)) {
@@ -366,23 +295,6 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		FragmentTransaction ft = TGSBaseActivity.beginBackStackTransaction(fragMgr);
 		ft.add(R.id.mainContentFragment, viewCommunity, VIEW_COMMUNITY);
 		ft.commit();
-	}
-
-	public void monitorHomeDir() {
-		File path = new File(getFilesDir().getAbsolutePath() + "/");
-		if(!path.exists())
-			return;
-		monitor("listing files/(D)irectories in " + path.getAbsolutePath());
-		File[] files = path.listFiles();
-		if(files != null) {
-			for(int i=0; i<files.length; i++) {
-				File f = files[i];
-				monitor(
-						(f.isDirectory() ? "(D) " : "")
-							+ f.getPath()
-				);
-			}
-		}
 	}
 
 }
