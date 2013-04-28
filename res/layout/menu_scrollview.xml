@@ -55,6 +55,7 @@
             android:text="@string/settingsBtnLabel"
             style="@style/MenuDrawer.Widget.Title" />
 
+        <!--
         <TextView
             android:id="@+id/helpDrawer"
             android:layout_width="match_parent"
@@ -62,6 +63,7 @@
             android:drawableLeft="@drawable/action_help"
             android:text="@string/helpBtnLabel"
             style="@style/MenuDrawer.Widget.Title" />
+        -->
         
         </LinearLayout>
 </ScrollView>

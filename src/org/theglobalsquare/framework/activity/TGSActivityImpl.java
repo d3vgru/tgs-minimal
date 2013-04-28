@@ -33,14 +33,18 @@ public abstract class TGSActivityImpl extends TGSUIActivity
 	}
 	
 	private void setCommunitiesDirty() {
+		// currently unused but may be useful soon
+		
 		// construct tabs as appropriate
 		// could be called from outside the UI thread..
+		/*
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				buildCommunityDrawers();
 			}
 		});
+		*/
 	}
 
 	public void setCommunities(TGSCommunityList l) {

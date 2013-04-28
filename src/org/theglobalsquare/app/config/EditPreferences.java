@@ -29,7 +29,6 @@ public class EditPreferences extends UnifiedSherlockPreferenceActivity
 
 	private void updatePref(String prefKey, String summary) {
 		// for 2.3 support (3.0+ uses %s in summary string)
-		@SuppressWarnings("deprecation")
 		Preference pref = findPreference(prefKey);
 		if(pref == null)
 			return;

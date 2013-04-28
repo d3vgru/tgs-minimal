@@ -1,12 +1,16 @@
 package org.theglobalsquare.framework.activity;
 
-import java.io.File;
-
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.app.config.EditPreferences;
 import org.theglobalsquare.framework.ITGSActivity;
+import org.theglobalsquare.ui.AboutFragment;
+import org.theglobalsquare.ui.FilesListFragment;
+import org.theglobalsquare.ui.MonitorFragment;
+import org.theglobalsquare.ui.OverviewListFragment;
+import org.theglobalsquare.ui.SearchFragment;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.widget.EditText;
 
 public class DrawerViewMap {
@@ -44,30 +48,29 @@ public class DrawerViewMap {
 		return drawer;
 	}
 	
-	public static int updateViewIdForDrawer(TGSDrawerActivity a, int drawer, boolean showFragment) {
+	public static int getAdjustedDrawer(TGSDrawerActivity a, int drawer, boolean showFragment) {
 		int adjustedDrawer = drawer;
-		int newActiveView = -1;
 		if(ITGSActivity.DRAWER_SEARCH != drawer) {
 			TGSBaseActivity.dismissKeyboardFor(a, (EditText)a.findViewById(R.id.txt_search_terms));
 		}
+		Fragment f = null;
+		String tag = null; // names are important, correspond to tag+"Drawer" to find id of buttons
 		switch(drawer) {
 			case ITGSActivity.DRAWER_SEARCH:
-				newActiveView = R.id.searchDrawer;
-				if(showFragment)
-					a.showSearch();
+				f = new SearchFragment();
+				tag = "search";
 				break;
 			case ITGSActivity.DRAWER_FILES:
-				newActiveView = R.id.fileDrawer;
-				if(showFragment)
-					a.showFiles();
+				f = new FilesListFragment();
+				tag = "file";
 				break;
 			case ITGSActivity.DRAWER_OVERVIEW:
-				// TODO eventually point to the actual community button
-				if(showFragment)
-					a.showOverview();
+				f = new OverviewListFragment();
+				tag =  "overview";
 			case ITGSActivity.DRAWER_COMMUNITY:
+				// TODO eventually point to the actual community button if it's a community
+				// or maybe not..
 				adjustedDrawer = ITGSActivity.DRAWER_OVERVIEW;
-				newActiveView = R.id.overviewDrawer;
 				break;
 			case ITGSActivity.DRAWER_SETTINGS:
 				// TODO maybe attach drawer to prefs activity
@@ -82,46 +85,28 @@ public class DrawerViewMap {
 				}
 				break;
 			case ITGSActivity.DRAWER_HELP:
-				newActiveView = R.id.helpDrawer;
-				if(showFragment)
-					a.showHelp();
+				/* TODO eventually..
+				f = new HelpFragment();
+				tag = "help";
+				*/
 				break;
 			case ITGSActivity.DRAWER_ABOUT:
-				newActiveView = R.id.aboutDrawer;
-				if(showFragment)
-					a.showAbout();
+				f = new AboutFragment();
+				tag =  "about";
 				break;
 			case ITGSActivity.DRAWER_MONITOR:
-				newActiveView = R.id.monitorDrawer;
-				if(showFragment)
-					a.showMonitor();
+				f = new MonitorFragment();
+				tag = "monitor";
 				break;
 			default:
 				break;
 		}
-		a.setActiveViewId(newActiveView);
-		if(newActiveView > -1)
-			a.updateActiveDrawer();
+		
+		if(showFragment && f != null)
+			a.showItem(f, tag);
+
 		a.closeDrawer();
 		return adjustedDrawer;
-	}
-
-	// TODO get rid of this
-	public static void monitorHomeDir(TGSDrawerActivity a) {
-		File path = new File(a.getFilesDir().getAbsolutePath() + "/");
-		if(!path.exists())
-			return;
-		a.monitor("listing files/(D)irectories in " + path.getAbsolutePath());
-		File[] files = path.listFiles();
-		if(files != null) {
-			for(int i=0; i<files.length; i++) {
-				File f = files[i];
-				a.monitor(
-						(f.isDirectory() ? "(D) " : "")
-							+ f.getPath()
-				);
-			}
-		}
 	}
 
 }

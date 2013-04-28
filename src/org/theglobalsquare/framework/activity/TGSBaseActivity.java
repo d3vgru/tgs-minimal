@@ -8,12 +8,9 @@ import org.theglobalsquare.framework.values.*;
 import org.theglobalsquare.ui.SearchFragment;
 import org.theglobalsquare.ui.SearchResultsFragment;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -170,34 +167,6 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 		TextView monitor = (TextView) findViewById(R.id.monitor);
 		if(monitor != null)
 			monitor.setText(sMonitorTxt);
-	}
-	
-	public FragmentTransaction beginBackStackTransaction() {
-		return beginBackStackTransaction(getSupportFragmentManager());
-	}
-
-	public FragmentTransaction beginBackStackTransaction(boolean clearBackStack) {
-		return beginBackStackTransaction(getSupportFragmentManager(), clearBackStack);
-	}
-
-	public static FragmentTransaction beginBackStackTransaction(FragmentManager fm) {
-		return beginBackStackTransaction(fm, false);
-	}
-	
-	@SuppressLint("CommitTransaction")
-	public static FragmentTransaction beginBackStackTransaction(FragmentManager fm, boolean clearBackStack) {
-		if(clearBackStack) {
-			clearBackStack(fm);
-		}
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.addToBackStack(null);
-		return ft;
-	}
-	
-	protected static void clearBackStack(FragmentManager fm) {
-		for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {    
-		    fm.popBackStack();
-		}
 	}
 	
 }

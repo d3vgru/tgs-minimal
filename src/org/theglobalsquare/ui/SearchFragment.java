@@ -2,6 +2,7 @@ package org.theglobalsquare.ui;
 
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.app.TGSMainActivity;
+import org.theglobalsquare.framework.activity.TGSBaseActivity;
 import org.theglobalsquare.framework.ui.*;
 
 import android.os.Bundle;
@@ -41,6 +42,12 @@ public class SearchFragment extends TGSFragment {
 			}
 		});
 		return view;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		TGSBaseActivity.showSearchTerms(getActivity());
 	}
 
 }

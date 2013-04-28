@@ -6,17 +6,12 @@ import net.simonvt.menudrawer.Position;
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.values.TGSCommunity;
 import org.theglobalsquare.framework.values.TGSCommunityList;
-import org.theglobalsquare.ui.AboutFragment;
 import org.theglobalsquare.ui.CommunityListFragment;
-import org.theglobalsquare.ui.FilesListFragment;
-import org.theglobalsquare.ui.MonitorFragment;
-//import org.theglobalsquare.ui.OverviewListFragment;
-import org.theglobalsquare.ui.SearchFragment;
 import org.theglobalsquare.ui.ViewCommunityFragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import com.actionbarsherlock.view.MenuItem;
@@ -24,9 +19,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 
-public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnClickListener {
+public abstract class TGSDrawerActivity extends TGSFragmentSupport implements OnClickListener {
 	public final static String TAG = "TGSDrawer";
-	
+
 	public final static String VIEW_COMMUNITY = "view community";
 	
 	private static final String STATE_MENUDRAWER = "org.theglobalsquare.framework.activity.TGSDrawerActivity.menuDrawer";
@@ -49,7 +44,7 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT, Position.LEFT, m480Plus);
 		super.onCreate(savedInstanceState);
 	}
-
+	
 	protected void configureDrawer(Bundle inState) {
 		if (inState != null) {
 	        mActiveViewId = inState.getInt(STATE_ACTIVE_VIEW_ID);
@@ -62,7 +57,7 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
         
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
-        updateActiveDrawer();
+        updateActiveItem();
 
         setSelectedDrawer(getTGSFacade().getDefaultDrawer());
         
@@ -74,33 +69,6 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
         addClickListener(R.id.helpDrawer);
         addClickListener(R.id.monitorDrawer);
         
-    	// manage selected tab using backstack listener, tagging each transaction with the view id
-        final FragmentManager fm = getSupportFragmentManager();
-        fm.addOnBackStackChangedListener(new OnBackStackChangedListener() {
-			@Override
-			public void onBackStackChanged() {
-				// FIXME does not properly work with back button
-				// if the tag of the transaction matches an id for a menu drawer button..
-				int count = fm.getBackStackEntryCount();
-				if(count == 0) {
-					mActiveViewId = R.id.overviewDrawer;
-					updateActiveDrawer();
-					return;
-				}
-				FragmentManager.BackStackEntry topEntry = fm.getBackStackEntryAt(count - 1);
-				String tag = topEntry.getName();
-				if(tag != null) {
-					int idFromTag = getResources().getIdentifier(tag + "Drawer", "id", this.getClass().getName());
-					if(idFromTag == 0)
-						return;
-					View viewFromId = findViewById(idFromTag);
-					if(viewFromId != null) {
-						mActiveViewId = idFromTag;
-						updateActiveDrawer();
-					}
-				}
-			}
-        });
 	}
 	
 	void setActiveViewId(int activeViewId) {
@@ -125,7 +93,8 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		setSelectedDrawer(drawer);
 	}
 	
-	void updateActiveDrawer() {
+	@Override
+	void updateActiveItem() {
 		if(mActiveViewId == -1) {
 			return;
 		}
@@ -147,71 +116,12 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 	}
 	public void setSelectedDrawer(int drawer, boolean showFragment, String communityId) {
 		// update menu drawer to show selected item
-		mSelectedDrawer = DrawerViewMap.updateViewIdForDrawer(this, drawer, showFragment);
-		getTGSFacade().setDefaultDrawer(mSelectedDrawer);
+		mSelectedDrawer = DrawerViewMap.getAdjustedDrawer(this, drawer, showFragment);
 		if(drawer == DRAWER_COMMUNITY) {
 			// TODO show the community
 			
 		}
-	}
-	
-	void showOverview() {
-		// clear back stack
-		clearBackStack(getSupportFragmentManager());
-		/*
-		FragmentTransaction ft = beginBackStackTransaction(true);
-		OverviewListFragment ol = new OverviewListFragment();
-		ft.add(R.id.mainContentFragment, ol);
-		ft.commit();
-		*/
-	}
-	
-	void showSearch() {
-		// clear back stack
-		FragmentTransaction ft = beginBackStackTransaction(true);
-		SearchFragment s = new SearchFragment();
-		ft.add(R.id.mainContentFragment, s, "search");
-		ft.commit();
-	}
-	
-	void showFiles() {
-		// clear back stack
-		FragmentTransaction ft = beginBackStackTransaction(true);
-		FilesListFragment fl = new FilesListFragment();
-		ft.add(R.id.mainContentFragment, fl, "files");
-		ft.commit();
-	}
-	
-	void showHelp() {
-		/* TODO eventually..
-		// dialog -- preserve back stack
-		FragmentTransaction ft = beginBackStackTransaction();
-		OverviewListFragment ol = new OverviewListFragment();
-		ft.add(R.id.mainContentFragment, ol);
-		ft.commit();
-		*/
-		//Toast.makeText(this, R.string.helpBtnLabel, Toast.LENGTH_SHORT).show();
-		
-		// for now, list the files in private storage
-		// how helpful is that?
-		DrawerViewMap.monitorHomeDir(this);
-		//setSelectedDrawer(DRAWER_HELP);
-	}
-	
-	void showAbout() {
-		// dialog -- preserve back stack
-		FragmentTransaction ft = beginBackStackTransaction();
-		AboutFragment a = new AboutFragment();
-		ft.add(R.id.mainContentFragment, a, "about");
-		ft.commit();
-	}
-	
-	void showMonitor() {
-		// clear back stack
-		FragmentTransaction ft = beginBackStackTransaction(true);
-		MonitorFragment m = new MonitorFragment();
-		ft.add(R.id.mainContentFragment, m, "monitor");
-		ft.commit();
+		getTGSFacade().setDefaultDrawer(mSelectedDrawer);
 	}
 	
 	@Override
@@ -248,23 +158,23 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
     
     @Override
     public void onBackPressed() {
-    	closeDrawer();
-        super.onBackPressed();
+    	if(!closeDrawer()) {
+    		setStayOpen(false);
+        	super.onBackPressed();
+    	}
     }
     
-    void closeDrawer() {
+    boolean closeDrawer() {
         final int drawerState = mMenuDrawer.getDrawerState();
         if(!m480Plus && (drawerState == MenuDrawer.STATE_OPEN
                 || drawerState == MenuDrawer.STATE_OPENING)) {
             mMenuDrawer.closeMenu();
-            return;
+        	// only return true if we actually close the drawer
+            return true;
         }
+        return false;
     }
     
-    protected void buildCommunityDrawers() {
-		
-	}
-
 	public void addCommunity(TGSCommunity c) {
 		// if tab name is blank, let's wait for the update event because screw trying to update later
 		if(c == null || c.getName() == null || c.getName().equals(""))
@@ -272,9 +182,6 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		
 		// add new community to set of tabs for squares
 		mCommunities.add(c);
-		
-		// TODO add to drawer nav
-		
 		
 		// show the new community
 		showCommunity(getSupportFragmentManager(), c);
@@ -292,9 +199,21 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		args.putSerializable(ViewCommunityFragment.COMMUNITY, c);
 		viewCommunity.setArguments(args);
 		
-		FragmentTransaction ft = TGSBaseActivity.beginBackStackTransaction(fragMgr);
+		// don't clear the backstack since this is on top of the overview
+		FragmentTransaction ft = TGSFragmentSupport.beginBackStackTransaction(fragMgr, false);
 		ft.add(R.id.mainContentFragment, viewCommunity, VIEW_COMMUNITY);
 		ft.commit();
 	}
+
+	void showItem(Fragment f, String tag) {
+		showItem(f, tag, true);
+	}
+	void showItem(Fragment f, String tag, boolean clearBackStack) {
+		setStayOpen(true);
+		FragmentTransaction ft = beginBackStackTransaction(clearBackStack, tag);
+		ft.add(R.id.mainContentFragment, f, tag); // do we want/need to set tag here?
+		ft.commit();
+	}
+	
 
 }
