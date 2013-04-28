@@ -70,6 +70,7 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 
         setSelectedDrawer(getTGSFacade().getDefaultDrawer());
         
+        addClickListener(R.id.searchDrawer);
         addClickListener(R.id.fileDrawer);
         addClickListener(R.id.overviewDrawer);
         addClickListener(R.id.settingsDrawer);
@@ -111,7 +112,6 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		int drawer = -1;
 		switch(vid) {
 			case R.id.searchDrawer:
-				android.util.Log.i(TAG, "search tapped in drawer");
 				drawer = DRAWER_SEARCH;
 				break;
 			case R.id.fileDrawer:
@@ -142,7 +142,7 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		return drawer;
 	}
 	
-	public int updateViewIdForDrawer(int drawer) {
+	public int updateViewIdForDrawer(int drawer, boolean showFragment) {
 		int adjustedDrawer = drawer;
 		int newActiveView = -1;
 		if(DRAWER_SEARCH != drawer) {
@@ -151,15 +151,18 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 		switch(drawer) {
 			case DRAWER_SEARCH:
 				newActiveView = R.id.searchDrawer;
-				showSearch();
+				if(showFragment)
+					showSearch();
 				break;
 			case DRAWER_FILES:
 				newActiveView = R.id.fileDrawer;
-				showFiles();
+				if(showFragment)
+					showFiles();
 				break;
 			case DRAWER_OVERVIEW:
 				// TODO eventually point to the actual community button
-				showOverview();
+				if(showFragment)
+					showOverview();
 			case DRAWER_COMMUNITY:
 				adjustedDrawer = DRAWER_OVERVIEW;
 				newActiveView = R.id.overviewDrawer;
@@ -167,23 +170,29 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 			case DRAWER_SETTINGS:
 				// TODO maybe attach drawer to prefs activity
 				// don't track this since it starts a new activity entirely
+				adjustedDrawer = getSelectedDrawer();
 				//newActiveView = R.id.settingsDrawer;
 				// show settings
-				Intent prefsIntent = new Intent();
-				prefsIntent.setClass(this, EditPreferences.class);
-				startActivityForResult(prefsIntent, PREFERENCES);
+				if(showFragment) {
+					Intent prefsIntent = new Intent();
+					prefsIntent.setClass(this, EditPreferences.class);
+					startActivityForResult(prefsIntent, PREFERENCES);
+				}
 				break;
 			case DRAWER_HELP:
 				newActiveView = R.id.helpDrawer;
-				showHelp();
+				if(showFragment)
+					showHelp();
 				break;
 			case DRAWER_ABOUT:
 				newActiveView = R.id.aboutDrawer;
-				showAbout();
+				if(showFragment)
+					showAbout();
 				break;
 			case DRAWER_MONITOR:
 				newActiveView = R.id.monitorDrawer;
-				showMonitor();
+				if(showFragment)
+					showMonitor();
 				break;
 			default:
 				break;
@@ -200,14 +209,16 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 	}
 		
 	public void setSelectedDrawer(int drawer) {
-		setSelectedDrawer(drawer, null);
+		setSelectedDrawer(drawer, true);
 	}
-	
-	public void setSelectedDrawer(int drawer, String communityId) {
+	public void setSelectedDrawer(int drawer, boolean showFragment) {
+		setSelectedDrawer(drawer, true, null);
+	}
+	public void setSelectedDrawer(int drawer, boolean showFragment, String communityId) {
 		mSelectedDrawer = drawer;
 		
 		// update menu drawer to show selected item
-		int adjustedDrawer = updateViewIdForDrawer(drawer);
+		int adjustedDrawer = updateViewIdForDrawer(drawer, showFragment);
 		getTGSFacade().setDefaultDrawer(adjustedDrawer);
 		if(drawer == DRAWER_COMMUNITY) {
 			// TODO show the community
@@ -227,7 +238,6 @@ public abstract class TGSDrawerActivity extends TGSBaseActivity implements OnCli
 	}
 	
 	private void showSearch() {
-		android.util.Log.i(TAG, "showSearch");
 		// clear back stack
 		FragmentTransaction ft = beginBackStackTransaction(true);
 		SearchFragment s = new SearchFragment();
