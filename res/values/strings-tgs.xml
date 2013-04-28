@@ -21,7 +21,8 @@
     <string name="filesLabel">My Files</string>
     <string name="noFilesMsg">Your private storage is empty.</string>
     
-    <string name="overviewLabel">My Communities</string>
+    <string name="overviewLabel">Overview</string>
+    <string name="myCommunitiesLabel">My Communities</string>
     <string name="noSquaresMsg">You haven\'t joined any communities yet. To get started,
             search for a community to join, or create a new one.</string>
             
@@ -31,10 +32,13 @@
     <string name="createCommunityBtnLabel">Create Community</string>
     <string name="noMessagesMsg">This community does not have any messages yet.</string>
     
+    <string name="toolsLabel">Tools</string>
     <string name="coreLabel">Core</string>
     <string name="monitorLabel">Monitor</string>
+    <string name="enableMonitorLabel">Enable Monitor</string>
+    <string name="enableMonitorSummary">Monitor error messages in a scrolling window.</string>
     <string name="statusLabel">Status</string>
-            
+	
 	<string name="hintMainSearch">Keyword</string>
     <string name="searchTextBtnLabel">Search For Text</string>
     <string name="searchUserBtnLabel">Search For User</string>

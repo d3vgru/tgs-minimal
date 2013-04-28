@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 // functionality we want to attach at the application level, and expose to python
 public interface ITGSFacade {
 	public final static String PREF_ALIAS = "pref_alias";
+	public final static String PREF_MONITOR_ENABLED = "pref_monitor_enabled";
 	public final static String PREF_DEFAULT_DRAWER = "pref_default_drawer";
 	public final static String PREF_ENABLE_DISPERSY = "pref_enable_dispersy";
 	public final static String PREF_DISPERSY_PORT = "pref_dispersy_port";
@@ -30,6 +31,7 @@ public interface ITGSFacade {
 	
 	String getAlias();
 	int getDefaultDrawer();
+	void setDefaultDrawer(int drawer);
 	boolean isDispersyEnabled();
 	String getDispersyPort();
 	boolean isProxyEnabled();
@@ -38,4 +40,8 @@ public interface ITGSFacade {
 	String getProxyPort();
 	boolean isSwiftEnabled();
 	boolean isTunnelDispersyOverSwift();
+	boolean isMonitorEnabled();
+	
+	boolean isCommunitiesLoaded();
+	void setCommunitiesLoaded(boolean communitiesLoaded);
 }

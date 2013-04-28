@@ -18,7 +18,7 @@ public class TGSListFragment extends SherlockListFragment {
 		return (ITGSActivity)getActivity();
 	}
 	
-	public ITGSFacade getFacade() {
+	public ITGSFacade getTGSFacade() {
 		return getTGSActivity().getTGSFacade();
 	}
 	
@@ -26,6 +26,7 @@ public class TGSListFragment extends SherlockListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
+		v.setBackgroundColor(getResources().getColor(android.R.color.white));
 		return v;
 	}
 	

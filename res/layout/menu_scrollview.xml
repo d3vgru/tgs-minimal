@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- based on https://github.com/SimonVT/android-menudrawer -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/searchDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/action_search"
+            android:text="@string/searchBtnLabel"
+            style="@style/MenuDrawer.Widget.Title" />
+
+        <TextView
+            android:id="@+id/fileDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/content_attachment"
+            android:text="@string/filesLabel"
+            style="@style/MenuDrawer.Widget.Title" />
+
+        <TextView
+            android:id="@+id/myCommunitiesCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/myCommunitiesLabel"
+            style="@style/MenuDrawer.Widget.Category" />
+        
+        <TextView
+            android:id="@+id/overviewDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/overviewLabel"
+            style="@style/MenuDrawer.Widget.Title" />
+        
+        <TextView
+            android:id="@+id/toolsDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/toolsLabel"
+            style="@style/MenuDrawer.Widget.Category" />
+        
+        <TextView
+            android:id="@+id/settingsDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/action_settings"
+            android:text="@string/settingsBtnLabel"
+            style="@style/MenuDrawer.Widget.Title" />
+
+        <TextView
+            android:id="@+id/helpDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/action_help"
+            android:text="@string/helpBtnLabel"
+            style="@style/MenuDrawer.Widget.Title" />
+        
+        </LinearLayout>
+</ScrollView>

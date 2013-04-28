@@ -53,8 +53,7 @@ class TGS:
         self._my_member = None
         self._TGSCommunity = AndroidFacade.Community()
         self._TGSCommunityList = AndroidFacade.CommunityList()
-        #self._TGSListInterface = AndroidFacade.ListInterface()
-        #self._TGSListEvent = AndroidFacade.ListEvent()
+        self._TGSListEvent = AndroidFacade.ListEvent()
 
         AndroidFacade.monitor("TGS: setting up search signals")
         TGSCommunitySearchEvent = AndroidFacade.CommunitySearchEvent()
@@ -85,16 +84,7 @@ class TGS:
     ##################################
     def setupThreads(self):
         # start threads
-        #callback = Callback(name="Dispersy")  # WARNING NAME SIGNIFICANT
-        # should start no matter what (so at least the db is available)?
-		#callback.start()
-		# FIXME invoke _dispersy from same thread?
-		#AndroidFacade.monitor('TGS: registering self._dispersy')
-		#callback.register(self._dispersy, (callback,))
-		AndroidFacade.monitor('TGS: running self._dispersy')
 		self._dispersy()
-		AndroidFacade.monitor('TGS: self._dispersy exited')
-        #self.callback = callback
 
     def stopThreads(self):
     	AndroidFacade.monitor('TGS: tearing down threads')
@@ -117,7 +107,6 @@ class TGS:
         self.callback.register(community.set_my_member_info, (alias,thumbnail_hash))
         
     def getSquareForCid(self, cid):
-        # FIXME probably not the right way to get dispersy
         if self.dispersy is None:
             return None
         return self.dispersy.get_community(cid)
@@ -128,7 +117,6 @@ class TGS:
     
     # if this is the right way to do things, call that startDispersy()
     def _dispersy(self):
-        AndroidFacade.monitor('enter _dispersy()')
         config = AndroidFacade.getConfig()
         AndroidFacade.monitor('config: {}'.format(config.toString()))
         if config.isDispersyEnabled():
@@ -137,11 +125,11 @@ class TGS:
             # TODO find out if swift can be proxied
             # set communication endpoint
             if config.isTunnelDispersyOverSwift() and self.swift_process:
-                AndroidFacade.monitor('starting TunnelEndpoint via swift')
+                AndroidFacade.monitor('TGS: starting TunnelEndpoint via swift')
                 endpoint = TunnelEndpoint(self.swift_process)
                 self.swift_process.add_download(endpoint)
             else:
-                AndroidFacade.monitor('starting StandaloneEndpoint on port {}'.format(config.getDispersyPort()))
+                AndroidFacade.monitor('TGS: starting StandaloneEndpoint on port {}'.format(config.getDispersyPort()))
                 endpoint = StandaloneEndpoint(config.getDispersyPort())
 
             # new database stuff will run on only one thread
@@ -160,14 +148,14 @@ class TGS:
             # However, for now we must start self.dispersy.callback before running
             # try_register(nocachedb, self.database_thread)!
             # ERK - not a problem for Android since the main UI thread is not blocked by the python threads
-            AndroidFacade.monitor('starting dispersy')
+            AndroidFacade.monitor('TGS: starting dispersy')
             self.dispersy.start()
             # throws an error for some reason
             #logger.info("lmc: Dispersy is listening on port", self.dispersy.wan_address[1], "[%d]" % id(self.dispersy))
 
         else:
             # new database stuff will run on only one thread
-            AndroidFacade.monitor('dispersy disabled, not making an endpoint')
+            AndroidFacade.monitor('TGS: dispersy disabled, not making an endpoint')
             self.callback = Callback("Dispersy")  # WARNING NAME SIGNIFICANT
             self.callback.start()
 
@@ -182,15 +170,12 @@ class TGS:
         public_key = "3081a7301006072a8648ce3d020106052b81040027038192000406b34f060c416e452fd31fb1770c2f475e928effce751f2f82565bec35c46a97fb8b375cca4ac5dc7d93df1ba594db335350297f003a423e207b53709e6163b7688c0f60a9cf6599037829098d5fbbfe786e0cb95194292f241ff6ae4d27c6414f94de7ed1aa62f0eb6ef70d2f5af97c9aade8266eb85b14296ed2004646838c056d1d9ad8a509b69f81fbc726201b57".decode("HEX")
         master = self.dispersy.get_member(public_key)
         try:
-            logger.warning("loading DiscoveryCommunity")
-            # FIXME this seems to be a different way to load the square db
-            # it bypasses tgscore.square.community.SquareBase which opens it....
-            # try moving the call to open the db to DiscoveryCommunity? hmm
+            AndroidFacade.monitor("TGS: loading DiscoveryCommunity")
             self._discovery = DiscoveryCommunity.load_community(self.dispersy, master)
         except ValueError:
             # generate user ID
             # FIXME allow generation of new ID from app settings screen (eg TOANFO)
-            logger.warning("generating user ID and constructing new DiscoveryCommunity")
+            AndroidFacade.monitor("TGS: generating user ID and constructing new DiscoveryCommunity")
             self._discovery = DiscoveryCommunity.join_community(self.dispersy, master, self.dispersy.get_new_member(u"low"))
 
         self._my_member = self._discovery.my_member
@@ -200,24 +185,22 @@ class TGS:
     	AndroidFacade.monitor('TGS: loading squares')
     	
         # load squares (ie master square community)
-        # commented out code to send list since dispersy seems to send its own event for each square
-        #communityList = self._TGSCommunityList()
-        #listEvent = self._TGSListEvent()
+        communityList = self._TGSCommunityList()
         for master in SquareCommunity.get_master_members(self.dispersy):
             yield 0.1
             c = self.dispersy.get_community(master.mid)
             AndroidFacade.monitor('TGS: loaded community: {}'.format(c))
-            #community = self._TGSCommunity()
-            #copySquareToCommunity(c, community)
+            community = self._TGSCommunity()
+            copySquareToCommunity(c, community)
 
             # put in TGSCommunityList
-            #communityList.addCommunity(community)
-        # FIXME send the event so the UI knows if there really are no squares
-        # send to java
-        #superList = cast('org.theglobalsquare.framework.ITGSList', communityList)
-        #listEvent.setList(superList)
-        #AndroidFacade.monitor('TGS: sending community list event')
-        #AndroidFacade.sendEvent(listEvent)
+            communityList.addCommunity(community)
+        # send the event so the UI knows if there really are no squares
+        superList = cast('org.theglobalsquare.framework.ITGSList', communityList)
+        listEvent = self._TGSListEvent()
+        listEvent.setList(superList)
+        AndroidFacade.monitor('TGS: sending community list event')
+        AndroidFacade.sendEvent(listEvent)
 
     	AndroidFacade.monitor('TGS: dispersy startup complete')
         # let android know we're done initializing

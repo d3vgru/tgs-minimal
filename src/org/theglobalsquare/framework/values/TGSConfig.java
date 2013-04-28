@@ -10,6 +10,16 @@ public class TGSConfig extends TGSObject {
 	public final static String SET_PARAM = "set_param";
 	public final static String PARAM_UPDATED = "param_updated";
 	
+	private boolean monitorEnabled;
+	
+	public boolean isMonitorEnabled() {
+		return monitorEnabled;
+	}
+	
+	public void setMonitorEnabled(boolean monitorEnabled) {
+		this.monitorEnabled = monitorEnabled;
+	}
+	
 	private int defaultDrawer;
 	
 	public int getDefaultDrawer() {

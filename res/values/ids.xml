@@ -2,4 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <item type="id" name="menu_help" />
     <item type="id" name="surface_view" />
+    <item type="id" name="monitorDrawer" />
+    <item type="id" name="aboutDrawer" />
+    <item type="id" name="communityDrawer" />
 </resources>

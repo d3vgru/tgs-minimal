@@ -6,7 +6,7 @@
 	url = https://github.com/d3vgru/pymdht.git
 [submodule "app/python/tgs-core"]
 	path = app/python/tgs-core
-	url = git://github.com/d3vgru/tgs-core.git
+	url = https://github.com/d3vgru/tgs-core.git
 [submodule "lib-projects/android-menudrawer"]
 	path = lib-projects/android-menudrawer
 	url = https://github.com/SimonVT/android-menudrawer.git

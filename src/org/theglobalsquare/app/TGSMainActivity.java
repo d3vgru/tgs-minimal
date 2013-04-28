@@ -144,6 +144,7 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 
 	public void monitor(String message) {
 		// monitor() shows the event in the monitor tab
+		/*
 		try {
 			if(message == null || "".equals(message))
 				throw new IllegalArgumentException("null or empty string sent to monitor");
@@ -151,6 +152,7 @@ public class TGSMainActivity extends TGSActivityImpl implements PropertyChangeLi
 			android.util.Log.e(TAG, ex.getMessage(), ex);
 			message = "<blank/>";
 		}
+		*/
 		super.monitor(message);
 	}
 	

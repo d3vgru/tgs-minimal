@@ -6,6 +6,7 @@
         <item name="android:buttonStyle">@style/MyDefaultButtonAppearance</item>
         <item name="android:windowBackground">@color/my_custom_background_color</item>
         <item name="android:colorBackgroundCacheHint">@color/my_custom_background_color</item>
+        <item name="menuDrawerStyle">@style/MenuDrawerStyle14</item>
     </style>
     
     <style name="MyDefaultTextAppearance" parent="@android:style/TextAppearance">

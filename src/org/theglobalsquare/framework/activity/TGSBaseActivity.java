@@ -8,9 +8,12 @@ import org.theglobalsquare.framework.values.*;
 import org.theglobalsquare.ui.SearchFragment;
 import org.theglobalsquare.ui.SearchResultsFragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -27,6 +30,9 @@ import com.actionbarsherlock.view.MenuItem;
 // depends on ActionBarSherlock
 public abstract class TGSBaseActivity extends PythonActivity implements ITGSActivity {
 	public final static String TAG = "TGSBase";
+	
+	public final static int PREFERENCES = 1001;
+
 	protected MenuItem mMenuClose = null;
 	protected MenuItem mMenuCompose = null;
 	protected MenuItem mMenuRefresh = null;
@@ -157,13 +163,43 @@ public abstract class TGSBaseActivity extends PythonActivity implements ITGSActi
 	}
 	
 	public void monitor(String message) {
-		sMonitorTxt = message + "\n" + sMonitorTxt;
-		final TextView monitor = (TextView) findViewById(R.id.monitor);
-		if(monitor != null)
-			monitor.setText(sMonitorTxt);
-		final TextView status = (TextView)findViewById(R.id.statusMessage);
+		TextView status = (TextView)findViewById(R.id.statusMessage);
 		if(status != null)
 			status.setText(message);
+		if(!getTGSFacade().isMonitorEnabled())
+			return;
+		sMonitorTxt = message + "\n" + sMonitorTxt;
+		TextView monitor = (TextView) findViewById(R.id.monitor);
+		if(monitor != null)
+			monitor.setText(sMonitorTxt);
+	}
+	
+	public FragmentTransaction beginBackStackTransaction() {
+		return beginBackStackTransaction(getSupportFragmentManager());
+	}
+
+	public FragmentTransaction beginBackStackTransaction(boolean clearBackStack) {
+		return beginBackStackTransaction(getSupportFragmentManager(), clearBackStack);
+	}
+
+	public static FragmentTransaction beginBackStackTransaction(FragmentManager fm) {
+		return beginBackStackTransaction(fm, false);
+	}
+	
+	@SuppressLint("CommitTransaction")
+	public static FragmentTransaction beginBackStackTransaction(FragmentManager fm, boolean clearBackStack) {
+		if(clearBackStack) {
+			clearBackStack(fm);
+		}
+		FragmentTransaction ft = fm.beginTransaction();
+		ft.addToBackStack(null);
+		return ft;
+	}
+	
+	protected static void clearBackStack(FragmentManager fm) {
+		for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {    
+		    fm.popBackStack();
+		}
 	}
 	
 }

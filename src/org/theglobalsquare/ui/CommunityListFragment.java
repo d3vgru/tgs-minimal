@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.theglobalsquare.app.R;
 import org.theglobalsquare.framework.ITGSActivity;
 import org.theglobalsquare.framework.ITGSObject;
+import org.theglobalsquare.framework.activity.TGSDrawerActivity;
 import org.theglobalsquare.framework.ui.TGSListAdapter;
 import org.theglobalsquare.framework.ui.TGSListFragment;
 import org.theglobalsquare.framework.values.TGSCommunity;
@@ -43,12 +44,10 @@ public abstract class CommunityListFragment extends TGSListFragment implements P
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				ViewCommunityFragment.showFromList(CommunityListFragment.this, position);
+				TGSDrawerActivity.showCommunityFromList(CommunityListFragment.this, position);
 			}
 			
 		});
-		
-		setListShown(false);
 	}
 
 	protected TGSListAdapter createListAdapter() {

@@ -7,4 +7,8 @@
     <color name="button_text_color">#413F3F</color>
     <color name="my_custom_background_color">#282425</color>
     <color name="grey">#ccc</color>
+
+    <!-- from https://github.com/SimonVT/android-menudrawer -->
+    <!-- The default background of the menu. -->
+    <color name="md__defaultBackground">#FF555555</color>
 </resources>

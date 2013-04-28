@@ -29,8 +29,9 @@ public class OverviewListFragment extends CommunityListFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		setListShown(getTGSFacade().isCommunitiesLoaded());
 		// register for community updates
-		getFacade().addListener(TGSCommunityEvent.class, this);
+		getTGSFacade().addListener(TGSCommunityEvent.class, this);
 	}
 
 	@Override

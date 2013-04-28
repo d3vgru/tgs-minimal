@@ -2,5 +2,6 @@
 <resources>
     <style name="PPSPTheme" parent="@style/Theme.Sherlock.Light">
         <!-- Any customizations for PPSP app running on 3.0+ devices here -->
+        <item name="menuDrawerStyle">@style/MenuDrawerStyle</item>
     </style>
 </resources>

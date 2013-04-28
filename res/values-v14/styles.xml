@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="MenuDrawerStyle14" parent="MenuDrawerStyle">
+        
+    </style>
+    <style name="MenuDrawer.Widget.Category" parent="MenuDrawer.Widget.CategoryBase">
+		<item name="android:textAllCaps">true</item>
+    </style>
+</resources>

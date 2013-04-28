@@ -1,7 +1,5 @@
 package org.theglobalsquare.framework.activity;
 
-import java.io.File;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,15 +13,12 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.theglobalsquare.app.*;
-import org.theglobalsquare.app.config.*;
 import org.theglobalsquare.ui.*;
 
 // this class sets up and manages the main UI
 public abstract class TGSUIActivity extends TGSDrawerActivity implements OnKeyListener {
 	public final static String TAG = "TGSUI";
 	
-	public final static int PREFERENCES = 1001;
-
     protected boolean showActionButtons(int index) {
 		return index >= DRAWER_COUNT_BASE;
 	}
@@ -32,9 +27,12 @@ public abstract class TGSUIActivity extends TGSDrawerActivity implements OnKeyLi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		// load full layout
-		ViewGroup mainLayout = (ViewGroup)findViewById(R.id.mainLayout);
-		getLayoutInflater().inflate(R.layout.main_activity, mainLayout);
+        // setup the default drawer -- TODO maybe call this before super?
+        configureDrawer(savedInstanceState);
+
+        // load full layout -- drawer does this now
+		//ViewGroup mainLayout = (ViewGroup)findViewById(R.id.mainLayout);
+		//getLayoutInflater().inflate(R.layout.main_activity, mainLayout);
 		
 		monitor(TAG + ": INIT");
 		
@@ -43,16 +41,13 @@ public abstract class TGSUIActivity extends TGSDrawerActivity implements OnKeyLi
         
         // attach click handlers
         configureButtons();
-
-        // setup the default drawer
-        configureDrawer();
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 	    inflater.inflate(R.menu.main_menu, menu);
-	    boolean visible = showActionButtons(mSelectedDrawer);
+	    boolean visible = showActionButtons(getSelectedDrawer());
 		mMenuClose = menu.findItem(R.id.menu_close);
 		mMenuClose.setVisible(visible);
 		mMenuCompose = menu.findItem(R.id.menu_compose);
@@ -82,7 +77,7 @@ public abstract class TGSUIActivity extends TGSDrawerActivity implements OnKeyLi
 				Toast.makeText(this, R.string.shareBtnLabel, Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.menu_create:
-				if(mSelectedDrawer == DRAWER_SEARCH) {
+				if(getSelectedDrawer() == DRAWER_SEARCH) {
 					// show search terms
 					showSearchTerms(this);
 				} else {
@@ -92,27 +87,21 @@ public abstract class TGSUIActivity extends TGSDrawerActivity implements OnKeyLi
 				break;
 			case R.id.menu_search:
 				// select Search tab
-		        setDrawer(DRAWER_SEARCH);
+		        setSelectedDrawer(DRAWER_SEARCH);
 				break;
 			case R.id.menu_settings:
-				Intent prefsIntent = new Intent();
-				prefsIntent.setClass(this, EditPreferences.class);
-				startActivityForResult(prefsIntent, PREFERENCES);
+				setSelectedDrawer(DRAWER_SETTINGS);
 				break;
 			case R.id.menu_help:
-				// TODO show help dialog
-				//Toast.makeText(this, R.string.helpBtnLabel, Toast.LENGTH_SHORT).show();
-				
-				// for now, list the files in private storage
-				// how helpful is that?
-				monitorHomeDir();
+				setSelectedDrawer(DRAWER_HELP);
 				break;
 			case R.id.menu_about:
 				// show about dialog
 				showDialog(new AboutFragment());
+				setSelectedDrawer(DRAWER_ABOUT);
 				break;
 			case R.id.menu_close:
-				if(mSelectedDrawer == DRAWER_SEARCH) {
+				if(getSelectedDrawer() == DRAWER_SEARCH) {
 					// TODO close/clear current search
 					
 				} else {
@@ -126,7 +115,6 @@ public abstract class TGSUIActivity extends TGSDrawerActivity implements OnKeyLi
 		}
 		return true;
 	}
-	
 	
 	
 	@Override
@@ -179,21 +167,4 @@ public abstract class TGSUIActivity extends TGSDrawerActivity implements OnKeyLi
 		df.show(getSupportFragmentManager(), "dialog");
 	}
 	
-	public void monitorHomeDir() {
-		File path = new File(getFilesDir().getAbsolutePath() + "/");
-		if(!path.exists())
-			return;
-		monitor("listing files/(D)irectories in " + path.getAbsolutePath());
-		File[] files = path.listFiles();
-		if(files != null) {
-			for(int i=0; i<files.length; i++) {
-				File f = files[i];
-				monitor(
-						(f.isDirectory() ? "(D) " : "")
-							+ f.getPath()
-				);
-			}
-		}
-	}
-
 }
